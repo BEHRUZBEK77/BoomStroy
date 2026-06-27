@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Boomstroy v6.0</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--p:#1a56db;--pd:#1e40af;--s:#16a34a;--d:#dc2626;--w:#d97706;--i:#0891b2;--bg:#f1f5f9;--sb:#1e293b;--st:#cbd5e1;--wh:#fff;--bo:#e2e8f0;--tx:#1e293b;--tl:#64748b;--ca:#fff;--sh:0 1px 3px rgba(0,0,0,.1);--shm:0 4px 12px rgba(0,0,0,.1);--r:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;display:flex;min-height:100vh}
+#sidebar{width:240px;background:var(--sb);color:var(--st);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto;transition:transform .3s}
+.sbl{padding:20px 16px;border-bottom:1px solid #334155;display:flex;align-items:center;gap:10px}
+.sbl i{font-size:24px;color:#1a56db}
+.sbl span{font-size:18px;font-weight:700;color:#fff}
+.sbl small{font-size:11px;color:#64748b;display:block}
+.sbs{padding:8px 0;border-bottom:1px solid #334155}
+.sbst{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#475569;padding:8px 16px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:all .15s;color:var(--st);font-size:13px;text-decoration:none}
+.nav-item:hover{background:#334155;color:#fff}
+.nav-item.active{background:var(--p);color:#fff}
+.nav-item i{width:18px;text-align:center;font-size:14px}
+.nbadge{margin-left:auto;background:var(--d);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center}
+#sov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+#stoggle{display:none;background:none;border:none;cursor:pointer;font-size:18px;color:var(--tx)}
+#main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+#topbar{background:var(--wh);border-bottom:1px solid var(--bo);padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.tbt{font-size:16px;font-weight:600;flex:1}
+.tba{display:flex;align-items:center;gap:8px}
+.tbs{border:1px solid var(--bo);border-radius:6px;padding:6px 12px;font-size:13px;width:220px;outline:none}
+.tbs:focus{border-color:var(--p)}
+.bti{width:36px;height:36px;border:1px solid var(--bo);border-radius:6px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tl);position:relative}
+.bti:hover{background:var(--bg)}
+.ndot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--d);border-radius:50%}
+.avatar{width:34px;height:34px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+#cs{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tl);padding:4px 10px;background:var(--bg);border-radius:20px}
+#cd{width:8px;height:8px;border-radius:50%;background:var(--w)}
+#cd.on{background:var(--s)}
+#pc{padding:20px;flex:1}
+.ps{display:none}
+.ps.active{display:block}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.sc{background:var(--ca);border-radius:var(--r);padding:16px;box-shadow:var(--sh);display:flex;align-items:center;gap:14px}
+.si{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.si.bl{background:#dbeafe;color:#1d4ed8}.si.gr{background:#dcfce7;color:#15803d}.si.or{background:#fef3c7;color:#b45309}.si.re{background:#fee2e2;color:#b91c1c}.si.pu{background:#ede9fe;color:#7c3aed}.si.te{background:#ccfbf1;color:#0f766e}
+.sv{font-size:22px;font-weight:700}.sl{font-size:12px;color:var(--tl)}
+.card{background:var(--ca);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.ch{padding:14px 16px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ct{font-size:14px;font-weight:600;flex:1}
+.cb{padding:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;white-space:nowrap}
+.bp{background:var(--p);color:#fff}.bp:hover{background:var(--pd)}
+.bs{background:var(--s);color:#fff}.bs:hover{background:#15803d}
+.bd{background:var(--d);color:#fff}.bd:hover{background:#b91c1c}
+.bw{background:var(--w);color:#fff}
+.bse{background:var(--bg);color:var(--tx);border:1px solid var(--bo)}.bse:hover{background:var(--bo)}
+.bi{background:var(--i);color:#fff}
+.bsm{padding:4px 10px;font-size:12px}
+.bxs{padding:2px 7px;font-size:11px}
+.tc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--bg);padding:10px 12px;text-align:left;font-weight:600;font-size:12px;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bo);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--bo);vertical-align:middle}
+tr:hover td{background:#f8fafc}
+tr:last-child td{border-bottom:none}
+.badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;display:inline-block}
+.bgs{background:#dcfce7;color:#15803d}.bgd{background:#fee2e2;color:#b91c1c}.bgw{background:#fef3c7;color:#b45309}.bgi{background:#cffafe;color:#0e7490}.bge{background:#f1f5f9;color:#475569}.bgp{background:#ede9fe;color:#7c3aed}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.mo.open{display:flex}
+.modal{background:var(--wh);border-radius:var(--r);width:100%;max-width:580px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.mlg{max-width:820px}.msm{max-width:440px}
+.mh{padding:16px 20px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:10px}
+.mt{font-size:15px;font-weight:600;flex:1}
+.mb2{padding:20px}
+.mf{padding:14px 20px;border-top:1px solid var(--bo);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.mc{background:none;border:none;cursor:pointer;color:var(--tl);padding:4px;border-radius:4px}
+.mc:hover{background:var(--bg)}
+.fg{margin-bottom:14px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--tl);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.fc{width:100%;padding:8px 11px;border:1px solid var(--bo);border-radius:6px;font-size:13px;outline:none;color:var(--tx);background:var(--wh);transition:border .15s}
+.fc:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+select.fc{cursor:pointer}
+textarea.fc{resize:vertical;min-height:80px}
+.iua{border:2px dashed var(--bo);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative}
+.iua:hover{border-color:var(--p);background:#eff6ff}
+.iua input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.ipv{width:80px;height:80px;border-radius:8px;object-fit:cover;border:2px solid var(--bo)}
+.pit{width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid var(--bo);background:#f1f5f9}
+.pip{width:40px;height:40px;border-radius:6px;background:var(--bg);border:1px solid var(--bo);display:flex;align-items:center;justify-content:center;color:var(--tl);font-size:16px}
+.lsa{background:linear-gradient(135deg,#fef2f2,#fff7ed);border:2px solid #fca5a5;border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.lsa .ai{font-size:24px;color:var(--d);flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.apc{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer}
+.apc.out{background:#1e293b;color:#fff;border-color:#1e293b}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.ccard{background:var(--ca);border-radius:var(--r);padding:16px;box-shadow:var(--sh);border:2px solid transparent;transition:all .2s}
+.ccard:hover{border-color:var(--p)}
+.cib{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:10px;overflow:hidden}
+.cib img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+#tc{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:#1e293b;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:var(--shm);animation:si .3s ease;min-width:240px}
+.toast.success{background:var(--s)}.toast.error{background:var(--d)}.toast.warning{background:var(--w)}
+@keyframes si{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+.spinner{width:20px;height:20px;border:2px solid var(--bo);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lo{display:flex;align-items:center;justify-content:center;padding:40px;flex-direction:column;gap:12px;color:var(--tl)}
+.sb2{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.siw{position:relative;flex:1;min-width:180px}
+.siw i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--tl);font-size:13px}
+.siw input{width:100%;padding:7px 10px 7px 32px;border:1px solid var(--bo);border-radius:6px;font-size:13px;outline:none}
+.siw input:focus{border-color:var(--p)}
+.pg{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--bo);font-size:12px;color:var(--tl)}
+.pbs{display:flex;gap:4px}
+.pb{width:30px;height:30px;border:1px solid var(--bo);background:var(--wh);border-radius:5px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center}
+.pb.active{background:var(--p);color:#fff;border-color:var(--p)}
+.es{text-align:center;padding:48px 20px;color:var(--tl)}
+.es i{font-size:48px;margin-bottom:12px;opacity:.4}
+.es h3{font-size:15px;color:var(--tx);margin-bottom:6px}
+.li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bo)}
+.li:last-child{border-bottom:none}
+.ld{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.ld.gn{background:var(--s)}.ld.rd{background:var(--d)}.ld.bl{background:var(--p)}.ld.og{background:var(--w)}
+.ib{background:var(--bg);border-radius:6px;padding:12px;font-size:12px;color:var(--tl);margin-bottom:12px}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bo)}
+.sr:last-child{border-bottom:none}
+.tgl{width:38px;height:22px;background:var(--bo);border-radius:20px;cursor:pointer;position:relative;transition:background .2s}
+.tgl.on{background:var(--p)}
+.tgl::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.tgl.on::after{transform:translateX(16px)}
+.prog{background:var(--bg);border-radius:20px;height:6px;overflow:hidden}
+.pb2{height:100%;border-radius:20px;transition:width .3s}
+.pb2.bl{background:var(--p)}.pb2.gn{background:var(--s)}.pb2.rd{background:var(--d)}.pb2.og{background:var(--w)}
+.sku{background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;font-family:monospace}
+.qrc{display:flex;flex-direction:column;align-items:center;gap:8px}
+.qrc canvas,.qrc img{border:1px solid var(--bo);border-radius:6px;padding:4px;background:#fff}
+.ch2{background:linear-gradient(135deg,#1e293b,#334155);border-radius:8px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;color:#fff}
+.cav{width:52px;height:52px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.cn{font-size:16px;font-weight:700;margin-bottom:4px}
+.cm{font-size:12px;color:#94a3b8;line-height:2}
+.cm a{color:#60a5fa;text-decoration:none}
+.ig2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ii{background:var(--bg);border-radius:6px;padding:11px}
+.il{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--tl);margin-bottom:3px;font-weight:700}
+.iv{font-size:13px;font-weight:600;color:var(--tx)}
+.iv.sm{font-size:12px;font-weight:400}
+.lb{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;border-radius:8px;padding:14px;margin-bottom:14px}
+.lb .lt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#1d4ed8;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.lb .lg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.lb .lgi label{font-size:10px;color:#3b82f6;font-weight:700;display:block;margin-bottom:2px;text-transform:uppercase}
+.lb .lgi span{font-size:13px;font-weight:700;color:#1e40af}
+.ml{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mb3{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;color:#fff;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;cursor:pointer;border:none;transition:opacity .15s}
+.mb3:hover{opacity:.85}
+.mb3.go{background:#1d4ed8}.mb3.ya{background:#e8402a}.mb3.ro{background:#15803d}
+.nlb{background:#fff7ed;border:1px solid #fed7aa;border-left:4px solid var(--w);border-radius:8px;padding:14px;margin-bottom:14px}
+.oit{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
+.oit th{background:#f8fafc;padding:8px 12px;text-align:left;font-weight:600;font-size:11px;color:var(--tl);text-transform:uppercase;border-bottom:1px solid var(--bo)}
+.oit td{padding:9px 12px;border-bottom:1px solid var(--bo)}
+.oit tr:last-child td{border-bottom:none}
+.smb{background:var(--bg);border-radius:8px;padding:14px;margin-bottom:14px}
+.smr{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--tl);border-bottom:1px solid var(--bo)}
+.smr:last-child{border-bottom:none;font-size:15px;font-weight:700;color:var(--tx);padding-top:10px;margin-top:4px}
+.smr.gn{color:var(--s)}
+.sdv{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tl);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--bo);display:flex;align-items:center;gap:6px}
+.sf{display:flex;gap:0;margin-bottom:14px;overflow-x:auto}
+.ss{flex:1;padding:9px 4px;text-align:center;font-size:11px;border-bottom:3px solid var(--bo);color:var(--tl);white-space:nowrap;min-width:80px}
+.ss.done{border-bottom-color:var(--s);color:var(--s);font-weight:600}
+.ss.cur{border-bottom-color:var(--p);color:var(--p);font-weight:700}
+.ss i{display:block;font-size:18px;margin-bottom:4px}
+.stsel{padding:4px 8px;border:1px solid var(--bo);border-radius:5px;font-size:12px;cursor:pointer;outline:none;background:var(--wh)}
+.or{cursor:pointer}
+.or:hover td{background:#eff6ff!important}
+.df{display:flex}.ac{align-items:center}.jb{justify-content:space-between}.g8{gap:8px}
+.tm{color:var(--tl)}.tsc{color:var(--s)}.tdc{color:var(--d)}
+.fw6{font-weight:600}
+.f11{font-size:11px}.f12{font-size:12px}.f13{font-size:13px}
+.mt2{margin-top:8px}.mb2b{margin-bottom:8px}.mb3b{margin-bottom:12px}.mb4{margin-bottom:16px}
+.aks{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:20px;margin-top:4px}
+.aks.sv{background:#dcfce7;color:#15803d}.aks.ms{background:#fee2e2;color:#b91c1c}
+/* Warehouse product sections */
+.wh-tab{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.wh-tb{padding:6px 14px;border-radius:6px;border:1px solid var(--bo);cursor:pointer;font-size:12px;font-weight:600;background:var(--bg);color:var(--tl)}
+.wh-tb.active{background:var(--p);color:#fff;border-color:var(--p)}
+/* reason custom input */
+.reason-wrap{position:relative}
+@media(max-width:768px){
+#sidebar{transform:translateX(-100%)}
+#sidebar.open{transform:none}
+#main{margin-left:0}
+#stoggle{display:flex;align-items:center}
+.g2,.fr,.ig2{grid-template-columns:1fr}
+.sg{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div id="sov" onclick="clos()"></div>
+<nav id="sidebar">
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.0</small></div></div>
+<div class="sbs"><div class="sbst">Asosiy</div>
+<a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
+<a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a></div>
+<div class="sbs"><div class="sbst">Inventar</div>
+<a class="nav-item" onclick="nav('products')"><i class="fas fa-boxes"></i> Mahsulotlar <span class="nbadge" id="nb-low"></span></a>
+<a class="nav-item" onclick="nav('categories')"><i class="fas fa-tags"></i> Kategoriyalar</a>
+<a class="nav-item" onclick="nav('warehouses')"><i class="fas fa-warehouse"></i> Omborlar</a>
+<a class="nav-item" onclick="nav('stock-in')"><i class="fas fa-arrow-circle-down"></i> Kirim</a>
+<a class="nav-item" onclick="nav('stock-out')"><i class="fas fa-arrow-circle-up"></i> Chiqim</a>
+<a class="nav-item" onclick="nav('transfers')"><i class="fas fa-exchange-alt"></i> Ko'chirish</a>
+<a class="nav-item" onclick="nav('inventory-check')"><i class="fas fa-clipboard-check"></i> Inventarizatsiya</a></div>
+<div class="sbs"><div class="sbst">Savdo</div>
+<a class="nav-item" onclick="nav('sales')"><i class="fas fa-shopping-cart"></i> Sotuvlar</a>
+<a class="nav-item" onclick="nav('purchases')"><i class="fas fa-file-invoice"></i> Xaridlar</a>
+<a class="nav-item" onclick="nav('orders')"><i class="fas fa-clipboard-list"></i> Buyurtmalar <span class="nbadge" id="nb-orders"></span></a>
+<a class="nav-item" onclick="nav('returns')"><i class="fas fa-undo"></i> Qaytarishlar</a>
+<a class="nav-item" onclick="nav('pos')"><i class="fas fa-cash-register"></i> Kassa (POS)</a></div>
+<div class="sbs"><div class="sbst">Kontaktlar</div>
+<a class="nav-item" onclick="nav('customers')"><i class="fas fa-users"></i> Mijozlar</a>
+<a class="nav-item" onclick="nav('suppliers')"><i class="fas fa-truck"></i> Yetkazuvchilar</a></div>
+<div class="sbs"><div class="sbst">Hisobotlar</div>
+<a class="nav-item" onclick="nav('reports')"><i class="fas fa-file-alt"></i> Hisobotlar</a>
+<a class="nav-item" onclick="nav('logs')"><i class="fas fa-history"></i> Harakatlar</a></div>
+<div class="sbs"><div class="sbst">Tizim</div>
+<a class="nav-item" onclick="nav('settings')"><i class="fas fa-cog"></i> Sozlamalar</a>
+<a class="nav-item" onclick="nav('users')"><i class="fas fa-user-shield"></i> Foydalanuvchilar</a></div>
+</nav>
+
+<div id="main">
+<div id="topbar">
+<button id="stoggle" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+<span class="tbt" id="tbt">Dashboard</span>
+<div class="tba">
+<div id="cs"><div id="cd"></div><span id="ct">Ulanmoqda...</span></div>
+<input class="tbs" placeholder="Qidirish..." oninput="gSearch(this.value)" id="gsearch">
+<button class="bti" onclick="showNotif()"><i class="fas fa-bell"></i><span class="ndot" id="ndot" style="display:none"></span></button>
+<div class="avatar">BS</div>
+</div></div>
+
+<div id="pc">
+
+<!-- DASHBOARD -->
+<div class="ps active" id="sec-dashboard">
+<div id="dlsb"></div>
+<div class="sg">
+<div class="sc"><div class="si bl"><i class="fas fa-boxes"></i></div><div><div class="sv" id="stp">—</div><div class="sl">Mahsulotlar</div></div></div>
+<div class="sc"><div class="si gr"><i class="fas fa-coins"></i></div><div><div class="sv" id="stv">—</div><div class="sl">Inv. qiymati</div></div></div>
+<div class="sc"><div class="si re"><i class="fas fa-exclamation-triangle"></i></div><div><div class="sv" id="stl">—</div><div class="sl">Kam qolgan</div></div></div>
+<div class="sc"><div class="si or"><i class="fas fa-users"></i></div><div><div class="sv" id="stc">—</div><div class="sl">Mijozlar</div></div></div>
+<div class="sc"><div class="si pu"><i class="fas fa-warehouse"></i></div><div><div class="sv" id="stw">—</div><div class="sl">Omborlar</div></div></div>
+<div class="sc"><div class="si te"><i class="fas fa-clipboard-list"></i></div><div><div class="sv" id="sto">—</div><div class="sl">Buyurtmalar</div></div></div>
+</div>
+<div class="g2" style="margin-bottom:16px">
+<div class="card"><div class="ch"><i class="fas fa-clock tm"></i><span class="ct">So'nggi harakatlar</span><button class="btn bse bsm" onclick="nav('logs')">Barchasi</button></div><div class="cb" id="rl" style="max-height:280px;overflow-y:auto"><div class="lo"><div class="spinner"></div></div></div></div>
+<div class="card"><div class="ch"><i class="fas fa-exclamation-circle tm"></i><span class="ct">Kam Qolgan</span></div><div class="cb" id="lsl" style="max-height:280px;overflow-y:auto"><div class="lo"><div class="spinner"></div></div></div></div>
+</div>
+<div class="g2">
+<div class="card"><div class="ch"><i class="fas fa-chart-bar tm"></i><span class="ct">Kategoriyalar</span></div><div class="cb" id="cc"></div></div>
+<div class="card"><div class="ch"><i class="fas fa-star tm"></i><span class="ct">Top mahsulotlar</span></div><div class="cb" id="tp"></div></div>
+</div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="ps" id="sec-products">
+<div id="plsb"></div>
+<div class="df jb ac mb3b"><div></div><div class="df g8">
+<button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-download"></i> CSV</button>
+<button class="btn bp" onclick="openPM()"><i class="fas fa-plus"></i> Mahsulot qo'shish</button>
+</div></div>
+<div class="card">
+<div class="ch"><i class="fas fa-boxes tm"></i><span class="ct">Mahsulotlar</span><span class="badge bgi" id="pcb">0</span></div>
+<div class="cb" style="padding-bottom:0">
+<div class="sb2">
+<div class="siw"><i class="fas fa-search"></i><input id="psrch" placeholder="Qidirish..." oninput="filterP()"></div>
+<select class="fc" style="width:150px" id="cf" onchange="filterP()"><option value="">Barcha kategoriya</option></select>
+<select class="fc" style="width:130px" id="sf" onchange="filterP()"><option value="">Barcha holat</option><option value="low">Kam qolgan</option><option value="out">Tugagan</option><option value="ok">Normal</option></select>
+<select class="fc" style="width:140px" id="wf" onchange="filterP()"><option value="">Barcha ombor</option></select>
+<button class="btn bse bsm" onclick="clrF()"><i class="fas fa-times"></i></button>
+</div></div>
+<div class="tc"><table><thead><tr><th>Rasm</th><th onclick="sortP('name')" style="cursor:pointer">Nomi<i class="fas fa-sort tm" style="margin-left:4px"></i></th><th>Kategoriya</th><th>Ombor</th><th onclick="sortP('quantity')" style="cursor:pointer">Miqdor<i class="fas fa-sort tm" style="margin-left:4px"></i></th><th onclick="sortP('price')" style="cursor:pointer">Narx<i class="fas fa-sort tm" style="margin-left:4px"></i></th><th>Min</th><th>Holat</th><th>SKU</th><th>Amallar</th></tr></thead>
+<tbody id="ptbody"><tr><td colspan="10"><div class="lo"><div class="spinner"></div><span>Yuklanmoqda...</span></div></td></tr></tbody>
+</table></div>
+<div class="pg" id="ppg"><span id="pi">0 ta</span><div class="pbs" id="pp"></div></div>
+</div></div>
+
+<!-- CATEGORIES -->
+<div class="ps" id="sec-categories">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openCM()"><i class="fas fa-plus"></i> Kategoriya qo'shish</button></div>
+<div class="g4" id="catgrid"><div class="lo"><div class="spinner"></div></div></div>
+</div>
+
+<!-- WAREHOUSES -->
+<div class="ps" id="sec-warehouses">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openWHM()"><i class="fas fa-plus"></i> Ombor qo'shish</button></div>
+<div class="g4" id="whgrid"><div class="lo"><div class="spinner"></div></div></div>
+<!-- Ombor mahsulotlari -->
+<div id="whprods" style="margin-top:16px"></div>
+</div>
+
+<!-- STOCK IN -->
+<div class="ps" id="sec-stock-in">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openSIM()"><i class="fas fa-plus"></i> Kirim qo'shish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-arrow-circle-down tm"></i><span class="ct">Kirim Tarixi</span><span class="badge bgi" id="sicb">0</span>
+<button class="btn bse bsm" onclick="expSICSV()"><i class="fas fa-download"></i> CSV</button></div>
+<div class="cb" style="padding-bottom:0">
+<div class="sb2">
+<div class="siw"><i class="fas fa-search"></i><input id="sisrch" placeholder="Qidirish..." oninput="filterSI()"></div>
+<select class="fc" style="width:140px" id="siwf" onchange="filterSI()"><option value="">Barcha ombor</option></select>
+<select class="fc" style="width:140px" id="sicatf" onchange="filterSI()"><option value="">Barcha kategoriya</option></select>
+</div></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Mahsulot</th><th>Kategoriya</th><th>Miqdor</th><th>Narx/dona</th><th>Jami</th><th>Yetkazuvchi</th><th>Ombor</th><th>Faktura</th><th>Sana</th><th>Izoh</th></tr></thead>
+<tbody id="sitbody"><tr><td colspan="11"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+<div class="pg"><span id="sii">0 ta kirim</span><div class="pbs" id="sip"></div></div>
+</div></div>
+
+<!-- STOCK OUT -->
+<div class="ps" id="sec-stock-out">
+<div class="df jb ac mb3b"><div></div><button class="btn bw" onclick="openSOM()"><i class="fas fa-plus"></i> Chiqim qo'shish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-arrow-circle-up tm"></i><span class="ct">Chiqim Tarixi</span><span class="badge bgi" id="socb">0</span>
+<button class="btn bse bsm" onclick="expSOCSV()"><i class="fas fa-download"></i> CSV</button></div>
+<div class="cb" style="padding-bottom:0">
+<div class="sb2">
+<div class="siw"><i class="fas fa-search"></i><input id="sosrch" placeholder="Qidirish..." oninput="filterSO()"></div>
+<select class="fc" style="width:140px" id="sowf" onchange="filterSO()"><option value="">Barcha ombor</option></select>
+<select class="fc" style="width:180px" id="sorf" onchange="filterSO()"><option value="">Barcha sabab</option></select>
+</div></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Mahsulot</th><th>Kategoriya</th><th>Miqdor</th><th>Ombor</th><th>Sabab</th><th>Mijoz</th><th>Sana</th><th>Izoh</th></tr></thead>
+<tbody id="sotbody"><tr><td colspan="9"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+<div class="pg"><span id="soi">0 ta chiqim</span><div class="pbs" id="sop"></div></div>
+</div></div>
+
+<!-- ORDERS -->
+<div class="ps" id="sec-orders">
+<div class="sg" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+<div class="sc"><div class="si or"><i class="fas fa-hourglass-half"></i></div><div><div class="sv" id="osp">—</div><div class="sl">Kutilmoqda</div></div></div>
+<div class="sc"><div class="si bl"><i class="fas fa-check-circle"></i></div><div><div class="sv" id="osc">—</div><div class="sl">Tasdiqlangan</div></div></div>
+<div class="sc"><div class="si pu"><i class="fas fa-truck"></i></div><div><div class="sv" id="oss">—</div><div class="sl">Yo'lda</div></div></div>
+<div class="sc"><div class="si gr"><i class="fas fa-check-double"></i></div><div><div class="sv" id="osd">—</div><div class="sl">Yetkazildi</div></div></div>
+<div class="sc"><div class="si re"><i class="fas fa-times-circle"></i></div><div><div class="sv" id="osca">—</div><div class="sl">Bekor</div></div></div>
+<div class="sc"><div class="si gr"><i class="fas fa-coins"></i></div><div><div class="sv" id="osr">—</div><div class="sl">Daromad</div></div></div>
+</div>
+<div class="card">
+<div class="ch"><i class="fas fa-clipboard-list tm"></i><span class="ct">Buyurtmalar</span><span class="badge bgi" id="ocb">0</span>
+<button class="btn bse bsm" onclick="expOCSV()"><i class="fas fa-download"></i> CSV</button>
+<button class="btn bp bsm" onclick="loadOrders()"><i class="fas fa-sync"></i> Yangilash</button></div>
+<div class="cb" style="padding-bottom:0">
+<div class="sb2">
+<div class="siw"><i class="fas fa-search"></i><input id="osrch" placeholder="Buyurtma, ism, telefon..." oninput="filterO()"></div>
+<select class="fc" style="width:160px" id="ostf" onchange="filterO()"><option value="">Barcha holat</option><option value="pending">Kutilmoqda</option><option value="paid_pending">To'lov tekshirilmoqda</option><option value="confirmed">Tasdiqlangan</option><option value="processing">Tayyorlanmoqda</option><option value="shipped">Yo'lda</option><option value="delivered">Yetkazildi</option><option value="completed">Bajarildi</option><option value="cancelled">Bekor</option></select>
+<select class="fc" style="width:120px" id="opf" onchange="filterO()"><option value="">Barcha to'lov</option><option value="cash">💵 Naqd</option><option value="card">💳 Karta</option></select>
+<button class="btn bse bsm" onclick="clrOF()"><i class="fas fa-times"></i></button>
+</div></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Buyurtma №</th><th>Mijoz</th><th>Telefon</th><th>Telegram</th><th>Manzil</th><th>📍</th><th>Summa</th><th>To'lov</th><th>Holat</th><th>Sana</th><th>Amallar</th></tr></thead>
+<tbody id="otbody"><tr><td colspan="12"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+<div class="pg"><span id="oi">0 ta buyurtma</span><div class="pbs" id="op"></div></div>
+</div></div>
+
+<!-- CUSTOMERS -->
+<div class="ps" id="sec-customers">
+<div class="df jb ac mb3b"><div></div><div class="df g8">
+<button class="btn bse bsm" onclick="expCust()"><i class="fas fa-download"></i> Export</button>
+<button class="btn bp" onclick="openCustM()"><i class="fas fa-plus"></i> Mijoz qo'shish</button>
+</div></div>
+<div class="card">
+<div class="ch"><i class="fas fa-users tm"></i><span class="ct">Mijozlar</span><span class="badge bgi" id="custcb">0</span></div>
+<div class="cb" style="padding-bottom:0">
+<div class="sb2">
+<div class="siw"><i class="fas fa-search"></i><input id="custsrch" placeholder="Qidirish..." oninput="filterCust()"></div>
+<select class="fc" style="width:140px" id="custtf" onchange="filterCust()"><option value="">Barcha tur</option><option value="individual">Jismoniy</option><option value="company">Yuridik</option></select>
+</div></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Ism</th><th>Telefon</th><th>Telegram</th><th>Email</th><th>Manzil</th><th>Tur</th><th>Buyurtmalar</th><th>Sana</th><th>Amallar</th></tr></thead>
+<tbody id="custtbody"><tr><td colspan="10"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+<div class="pg"><span id="custinfo">0 ta mijoz</span><div class="pbs" id="custp"></div></div>
+</div></div>
+
+<!-- SUPPLIERS -->
+<div class="ps" id="sec-suppliers">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openSuppM()"><i class="fas fa-plus"></i> Yetkazuvchi qo'shish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-truck tm"></i><span class="ct">Yetkazuvchilar</span><span class="badge bgi" id="suppcb">0</span></div>
+<div class="cb" style="padding-bottom:0"><div class="sb2"><div class="siw"><i class="fas fa-search"></i><input id="suppsrch" placeholder="Qidirish..." oninput="filterSupp()"></div></div></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Kompaniya</th><th>Aloqa</th><th>Telefon</th><th>Email</th><th>Manzil</th><th>Holat</th><th>Amallar</th></tr></thead>
+<tbody id="supptbody"><tr><td colspan="8"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+</div></div>
+
+<!-- SALES -->
+<div class="ps" id="sec-sales">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openSaleM()"><i class="fas fa-plus"></i> Sotuv qo'shish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-shopping-cart tm"></i><span class="ct">Sotuvlar</span></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Mijoz</th><th>Mahsulotlar</th><th>Jami</th><th>To'lov</th><th>Holat</th><th>Sana</th></tr></thead>
+<tbody id="salbody"><tr><td colspan="7"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+</div></div>
+
+<!-- PURCHASES -->
+<div class="ps" id="sec-purchases">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openPurchM()"><i class="fas fa-plus"></i> Xarid qo'shish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-file-invoice tm"></i><span class="ct">Xaridlar</span></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Yetkazuvchi</th><th>Mahsulotlar</th><th>Jami</th><th>To'lov</th><th>Sana</th></tr></thead>
+<tbody id="purchbody"><tr><td colspan="6"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+</div></div>
+
+<!-- TRANSFERS -->
+<div class="ps" id="sec-transfers">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openTrM()"><i class="fas fa-plus"></i> Ko'chirish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-exchange-alt tm"></i><span class="ct">Ko'chirishlar</span><span class="badge bgi" id="trcb">0</span></div>
+<div class="cb" style="padding-bottom:0"><div class="sb2">
+<div class="siw"><i class="fas fa-search"></i><input id="trsrch" placeholder="Qidirish..." oninput="filterTr()"></div>
+<select class="fc" style="width:140px" id="trwff" onchange="filterTr()"><option value="">Barcha ombor</option></select>
+</div></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Mahsulot</th><th>Kategoriya</th><th>Miqdor</th><th>Dan</th><th>Gacha</th><th>Sabab</th><th>Sana</th><th>Izoh</th></tr></thead>
+<tbody id="trtbody"><tr><td colspan="9"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+</div></div>
+
+<!-- RETURNS -->
+<div class="ps" id="sec-returns">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openRetM()"><i class="fas fa-plus"></i> Qaytarish qo'shish</button></div>
+<div class="card">
+<div class="ch"><i class="fas fa-undo tm"></i><span class="ct">Qaytarishlar</span></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Mahsulot</th><th>Miqdor</th><th>Sabab</th><th>Sana</th><th>Holat</th></tr></thead>
+<tbody id="retbody"><tr><td colspan="6"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+</div></div>
+
+<!-- POS -->
+<div class="ps" id="sec-pos">
+<div class="g2">
+<div class="card"><div class="ch"><i class="fas fa-search tm"></i><span class="ct">Mahsulot tanlash</span>
+<select class="fc" style="width:140px" id="poswf" onchange="renderPosProds()"><option value="">Barcha ombor</option></select>
+</div><div class="cb">
+<div class="sb2 mb3b"><div class="siw" style="flex:1"><i class="fas fa-search"></i><input id="possrch" placeholder="Mahsulot qidirish..." oninput="renderPosProds()"></div></div>
+<div id="posgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:400px;overflow-y:auto"></div>
+</div></div>
+<div class="card"><div class="ch"><i class="fas fa-shopping-basket tm"></i><span class="ct">Savat</span><button class="btn bsm bse" onclick="clrCart()"><i class="fas fa-trash"></i></button></div>
+<div class="cb" id="poscart" style="min-height:200px"></div>
+<div style="padding:12px;border-top:1px solid var(--bo)">
+<div class="df jb mb2b"><span>Jami:</span><strong id="postotal">0 so'm</strong></div>
+<div class="fg"><label class="fl">Mijoz</label><select class="fc" id="poscust"><option value="">Naqd</option></select></div>
+<div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="pospay"><option value="cash">Naqd</option><option value="card">Karta</option><option value="transfer">O'tkazma</option></select></div>
+<button class="btn bs" style="width:100%" onclick="completeSale()"><i class="fas fa-check"></i> Sotuvni yakunlash</button>
+</div></div></div></div>
+
+<!-- INVENTORY CHECK -->
+<div class="ps" id="sec-inventory-check">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="loadIC()"><i class="fas fa-clipboard-check"></i> Inventarizatsiya boshlash</button></div>
+<div class="card"><div class="ch"><i class="fas fa-clipboard-check tm"></i><span class="ct">Inventarizatsiya</span>
+<select class="fc" style="width:140px" id="icwf" onchange="loadIC()"><option value="">Barcha ombor</option></select>
+</div>
+<div class="cb"><div class="tc"><table><thead><tr><th>Mahsulot</th><th>Ombor</th><th>Tizim miqdori</th><th>Haqiqiy miqdor</th><th>Farq</th><th>Holat</th></tr></thead><tbody id="ictbody"></tbody></table></div>
+<div style="margin-top:12px"><button class="btn bs bsm" onclick="saveIC()"><i class="fas fa-save"></i> Saqlash va yangilash</button></div>
+</div></div></div>
+
+<!-- ANALYTICS -->
+<div class="ps" id="sec-analytics">
+<div class="sg">
+<div class="sc"><div class="si bl"><i class="fas fa-chart-line"></i></div><div><div class="sv" id="ants">—</div><div class="sl">Jami sotuvlar</div></div></div>
+<div class="sc"><div class="si gr"><i class="fas fa-money-bill-wave"></i></div><div><div class="sv" id="antr">—</div><div class="sl">Jami daromad</div></div></div>
+<div class="sc"><div class="si or"><i class="fas fa-shopping-basket"></i></div><div><div class="sv" id="antp">—</div><div class="sl">Jami xaridlar</div></div></div>
+<div class="sc"><div class="si te"><i class="fas fa-warehouse"></i></div><div><div class="sv" id="antw">—</div><div class="sl">Omborlar</div></div></div>
+</div>
+<div class="g2">
+<div class="card"><div class="ch"><i class="fas fa-chart-bar tm"></i><span class="ct">Kategoriya taqsimoti</span></div><div class="cb" id="ancc"></div></div>
+<div class="card"><div class="ch"><i class="fas fa-list tm"></i><span class="ct">Ombor bo'yicha</span></div><div class="cb" id="anwh"></div></div>
+</div></div>
+
+<!-- REPORTS -->
+<div class="ps" id="sec-reports">
+<div class="g3" style="margin-bottom:16px">
+<div class="card" style="cursor:pointer" onclick="genRep('stock')"><div class="cb" style="text-align:center;padding:24px"><i class="fas fa-boxes fa-2x" style="color:var(--p);margin-bottom:10px"></i><div class="fw6">Inventar Hisoboti</div></div></div>
+<div class="card" style="cursor:pointer" onclick="genRep('orders')"><div class="cb" style="text-align:center;padding:24px"><i class="fas fa-clipboard-list fa-2x" style="color:var(--i);margin-bottom:10px"></i><div class="fw6">Buyurtmalar</div></div></div>
+<div class="card" style="cursor:pointer" onclick="genRep('lowstock')"><div class="cb" style="text-align:center;padding:24px"><i class="fas fa-exclamation-triangle fa-2x" style="color:var(--d);margin-bottom:10px"></i><div class="fw6">Kam Qolgan</div></div></div>
+<div class="card" style="cursor:pointer" onclick="genRep('warehouse')"><div class="cb" style="text-align:center;padding:24px"><i class="fas fa-warehouse fa-2x" style="color:#7c3aed;margin-bottom:10px"></i><div class="fw6">Omborlar Hisoboti</div></div></div>
+<div class="card" style="cursor:pointer" onclick="genRep('sales')"><div class="cb" style="text-align:center;padding:24px"><i class="fas fa-chart-line fa-2x" style="color:var(--s);margin-bottom:10px"></i><div class="fw6">Sotuv Hisoboti</div></div></div>
+<div class="card" style="cursor:pointer" onclick="genRep('qrcodes')"><div class="cb" style="text-align:center;padding:24px"><i class="fas fa-qrcode fa-2x" style="color:#7c3aed;margin-bottom:10px"></i><div class="fw6">QR Kodlar</div></div></div>
+</div>
+<div class="card"><div class="ch"><i class="fas fa-table tm"></i><span class="ct" id="reptitle">Hisobot tanlang</span><button class="btn bsm bse" onclick="window.print()" id="prbtn" style="display:none"><i class="fas fa-print"></i> Chop etish</button></div>
+<div class="cb" id="repcontent"><div class="es"><i class="fas fa-file-alt"></i><h3>Hisobot tanlang</h3><p>Yuqoridagi kartochkalardan birini bosing</p></div></div>
+</div></div>
+
+<!-- LOGS -->
+<div class="ps" id="sec-logs">
+<div class="card"><div class="ch"><i class="fas fa-history tm"></i><span class="ct">Barcha harakatlar</span><button class="btn bsm bse" onclick="clrLogs()"><i class="fas fa-trash"></i> Tozalash</button></div>
+<div class="cb"><div class="sb2"><div class="siw"><i class="fas fa-search"></i><input placeholder="Log qidirish..." oninput="filterLogs(this.value)"></div></div><div id="logslist"></div></div>
+</div></div>
+
+<!-- SETTINGS -->
+<div class="ps" id="sec-settings">
+<div class="g2">
+<div class="card"><div class="ch"><i class="fas fa-building tm"></i><span class="ct">Kompaniya</span></div>
+<div class="cb">
+<div class="fg"><label class="fl">Nomi</label><input class="fc" id="s-comp" value="Boomstroy"></div>
+<div class="fg"><label class="fl">Telefon</label><input class="fc" id="s-ph" placeholder="+998 90 000 00 00"></div>
+<div class="fg"><label class="fl">Manzil</label><input class="fc" id="s-adr" placeholder="Toshkent"></div>
+<button class="btn bp" onclick="saveSett()"><i class="fas fa-save"></i> Saqlash</button>
+</div></div>
+<div class="card"><div class="ch"><i class="fas fa-image tm"></i><span class="ct">imgbb API Kaliti</span></div>
+<div class="cb">
+<div class="fg"><label class="fl">imgbb API Key</label>
+<div class="df g8"><input class="fc" id="s-imgbb" placeholder="API kalitni kiriting..." type="password"><button class="btn bse bsm" onclick="togAPI()"><i class="fas fa-eye" id="apieyei"></i></button></div>
+<div id="apist"></div></div>
+<button class="btn bs" onclick="saveAPI()"><i class="fas fa-cloud-upload-alt"></i> Firebase'ga saqlash</button>
+</div></div>
+<div class="card"><div class="ch"><i class="fas fa-sliders-h tm"></i><span class="ct">Tizim Sozlamalari</span></div>
+<div class="cb">
+<div class="sr"><div><div class="fw6 f13">Avtomatik SKU</div></div><div class="tgl on" id="t-sku" onclick="togSet(this)"></div></div>
+<div class="sr"><div><div class="fw6 f13">QR kod</div></div><div class="tgl on" id="t-qr" onclick="togSet(this)"></div></div>
+<div class="sr"><div><div class="fw6 f13">Avtomatik rasm</div></div><div class="tgl on" id="t-img" onclick="togSet(this)"></div></div>
+<div class="fg" style="margin-top:12px"><label class="fl">Standart min zaxira</label><input class="fc" type="number" id="s-min" value="5"></div>
+<div class="fg"><label class="fl">Valyuta</label><select class="fc" id="s-cur"><option value="UZS">So'm (UZS)</option><option value="USD">Dollar (USD)</option></select></div>
+</div></div>
+<div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
+<div class="cb">
+<div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.0.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+</div></div>
+</div></div>
+
+<!-- USERS -->
+<div class="ps" id="sec-users">
+<div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openUM()"><i class="fas fa-plus"></i> Foydalanuvchi qo'shish</button></div>
+<div class="card"><div class="ch"><i class="fas fa-user-shield tm"></i><span class="ct">Foydalanuvchilar</span></div>
+<div class="tc"><table><thead><tr><th>#</th><th>Ism</th><th>Telefon</th><th>Telegram</th><th>Rol</th><th>Buyurtmalar</th><th>Sana</th><th>Amallar</th></tr></thead>
+<tbody id="usertbody"><tr><td colspan="8"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
+</div></div>
+
+</div><!-- /pc -->
+</div><!-- /main -->
+
+<!-- ═══ MODALS ═══════════════════════════════════════════ -->
+
+<!-- PRODUCT MODAL -->
+<div class="mo" id="pm">
+<div class="modal">
+<div class="mh"><i class="fas fa-box"></i><span class="mt" id="pmtitle">Mahsulot qo'shish</span><button class="mc" onclick="closeM('pm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<input type="hidden" id="pm-id">
+<div class="fg"><label class="fl">Rasm</label>
+<div class="iua" id="pm-iarea"><input type="file" accept="image/*" onchange="handlePI(event)"><div id="pm-iprev"><i class="fas fa-camera" style="font-size:28px;display:block;margin:0 auto 6px;color:var(--tl)"></i><div class="f12 tm">Rasm yuklash</div></div></div>
+<div id="pm-istat" style="font-size:12px;margin-top:4px;color:var(--tl)"></div>
+<button class="btn bse bsm" style="margin-top:6px" onclick="autoFindImg()"><i class="fas fa-search"></i> Rasmni avtomatik topish</button></div>
+<div class="fr">
+<div class="fg"><label class="fl">Nomi *</label><input class="fc" id="pm-name" oninput="updSKU()"></div>
+<div class="fg"><label class="fl">SKU <button class="btn bxs bse" onclick="genSKUM()"><i class="fas fa-magic"></i></button></label><input class="fc" id="pm-sku" readonly style="background:#f1f5f9;font-family:monospace"></div>
+</div>
+<div class="fr">
+<div class="fg"><label class="fl">Kategoriya *</label><select class="fc" id="pm-cat" onchange="onCatCh()"><option value="">Tanlang...</option></select></div>
+<div class="fg"><label class="fl">Brend</label><input class="fc" id="pm-brand"></div>
+</div>
+<div class="fr">
+<div class="fg"><label class="fl">Sotish narxi *</label><input class="fc" type="number" id="pm-price"></div>
+<div class="fg"><label class="fl">Ombor narxi</label><input class="fc" type="number" id="pm-cost"></div>
+</div>
+<div class="fr">
+<div class="fg"><label class="fl">Miqdor *</label><input class="fc" type="number" id="pm-qty"></div>
+<div class="fg"><label class="fl">Min zaxira *</label><input class="fc" type="number" id="pm-minqty" value="5"></div>
+</div>
+<div class="fr">
+<div class="fg"><label class="fl">O'lchov birligi</label><select class="fc" id="pm-unit"><option value="dona">Dona</option><option value="kg">Kg</option><option value="litr">Litr</option><option value="metr">Metr</option><option value="quti">Quti</option><option value="metr2">m²</option><option value="metr3">m³</option><option value="tonna">Tonna</option></select></div>
+<div class="fg"><label class="fl">Ombor *</label><select class="fc" id="pm-wh"><option value="">Tanlang...</option></select></div>
+</div>
+<div class="fg"><label class="fl">Tavsif</label><textarea class="fc" id="pm-desc"></textarea></div>
+<div class="fg"><label class="fl">Holat</label><select class="fc" id="pm-stat"><option value="active">Faol</option><option value="inactive">Faol emas</option></select></div>
+<div id="pm-qrprev" style="display:none;margin-top:10px"><label class="fl">QR Kod</label><div id="pm-qrc" class="qrc"></div></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('pm')">Bekor</button><button class="btn bp" id="pm-savebtn" onclick="saveProd()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- STOCK IN MODAL (TO'LIQ) -->
+<div class="mo" id="sim">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-arrow-circle-down"></i><span class="mt">Kirim qo'shish</span><button class="mc" onclick="closeM('sim')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr">
+<div class="fg"><label class="fl">Ombor *</label><select class="fc" id="si-wh" onchange="filterSIProd()"><option value="">Tanlang...</option></select></div>
+<div class="fg"><label class="fl">Yetkazuvchi</label><select class="fc" id="si-supp"><option value="">Tanlang...</option></select></div>
+</div>
+<div class="fg"><label class="fl">Faktura raqami</label><input class="fc" id="si-doc" placeholder="INV-001"></div>
+<div class="fg"><label class="fl">Mahsulotlar qo'shish</label>
+<div class="df g8" style="flex-wrap:wrap">
+<select class="fc" style="flex:1;min-width:180px" id="si-prodslt"><option value="">Mahsulot tanlang...</option></select>
+<input class="fc" type="number" id="si-qty2" placeholder="Miqdor" style="width:90px" value="1">
+<input class="fc" type="number" id="si-prc2" placeholder="Narx" style="width:100px">
+<button class="btn bp bsm" onclick="addSIItem()"><i class="fas fa-plus"></i></button>
+</div></div>
+<div id="si-items" style="margin-bottom:12px"></div>
+<div class="df jb" style="border-top:1px solid var(--bo);padding-top:10px"><span class="fw6">Jami:</span><span class="fw6" id="si-total">0 so'm</span></div>
+<div class="fg" style="margin-top:10px"><label class="fl">Izoh</label><textarea class="fc" id="si-note"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('sim')">Bekor</button><button class="btn bs" onclick="saveSI()"><i class="fas fa-check"></i> Kiritish</button></div>
+</div></div>
+
+<!-- STOCK OUT MODAL (TO'LIQ) -->
+<div class="mo" id="som">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-arrow-circle-up"></i><span class="mt">Chiqim qo'shish</span><button class="mc" onclick="closeM('som')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr">
+<div class="fg"><label class="fl">Ombor *</label><select class="fc" id="so-wh" onchange="filterSOProd()"><option value="">Tanlang...</option></select></div>
+<div class="fg"><label class="fl">Sabab *</label>
+<select class="fc" id="so-reason" onchange="togSOCustom(this.value)">
+<option value="">Tanlang...</option>
+<option value="sale">Sotuv</option>
+<option value="damage">Buzilgan / Singan</option>
+<option value="loss">Yo'qolgan</option>
+<option value="theft">O'g'irlik</option>
+<option value="expiry">Muddati o'tgan</option>
+<option value="return_supplier">Yetkazuvchiga qaytarish</option>
+<option value="return_customer">Mijozdan qaytarilgan (defekt)</option>
+<option value="internal_use">Ichki foydalanish</option>
+<option value="production">Ishlab chiqarishga</option>
+<option value="gift">Sovg'a / Namuna</option>
+<option value="discount_write_off">Chegirma bilan chiqarish</option>
+<option value="quality_control">Sifat nazorati (rad etildi)</option>
+<option value="warehouse_transfer">Ombor ko'chirish</option>
+<option value="inventory_adjustment">Inventar to'g'irlash</option>
+<option value="natural_loss">Tabiiy yo'qotish</option>
+<option value="fire_disaster">Yong'in / Ofat</option>
+<option value="flood">Suv toshqini</option>
+<option value="packaging_loss">Qadoqlash yo'qotishi</option>
+<option value="transport_damage">Transport zararlanishi</option>
+<option value="other">Boshqa sabab</option>
+<option value="custom">Qo'lda kiritish...</option>
+</select>
+<input class="fc" id="so-custom-reason" placeholder="Sababni kiriting..." style="display:none;margin-top:6px">
+</div>
+</div>
+<div class="fg"><label class="fl">Mahsulotlar qo'shish</label>
+<div class="df g8" style="flex-wrap:wrap">
+<select class="fc" style="flex:1;min-width:180px" id="so-prodslt"><option value="">Mahsulot tanlang...</option></select>
+<input class="fc" type="number" id="so-qty2" placeholder="Miqdor" style="width:90px" value="1">
+<button class="btn bw bsm" onclick="addSOItem()"><i class="fas fa-plus"></i></button>
+</div></div>
+<div id="so-items" style="margin-bottom:12px"></div>
+<div class="df jb" style="border-top:1px solid var(--bo);padding-top:10px"><span class="fw6">Jami chiqariladi:</span><span class="fw6" id="so-total">0 dona</span></div>
+<div class="fr">
+<div class="fg"><label class="fl">Mijoz</label><select class="fc" id="so-cust"><option value="">Tanlang...</option></select></div>
+<div class="fg"><label class="fl">Sana</label><input class="fc" type="date" id="so-date"></div>
+</div>
+<div class="fg"><label class="fl">Izoh</label><textarea class="fc" id="so-note"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('som')">Bekor</button><button class="btn bw" onclick="saveSO()"><i class="fas fa-check"></i> Chiqarish</button></div>
+</div></div>
+
+<!-- WAREHOUSE MODAL -->
+<div class="mo" id="whm">
+<div class="modal">
+<div class="mh"><i class="fas fa-warehouse"></i><span class="mt" id="whmtitle">Ombor qo'shish</span><button class="mc" onclick="closeM('whm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<input type="hidden" id="whm-id">
+<div class="fg"><label class="fl">Ombor nomi *</label><input class="fc" id="whm-name"></div>
+<div class="fg"><label class="fl">Manzil</label><input class="fc" id="whm-adr"></div>
+<div class="fr">
+<div class="fg"><label class="fl">Sig'im (m²)</label><input class="fc" type="number" id="whm-cap"></div>
+<div class="fg"><label class="fl">Mas'ul shaxs</label><input class="fc" id="whm-mgr"></div>
+</div>
+<div class="fr">
+<div class="fg"><label class="fl">Telefon</label><input class="fc" id="whm-ph"></div>
+<div class="fg"><label class="fl">Holat</label><select class="fc" id="whm-stat"><option value="active">Faol</option><option value="inactive">Faol emas</option></select></div>
+</div>
+<div class="fg"><label class="fl">Izoh</label><textarea class="fc" id="whm-note"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('whm')">Bekor</button><button class="btn bp" onclick="saveWH()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- CATEGORY MODAL -->
+<div class="mo" id="catm">
+<div class="modal">
+<div class="mh"><i class="fas fa-tag"></i><span class="mt" id="catmtitle">Kategoriya qo'shish</span><button class="mc" onclick="closeM('catm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<input type="hidden" id="cm-id">
+<div class="fg"><label class="fl">Nomi *</label><input class="fc" id="cm-name"></div>
+<div class="fr">
+<div class="fg"><label class="fl">Ikonka (emoji)</label><input class="fc" id="cm-icon" placeholder="📦" maxlength="4"></div>
+<div class="fg"><label class="fl">Rang</label><input class="fc" type="color" id="cm-color" value="#1a56db"></div>
+</div>
+<div class="fg"><label class="fl">Rasm URL</label>
+<div class="df g8"><input class="fc" id="cm-img" placeholder="URL..."><button class="btn bse bsm" onclick="autoFindCatImg()"><i class="fas fa-search"></i></button></div>
+</div>
+<div class="fg"><label class="fl">Tavsif</label><textarea class="fc" id="cm-desc"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('catm')">Bekor</button><button class="btn bp" onclick="saveCat()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- TRANSFER MODAL -->
+<div class="mo" id="trm">
+<div class="modal">
+<div class="mh"><i class="fas fa-exchange-alt"></i><span class="mt">Mahsulot ko'chirish</span><button class="mc" onclick="closeM('trm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr">
+<div class="fg"><label class="fl">Dan (Ombor)</label><select class="fc" id="tr-from" onchange="filterTrProd()"><option value="">Tanlang...</option></select></div>
+<div class="fg"><label class="fl">Gacha (Ombor)</label><select class="fc" id="tr-to"><option value="">Tanlang...</option></select></div>
+</div>
+<div class="fg"><label class="fl">Mahsulot</label>
+<div class="df g8">
+<select class="fc" style="flex:1" id="tr-prodslt"><option value="">Mahsulot tanlang...</option></select>
+<input class="fc" type="number" id="tr-qty2" placeholder="Miqdor" style="width:90px" value="1">
+<button class="btn bp bsm" onclick="addTrItem()"><i class="fas fa-plus"></i></button>
+</div></div>
+<div id="tr-items" style="margin-bottom:12px"></div>
+<div class="fg"><label class="fl">Sabab</label><select class="fc" id="tr-reason"><option value="rebalance">Muvozanatlash</option><option value="request">So'rov bo'yicha</option><option value="overflow">Ortiqcha</option><option value="shortage">Kamchilik</option><option value="other">Boshqa</option></select></div>
+<div class="fg"><label class="fl">Izoh</label><textarea class="fc" id="tr-note"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('trm')">Bekor</button><button class="btn bp" onclick="saveTr()"><i class="fas fa-check"></i> Ko'chirish</button></div>
+</div></div>
+
+<!-- CUSTOMER MODAL -->
+<div class="mo" id="custm">
+<div class="modal">
+<div class="mh"><i class="fas fa-user"></i><span class="mt" id="custmtitle">Mijoz qo'shish</span><button class="mc" onclick="closeM('custm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<input type="hidden" id="custm-id">
+<div class="fr"><div class="fg"><label class="fl">Ism *</label><input class="fc" id="custm-name"></div><div class="fg"><label class="fl">Tur</label><select class="fc" id="custm-type"><option value="individual">Jismoniy</option><option value="company">Yuridik</option></select></div></div>
+<div class="fr"><div class="fg"><label class="fl">Telefon *</label><input class="fc" id="custm-ph" placeholder="+998 90 000 00 00"></div><div class="fg"><label class="fl">Email</label><input class="fc" type="email" id="custm-email"></div></div>
+<div class="fg"><label class="fl">Manzil</label><input class="fc" id="custm-adr"></div>
+<div class="fr"><div class="fg"><label class="fl">Telegram username</label><input class="fc" id="custm-tg" placeholder="username"></div><div class="fg"><label class="fl">Telegram ID</label><input class="fc" id="custm-tgid"></div></div>
+<div class="fg"><label class="fl">Izoh</label><textarea class="fc" id="custm-note"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('custm')">Bekor</button><button class="btn bp" onclick="saveCust()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- SUPPLIER MODAL -->
+<div class="mo" id="suppm">
+<div class="modal">
+<div class="mh"><i class="fas fa-truck"></i><span class="mt" id="suppmtitle">Yetkazuvchi qo'shish</span><button class="mc" onclick="closeM('suppm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<input type="hidden" id="suppm-id">
+<div class="fr"><div class="fg"><label class="fl">Kompaniya nomi *</label><input class="fc" id="suppm-name"></div><div class="fg"><label class="fl">Aloqa shaxs</label><input class="fc" id="suppm-cont"></div></div>
+<div class="fr"><div class="fg"><label class="fl">Telefon *</label><input class="fc" id="suppm-ph"></div><div class="fg"><label class="fl">Email</label><input class="fc" type="email" id="suppm-email"></div></div>
+<div class="fg"><label class="fl">Manzil</label><input class="fc" id="suppm-adr"></div>
+<div class="fg"><label class="fl">Holat</label><select class="fc" id="suppm-stat"><option value="active">Faol</option><option value="inactive">Faol emas</option></select></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('suppm')">Bekor</button><button class="btn bp" onclick="saveSupp()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- SALE MODAL -->
+<div class="mo" id="salem">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-shopping-cart"></i><span class="mt">Sotuv qo'shish</span><button class="mc" onclick="closeM('salem')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr"><div class="fg"><label class="fl">Mijoz</label><select class="fc" id="salem-cust"><option value="">Naqd</option></select></div><div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="salem-pay"><option value="cash">Naqd</option><option value="card">Karta</option><option value="transfer">O'tkazma</option></select></div></div>
+<div class="fg"><label class="fl">Mahsulot qo'shish</label>
+<div class="df g8"><select class="fc" id="salem-prodslt"><option value="">Tanlang...</option></select><input class="fc" type="number" id="salem-qty" style="width:90px" value="1"><button class="btn bp bsm" onclick="addSalItem()"><i class="fas fa-plus"></i></button></div></div>
+<div id="salem-items" style="margin-bottom:12px"></div>
+<div class="df jb" style="border-top:1px solid var(--bo);padding-top:10px"><span class="fw6">JAMI:</span><strong id="salem-total" style="color:var(--p)">0 so'm</strong></div>
+<div class="fg" style="margin-top:10px"><label class="fl">Izoh</label><textarea class="fc" id="salem-note" rows="2"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('salem')">Bekor</button><button class="btn bs" onclick="saveSale()"><i class="fas fa-check"></i> Saqlash</button></div>
+</div></div>
+
+<!-- PURCHASE MODAL -->
+<div class="mo" id="purchm">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-file-invoice"></i><span class="mt">Xarid qo'shish</span><button class="mc" onclick="closeM('purchm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr"><div class="fg"><label class="fl">Yetkazuvchi</label><select class="fc" id="purchm-supp"><option value="">Tanlang...</option></select></div><div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="purchm-pay"><option value="cash">Naqd</option><option value="transfer">O'tkazma</option><option value="credit">Nasiya</option></select></div></div>
+<div class="fg"><label class="fl">Mahsulot qo'shish</label>
+<div class="df g8"><select class="fc" id="purchm-prodslt"><option value="">Tanlang...</option></select><input class="fc" type="number" id="purchm-qty" placeholder="Miqdor" style="width:80px"><input class="fc" type="number" id="purchm-prc" placeholder="Narx" style="width:100px"><button class="btn bp bsm" onclick="addPurchItem()"><i class="fas fa-plus"></i></button></div></div>
+<div id="purchm-items"></div>
+<div class="df jb" style="border-top:1px solid var(--bo);padding-top:10px"><span class="fw6">Jami:</span><span class="fw6" id="purchm-total">0 so'm</span></div>
+<div class="fg" style="margin-top:10px"><label class="fl">Faktura</label><input class="fc" id="purchm-inv"></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('purchm')">Bekor</button><button class="btn bp" onclick="savePurch()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- RETURN MODAL -->
+<div class="mo" id="retm">
+<div class="modal">
+<div class="mh"><i class="fas fa-undo"></i><span class="mt">Qaytarish qo'shish</span><button class="mc" onclick="closeM('retm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr"><div class="fg"><label class="fl">Mahsulot *</label><select class="fc" id="retm-prod"><option value="">Tanlang...</option></select></div><div class="fg"><label class="fl">Miqdor *</label><input class="fc" type="number" id="retm-qty"></div></div>
+<div class="fr"><div class="fg"><label class="fl">Tur</label><select class="fc" id="retm-type"><option value="from_customer">Mijozdan</option><option value="to_supplier">Yetkazuvchiga</option></select></div><div class="fg"><label class="fl">Holat</label><select class="fc" id="retm-stat"><option value="pending">Kutilmoqda</option><option value="approved">Tasdiqlangan</option><option value="completed">Bajarildi</option></select></div></div>
+<div class="fg"><label class="fl">Sabab *</label><textarea class="fc" id="retm-reason"></textarea></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('retm')">Bekor</button><button class="btn bp" onclick="saveRet()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="mo" id="odm">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-receipt" style="color:var(--p)"></i><span class="mt" id="odtitle">Buyurtma tafsiloti</span><button class="mc" onclick="closeM('odm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2" id="odbody"></div>
+<div class="mf" id="odfooter"></div>
+</div></div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="mo" id="pdm">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-info-circle"></i><span class="mt">Mahsulot ma'lumotlari</span><button class="mc" onclick="closeM('pdm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2" id="pdbody"></div>
+<div class="mf" id="pdfooter"></div>
+</div></div>
+
+<!-- USER MODAL -->
+<div class="mo" id="um">
+<div class="modal">
+<div class="mh"><i class="fas fa-user-plus"></i><span class="mt">Foydalanuvchi qo'shish</span><button class="mc" onclick="closeM('um')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="fr"><div class="fg"><label class="fl">Ism *</label><input class="fc" id="um-name"></div><div class="fg"><label class="fl">Email *</label><input class="fc" type="email" id="um-email"></div></div>
+<div class="fr"><div class="fg"><label class="fl">Rol</label><select class="fc" id="um-role"><option value="admin">Admin</option><option value="manager">Menejer</option><option value="cashier">Kassir</option><option value="viewer">Ko'ruvchi</option></select></div><div class="fg"><label class="fl">Holat</label><select class="fc" id="um-stat"><option value="active">Faol</option><option value="inactive">Faol emas</option></select></div></div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('um')">Bekor</button><button class="btn bp" onclick="saveUser()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- CONFIRM MODAL -->
+<div class="mo" id="confm">
+<div class="modal msm">
+<div class="mh"><i class="fas fa-question-circle" style="color:var(--w)"></i><span class="mt">Tasdiqlash</span><button class="mc" onclick="closeM('confm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2"><p id="confmsg" style="font-size:14px"></p></div>
+<div class="mf"><button class="btn bse" onclick="closeM('confm')">Bekor</button><button class="btn bd" id="confbtn" onclick="execConf()">Tasdiqlash</button></div>
+</div></div>
+
+<div id="tc2"></div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import{getFirestore,collection,addDoc,getDocs,doc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,limit,writeBatch,getDoc,setDoc,where}from"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const FC={apiKey:"AIzaSyACliLcu37e-qLtG4rGZXRQsRQhHlZf6ZY",authDomain:"boomstroy-7bfdc.firebaseapp.com",projectId:"boomstroy-7bfdc",storageBucket:"boomstroy-7bfdc.firebasestorage.app",messagingSenderId:"615764370606",appId:"1:615764370606:web:3d28123cb3e21c10d8393f"};
+const app=initializeApp(FC);const db=getFirestore(app);
+const TGT="8738939484:AAH0RJYIiGgSRK1FvfBFks_u5q3smd274l4";
+async function tgSend(id,txt){if(!id)return;try{await fetch(`https://api.telegram.org/bot${TGT}/sendMessage`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:id,text:txt,parse_mode:"HTML"})})}catch(e){}}
+
+let IMGBB="";
+let products=[],categories=[],customers=[],suppliers=[],warehouses=[],stockIns=[],stockOuts=[],sales=[],purchases=[],orders=[],transfers=[],returns=[],logs=[],users=[];
+let curSec="dashboard";
+let pPage=1,pPS=15,filtP=[];
+let oFilt=[],oPage=1,oPS=20;
+let sIPage=1,sIPS=20,filtSI=[];
+let sOPage=1,sOPS=20,filtSO=[];
+let trFilt=[],trPage=1,trPS=20;
+let sortK="name",sortD=1;
+let confCB=null;
+let pendImgFile=null,pendAutoImg=null;
+let cartItems=[],saleItems=[],purchItems=[],siItems=[],soItems=[],trItems=[];
+let editPId=null,editCatId=null,editCustId=null,editWHId=null,editSuppId=null;
+
+const STM={pending:{lbl:"Kutilmoqda",cls:"bgw",icon:"fa-hourglass-half"},paid_pending:{lbl:"To'lov tekshirilmoqda",cls:"bgi",icon:"fa-credit-card"},confirmed:{lbl:"Tasdiqlangan",cls:"bgi",icon:"fa-check-circle"},processing:{lbl:"Tayyorlanmoqda",cls:"bgp",icon:"fa-cog"},shipped:{lbl:"Yo'lda",cls:"bgi",icon:"fa-truck"},delivered:{lbl:"Yetkazildi",cls:"bgs",icon:"fa-check-double"},completed:{lbl:"Bajarildi",cls:"bgs",icon:"fa-check-double"},cancelled:{lbl:"Bekor qilingan",cls:"bgd",icon:"fa-times-circle"}};
+const PL={cash:"💵 Naqd",card:"💳 Karta",transfer:"🔄 O'tkazma",credit:"📋 Nasiya"};
+const REASONS={sale:"Sotuv",damage:"Buzilgan/Singan",loss:"Yo'qolgan",theft:"O'g'irlik",expiry:"Muddati o'tgan",return_supplier:"Yetkazuvchiga qaytarish",return_customer:"Mijozdan qaytarilgan",internal_use:"Ichki foydalanish",production:"Ishlab chiqarishga",gift:"Sovg'a/Namuna",discount_write_off:"Chegirma chiqarish",quality_control:"Sifat nazorati",warehouse_transfer:"Ombor ko'chirish",inventory_adjustment:"Inventar to'g'irlash",natural_loss:"Tabiiy yo'qotish",fire_disaster:"Yong'in/Ofat",flood:"Suv toshqini",packaging_loss:"Qadoqlash yo'qotishi",transport_damage:"Transport zararlanishi",other:"Boshqa sabab"};
+
+const fN=n=>(n||0).toLocaleString("uz-UZ");
+function fD(ts){if(!ts)return"—";try{const d=ts?.toDate?ts.toDate():new Date(ts);return d.toLocaleDateString("uz-UZ")+" "+d.toLocaleTimeString("uz-UZ",{hour:"2-digit",minute:"2-digit"})}catch{return"—"}}
+function setConn(ok){document.getElementById("cd").className=ok?"on":"";document.getElementById("ct").textContent=ok?"Firebase ulangan":"Ulanmagan"}
+window.showToast=function(msg,type="",dur=3000){const ic={success:"fa-check-circle",error:"fa-times-circle",warning:"fa-exclamation-triangle"};const t=document.createElement("div");t.className=`toast${type?" "+type:""}`;t.innerHTML=`<i class="fas ${ic[type]||"fa-info-circle"}"></i> ${msg}`;document.getElementById("tc2").appendChild(t);setTimeout(()=>t.remove(),dur)};
+window.closeM=id=>document.getElementById(id)?.classList.remove("open");
+function openM(id){document.getElementById(id)?.classList.add("open")}
+document.querySelectorAll(".mo").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
+window.togSet=el=>{if(el.classList.contains("locked"))return showToast("O'chirilmaydi","warning");el.classList.toggle("on")};
+window.toggleSB=()=>{document.getElementById("sidebar").classList.toggle("open");document.getElementById("sov").style.display=document.getElementById("sidebar").classList.contains("open")?"block":"none"};
+window.clos=()=>{document.getElementById("sidebar").classList.remove("open");document.getElementById("sov").style.display="none"};
+window.showConfirm=function(msg,cb){confCB=cb;document.getElementById("confmsg").textContent=msg;openM("confm")};
+window.execConf=function(){if(confCB){confCB();confCB=null}closeM("confm")};
+
+// NAV
+window.nav=function(sec){
+  document.querySelectorAll(".ps").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  document.getElementById("sec-"+sec)?.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(n=>{if(n.getAttribute("onclick")?.includes(`'${sec}'`))n.classList.add("active")});
+  const titles={dashboard:"Dashboard",products:"Mahsulotlar",categories:"Kategoriyalar",customers:"Mijozlar",suppliers:"Yetkazuvchilar",warehouses:"Omborlar","stock-in":"Kirim","stock-out":"Chiqim",sales:"Sotuvlar",purchases:"Xaridlar",orders:"Buyurtmalar",transfers:"Ko'chirishlar",returns:"Qaytarishlar",pos:"Kassa (POS)",analytics:"Tahlil",reports:"Hisobotlar",logs:"Harakatlar",settings:"Sozlamalar",users:"Foydalanuvchilar","inventory-check":"Inventarizatsiya"};
+  document.getElementById("tbt").textContent=titles[sec]||sec;
+  curSec=sec;clos();
+  if(sec==="dashboard")loadDash();
+  else if(sec==="products"){renderP();renderLSB("plsb")}
+  else if(sec==="categories")renderCats();
+  else if(sec==="customers")renderCust();
+  else if(sec==="suppliers")renderSupp();
+  else if(sec==="warehouses")renderWH();
+  else if(sec==="stock-in")renderSI();
+  else if(sec==="stock-out")renderSO();
+  else if(sec==="sales")renderSales();
+  else if(sec==="purchases")renderPurch();
+  else if(sec==="orders")loadOrders();
+  else if(sec==="transfers")renderTr();
+  else if(sec==="returns")renderRet();
+  else if(sec==="pos")initPOS();
+  else if(sec==="analytics")loadAnalytics();
+  else if(sec==="logs")renderLogs();
+  else if(sec==="users")renderUsers();
+  else if(sec==="inventory-check")loadIC();
+  else if(sec==="settings")updAPIStatus();
+};
+
+// LOAD ALL
+async function loadAll(){
+  try{
+    await Promise.all([loadAPIKey(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers()]);
+    setConn(true);loadDash();updAllLSB();updAllSelects();
+  }catch(e){setConn(false);showToast("Firebase xatosi: "+e.message,"error")}
+}
+
+// API KEY
+async function loadAPIKey(){try{const d=await getDoc(doc(db,"settings","imgbb"));if(d.exists()){IMGBB=d.data().apiKey||"";if(IMGBB)localStorage.setItem("ibk",IMGBB)}else{const c=localStorage.getItem("ibk");if(c)IMGBB=c}updAPIStatus()}catch(e){const c=localStorage.getItem("ibk");if(c)IMGBB=c}}
+function updAPIStatus(){const el=document.getElementById("apist");const inp=document.getElementById("s-imgbb");if(!el)return;if(IMGBB){if(inp)inp.value=IMGBB;el.innerHTML='<span class="aks sv"><i class="fas fa-check-circle"></i> Saqlangan</span>'}else{el.innerHTML='<span class="aks ms"><i class="fas fa-times-circle"></i> Kiritilmagan</span>'}}
+window.saveAPI=async function(){const k=document.getElementById("s-imgbb").value.trim();if(!k)return showToast("API kalit bo'sh!","error");try{await setDoc(doc(db,"settings","imgbb"),{apiKey:k,updatedAt:serverTimestamp()});IMGBB=k;localStorage.setItem("ibk",k);updAPIStatus();showToast("API kalit saqlandi ✅","success",4000)}catch(e){showToast("Xato: "+e.message,"error")}};
+window.togAPI=function(){const i=document.getElementById("s-imgbb");const ic=document.getElementById("apieyei");if(i.type==="password"){i.type="text";ic.className="fas fa-eye-slash"}else{i.type="password";ic.className="fas fa-eye"}};
+
+// IMAGE
+async function uploadImgbb(file){if(!IMGBB){showToast("imgbb API kaliti yo'q!","error",5000);return null}const fd=new FormData();fd.append("image",file);const r=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB}`,{method:"POST",body:fd});const d=await r.json();if(d.success)return d.data.url;throw new Error(d.error?.message||"imgbb xatosi")}
+async function findImg(name,cat){return`https://source.unsplash.com/400x400/?${encodeURIComponent(name+" "+(cat||"")+" building material")}`}
+window.autoFindImg=async function(){const name=document.getElementById("pm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");const catId=document.getElementById("pm-cat").value;const cat=categories.find(c=>c.id===catId);const st=document.getElementById("pm-istat");st.innerHTML='<i class="fas fa-spinner fa-spin"></i> Qidirilmoqda...';try{const url=await findImg(name,cat?.name||"");document.getElementById("pm-iprev").innerHTML=`<img src="${url}" class="ipv" alt="">`;pendAutoImg=url;st.innerHTML='<i class="fas fa-check-circle" style="color:var(--s)"></i> Topildi!'}catch(e){st.innerHTML='<i class="fas fa-times-circle" style="color:var(--d)"></i> Topilmadi'}};
+window.autoFindCatImg=async function(){const name=document.getElementById("cm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");try{document.getElementById("cm-img").value=await findImg(name,"construction")}catch(e){}};
+window.handlePI=function(e){const f=e.target.files[0];if(!f)return;if(f.size>10*1024*1024)return showToast("10MB dan katta!","error");pendImgFile=f;pendAutoImg=null;const r=new FileReader();r.onload=ev=>document.getElementById("pm-iprev").innerHTML=`<img src="${ev.target.result}" class="ipv">`;r.readAsDataURL(f);document.getElementById("pm-istat").innerHTML=`<i class="fas fa-info-circle"></i> ${f.name}`};
+
+// SKU
+function genSKU(name,cat){const nc=(name||"").replace(/[^a-zA-Z0-9]/g,"").toUpperCase().substring(0,3);const cc=(cat||"").replace(/[^a-zA-Z0-9]/g,"").toUpperCase().substring(0,2);const num=Math.floor(Math.random()*9000)+1000;return`BS-${nc}${cc?"-"+cc:""}-${num}`}
+window.updSKU=function(){const el=document.getElementById("t-sku");if(el&&el.classList.contains("on")){const n=document.getElementById("pm-name").value.trim();if(n&&!document.getElementById("pm-id").value){const c=categories.find(x=>x.id===document.getElementById("pm-cat").value);document.getElementById("pm-sku").value=genSKU(n,c?.name||"")}}};
+window.onCatCh=function(){updSKU()};
+window.genSKUM=function(){const n=document.getElementById("pm-name").value.trim()||"PROD";const c=categories.find(x=>x.id===document.getElementById("pm-cat").value);const sk=genSKU(n,c?.name||"");document.getElementById("pm-sku").value=sk;showToast("SKU: "+sk,"success")};
+
+// QR
+function genQR(cid,data,size=120){const c=document.getElementById(cid);if(!c)return;c.innerHTML="";try{new QRCode(c,{text:data,width:size,height:size,colorDark:"#1e293b",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}catch(e){c.innerHTML=`<div style="width:${size}px;height:${size}px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid var(--bo);border-radius:6px">QR</div>`}}
+function getQRD(p){return JSON.stringify({id:p.id,sku:p.sku||"",name:p.name||"",price:p.price||0,unit:p.unit||"dona",company:"Boomstroy"})}
+
+// STOCK STATUS
+function stSt(p){if((p.quantity||0)<=0)return{cls:"bgd",label:"Tugagan",val:"out"};if((p.quantity||0)<=(p.minQuantity||5))return{cls:"bgw",label:"Kam qolgan",val:"low"};return{cls:"bgs",label:"Normal",val:"ok"}}
+
+// LOW STOCK BANNER
+function renderLSB(id){const el=document.getElementById(id);if(!el)return;const low=products.filter(p=>stSt(p).val!=="ok");if(!low.length){el.innerHTML="";return}const out=low.filter(p=>stSt(p).val==="out"),lw=low.filter(p=>stSt(p).val==="low");el.innerHTML=`<div class="lsa"><div class="ai"><i class="fas fa-exclamation-triangle"></i></div><div style="flex:1"><div style="font-weight:700;color:var(--d);font-size:13px;margin-bottom:4px">🔔 Zaxira ogohlantirishi — ${low.length} ta mahsulot</div>${out.length?`<div class="f12" style="color:#b91c1c;margin-bottom:4px"><strong>Tugagan (${out.length}):</strong></div><div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px">${out.map(p=>`<span class="apc out">${p.name}: 0</span>`).join("")}</div>`:""}${lw.length?`<div class="f12" style="color:#b45309;margin-bottom:4px"><strong>Kam qolgan (${lw.length}):</strong></div><div style="display:flex;flex-wrap:wrap;gap:5px">${lw.map(p=>`<span class="apc">${p.name}: ${p.quantity}</span>`).join("")}</div>`:""}</div><button onclick="openSIM()" class="btn bs bsm"><i class="fas fa-plus"></i> Kirim</button></div>`}
+function updAllLSB(){renderLSB("dlsb");renderLSB("plsb");const cnt=products.filter(p=>stSt(p).val!=="ok").length;const nb=document.getElementById("nb-low");if(nb)nb.textContent=cnt||"";const sd=document.getElementById("stl");if(sd)sd.textContent=cnt;const nd=document.getElementById("ndot");if(nd)nd.style.display=cnt>0?"block":"none"}
+
+// ALL SELECTS UPDATE
+function updAllSelects(){updCatSelects();updWHSelects();updProdSelects();updCustSelects();updSuppSelects();updSOReasonFilter()}
+
+function updSOReasonFilter(){const el=document.getElementById("sorf");if(!el)return;el.innerHTML='<option value="">Barcha sabab</option>'+Object.entries(REASONS).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}
+
+// CATEGORIES
+async function loadCats(){const snap=await getDocs(query(collection(db,"categories"),orderBy("name")));categories=snap.docs.map(d=>({id:d.id,...d.data()}))}
+window.openCM=function(id=null){editCatId=id;document.getElementById("catmtitle").textContent=id?"Kategoriyani tahrirlash":"Kategoriya qo'shish";["cm-name","cm-desc","cm-img"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("cm-icon").value="📦";document.getElementById("cm-color").value="#1a56db";document.getElementById("cm-id").value="";if(id){const c=categories.find(x=>x.id===id);if(c){document.getElementById("cm-name").value=c.name||"";document.getElementById("cm-desc").value=c.description||"";document.getElementById("cm-icon").value=c.icon||"📦";document.getElementById("cm-color").value=c.color||"#1a56db";if(c.imageUrl)document.getElementById("cm-img").value=c.imageUrl}}openM("catm")};
+window.saveCat=async function(){const name=document.getElementById("cm-name").value.trim();if(!name)return showToast("Kategoriya nomi kerak!","error");let img=document.getElementById("cm-img").value.trim();if(!img)img=await findImg(name,"construction");const data={name,icon:document.getElementById("cm-icon").value.trim()||"📦",color:document.getElementById("cm-color").value||"#1a56db",description:document.getElementById("cm-desc").value.trim(),imageUrl:img,updatedAt:serverTimestamp()};try{if(editCatId){await updateDoc(doc(db,"categories",editCatId),data);showToast("Kategoriya yangilandi","success")}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"categories"),data);showToast("Kategoriya qo'shildi","success")}await loadCats();renderCats();updCatSelects();closeM("catm")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.deleteCat=async function(id){const c=categories.find(x=>x.id===id);showConfirm(`"${c?.name}" o'chirilsin?`,async()=>{await deleteDoc(doc(db,"categories",id));await loadCats();renderCats();updCatSelects();showToast("O'chirildi","success")})};
+function renderCats(){const g=document.getElementById("catgrid");if(!categories.length){g.innerHTML=`<div class="es" style="grid-column:1/-1"><i class="fas fa-tags"></i><h3>Kategoriyalar yo'q</h3></div>`;return}g.innerHTML=categories.map(c=>{const cnt=products.filter(p=>p.category===c.id).length;const col=c.color||"#1a56db";return`<div class="ccard"><div class="cib" style="background:${col}22;color:${col}">${c.imageUrl?`<img src="${c.imageUrl}" alt="${c.name}" onerror="this.style.display='none'">`:c.icon||"📦"}</div><div class="fw6 f13">${c.name}</div><div class="f12 tm">${cnt} ta mahsulot</div>${c.description?`<div class="f12 tm" style="margin-top:4px">${c.description}</div>`:""}<div style="margin-top:10px;display:flex;gap:6px"><button class="btn bse bxs" onclick="openCM('${c.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteCat('${c.id}')"><i class="fas fa-trash"></i></button></div></div>`}).join("")}
+function updCatSelects(){["pm-cat","cf","sicatf"].forEach(id=>{const el=document.getElementById(id);if(!el)return;const v=el.value;const pr=id==="cf"||id==="sicatf"?'<option value="">Barcha kategoriya</option>':'<option value="">Tanlang...</option>';el.innerHTML=pr+categories.map(c=>`<option value="${c.id}">${c.icon||"📦"} ${c.name}</option>`).join("");el.value=v})}
+
+// WAREHOUSES
+async function loadWHs(){const snap=await getDocs(collection(db,"warehouses"));warehouses=snap.docs.map(d=>({id:d.id,...d.data()}))}
+window.openWHM=function(id=null){editWHId=id;document.getElementById("whmtitle").textContent=id?"Ombor tahrirlash":"Ombor qo'shish";["whm-name","whm-adr","whm-cap","whm-mgr","whm-ph","whm-note"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("whm-id").value="";document.getElementById("whm-stat").value="active";if(id){const w=warehouses.find(x=>x.id===id);if(w){document.getElementById("whm-id").value=id;document.getElementById("whm-name").value=w.name||"";document.getElementById("whm-adr").value=w.address||"";document.getElementById("whm-cap").value=w.capacity||"";document.getElementById("whm-mgr").value=w.manager||"";document.getElementById("whm-ph").value=w.phone||"";document.getElementById("whm-note").value=w.note||"";document.getElementById("whm-stat").value=w.status||"active"}}openM("whm")};
+window.saveWH=async function(){const name=document.getElementById("whm-name").value.trim();if(!name)return showToast("Ombor nomi kerak!","error");const data={name,address:document.getElementById("whm-adr").value.trim(),capacity:parseFloat(document.getElementById("whm-cap").value)||0,manager:document.getElementById("whm-mgr").value.trim(),phone:document.getElementById("whm-ph").value.trim(),note:document.getElementById("whm-note").value.trim(),status:document.getElementById("whm-stat").value,updatedAt:serverTimestamp()};try{if(editWHId){await updateDoc(doc(db,"warehouses",editWHId),data)}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"warehouses"),data)}await loadWHs();renderWH();updWHSelects();closeM("whm");showToast("Saqlandi","success")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.deleteWH=async function(id){const used=products.some(p=>p.warehouse===id);if(used)return showToast("Bu omborda mahsulotlar bor! Avval ko'chiring.","error");showConfirm("Omborni o'chirish?",async()=>{await deleteDoc(doc(db,"warehouses",id));await loadWHs();renderWH();updWHSelects();showToast("O'chirildi","success")})};
+function getAllWH(){return[...warehouses]}
+function getWHName(id){const w=warehouses.find(x=>x.id===id);return w?.name||id||"Noma'lum ombor"}
+function renderWH(){
+  const g=document.getElementById("whgrid");
+  if(!warehouses.length){g.innerHTML=`<div class="ccard" style="grid-column:1/-1;text-align:center"><div class="cib" style="background:#dbeafe;color:#1d4ed8;margin:0 auto"><i class="fas fa-warehouse"></i></div><div class="fw6 f13">Hali ombor qo'shilmagan</div><div class="f12 tm">Yuqoridagi tugma bilan ombor qo'shing</div></div>`;renderWHProds();return}
+  g.innerHTML=warehouses.map(w=>{const cnt=products.filter(p=>p.warehouse===w.id).length;const tv=products.filter(p=>p.warehouse===w.id).reduce((s,p)=>(s+(p.price||0)*(p.quantity||0)),0);return`<div class="ccard"><div class="cib" style="background:#dbeafe;color:#1d4ed8"><i class="fas fa-warehouse" style="font-size:24px"></i></div><div class="fw6 f13">${w.name}</div><div class="f12 tm">${w.address||"Manzil yo'q"}</div><div class="f12 tm">${cnt} ta mahsulot turi</div><div class="f12 tm">💰 ${fN(tv)} so'm</div>${w.manager?`<div class="f12 tm"><i class="fas fa-user"></i> ${w.manager}</div>`:""}<div class="badge ${w.status==="active"?"bgs":"bgd"}" style="margin-top:6px">${w.status==="active"?"Faol":"Faol emas"}</div><div style="margin-top:10px;display:flex;gap:6px"><button class="btn bse bxs" onclick="openWHM('${w.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteWH('${w.id}')"><i class="fas fa-trash"></i></button><button class="btn bp bxs" onclick="showWHProds('${w.id}')"><i class="fas fa-boxes"></i> Ko'rish</button></div></div>`}).join("");
+  renderWHProds();
+}
+window.showWHProds=function(whId){
+  const el=document.getElementById("whprods");
+  const wh=warehouses.find(x=>x.id===whId);
+  const prods=products.filter(p=>p.warehouse===whId);
+  el.innerHTML=`<div class="card"><div class="ch"><i class="fas fa-boxes tm"></i><span class="ct">${wh?.name||""} — Mahsulotlar (${prods.length})</span><button class="btn bse bsm" onclick="document.getElementById('whprods').innerHTML=''"><i class="fas fa-times"></i></button></div><div class="tc"><table><thead><tr><th>Rasm</th><th>Nomi</th><th>Kategoriya</th><th>Miqdor</th><th>Narx</th><th>Holat</th></tr></thead><tbody>${prods.length?prods.map(p=>{const c=categories.find(x=>x.id===p.category);const st=stSt(p);return`<tr><td>${p.imageUrl?`<img src="${p.imageUrl}" class="pit" onerror="this.style.display='none'">`:c?.icon||"📦"}</td><td class="fw6">${p.name}</td><td>${c?.name||"—"}</td><td>${p.quantity||0} ${p.unit||"dona"}</td><td>${fN(p.price)} so'm</td><td><span class="badge ${st.cls}">${st.label}</span></td></tr>`}).join(""):`<tr><td colspan="6"><div class="es"><i class="fas fa-inbox"></i><h3>Bu omborda mahsulot yo'q</h3></div></td></tr>`}</tbody></table></div></div>`;
+};
+function renderWHProds(){const el=document.getElementById("whprods");if(el)el.innerHTML=""}
+function updWHSelects(){
+  const allWH=getAllWH();
+  const optsAll=allWH.map(w=>`<option value="${w.id}">${w.name}</option>`).join("");
+  const optsBlank='<option value="">Tanlang...</option>'+optsAll;
+  const optsFilter='<option value="">Barcha ombor</option>'+optsAll;
+  ["pm-wh","si-wh","so-wh","tr-from","tr-to"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=optsBlank});
+  ["wf","siwf","sowf","trwff","poswf","icwf"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=optsFilter});
+}
+
+// PRODUCTS
+async function loadProds(){const snap=await getDocs(query(collection(db,"products"),orderBy("name")));products=snap.docs.map(d=>({id:d.id,...d.data()}));filtP=[...products]}
+window.openPM=function(id=null){editPId=id;pendImgFile=null;pendAutoImg=null;document.getElementById("pmtitle").textContent=id?"Mahsulotni tahrirlash":"Mahsulot qo'shish";document.getElementById("pm-id").value="";["pm-name","pm-sku","pm-brand","pm-price","pm-cost","pm-qty","pm-desc"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("pm-minqty").value="5";document.getElementById("pm-unit").value="dona";document.getElementById("pm-stat").value="active";document.getElementById("pm-iprev").innerHTML=`<i class="fas fa-camera" style="font-size:28px;display:block;margin:0 auto 6px;color:var(--tl)"></i><div class="f12 tm">Rasm yuklash</div>`;document.getElementById("pm-istat").textContent="";document.getElementById("pm-qrprev").style.display="none";document.getElementById("pm-qrc").innerHTML="";updCatSelects();updWHSelects();if(id){const p=products.find(x=>x.id===id);if(p){document.getElementById("pm-id").value=p.id;document.getElementById("pm-name").value=p.name||"";document.getElementById("pm-sku").value=p.sku||"";document.getElementById("pm-brand").value=p.brand||"";document.getElementById("pm-price").value=p.price||"";document.getElementById("pm-cost").value=p.cost||"";document.getElementById("pm-qty").value=p.quantity||"";document.getElementById("pm-minqty").value=p.minQuantity||5;document.getElementById("pm-desc").value=p.description||"";document.getElementById("pm-unit").value=p.unit||"dona";document.getElementById("pm-stat").value=p.status||"active";if(p.category)document.getElementById("pm-cat").value=p.category;if(p.warehouse)document.getElementById("pm-wh").value=p.warehouse;if(p.imageUrl)document.getElementById("pm-iprev").innerHTML=`<img src="${p.imageUrl}" class="ipv" onerror="this.style.display='none'">`;if(p.sku||p.qrData){document.getElementById("pm-qrprev").style.display="block";setTimeout(()=>genQR("pm-qrc",p.qrData||getQRD(p),100),100)}}}else{const e=document.getElementById("t-sku");if(e&&e.classList.contains("on"))document.getElementById("pm-sku").value=genSKU("PROD","")}openM("pm")};
+window.saveProd=async function(){const name=document.getElementById("pm-name").value.trim();const cat=document.getElementById("pm-cat").value;const wh=document.getElementById("pm-wh").value;if(!name)return showToast("Mahsulot nomi kerak!","error");if(!cat)return showToast("Kategoriya tanlang!","error");if(!wh)return showToast("Ombor tanlang!","error");const c=categories.find(x=>x.id===cat);let sku=document.getElementById("pm-sku").value.trim();if(!sku)sku=genSKU(name,c?.name||"");const data={name,category:cat,sku,warehouse:wh,price:parseFloat(document.getElementById("pm-price").value)||0,cost:parseFloat(document.getElementById("pm-cost").value)||0,quantity:parseInt(document.getElementById("pm-qty").value)||0,minQuantity:parseInt(document.getElementById("pm-minqty").value)||5,brand:document.getElementById("pm-brand").value.trim(),unit:document.getElementById("pm-unit").value,description:document.getElementById("pm-desc").value.trim(),status:document.getElementById("pm-stat").value,updatedAt:serverTimestamp()};const btn=document.getElementById("pm-savebtn");btn.disabled=true;btn.innerHTML='<div class="spinner" style="width:14px;height:14px"></div> Saqlanmoqda...';if(pendImgFile){try{const url=await uploadImgbb(pendImgFile);if(url)data.imageUrl=url}catch(e){showToast("Rasm yuklash xatosi: "+e.message,"warning")}}else if(pendAutoImg){data.imageUrl=pendAutoImg}else if(!editPId){const ai=document.getElementById("t-img");if(ai&&ai.classList.contains("on")){try{data.imageUrl=await findImg(name,c?.name||"")}catch(e){}}}const qrObj={id:editPId||"new",sku,name,price:data.price,unit:data.unit,company:"Boomstroy"};data.qrData=JSON.stringify(qrObj);btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Saqlash';try{if(editPId){await updateDoc(doc(db,"products",editPId),data);showToast("Mahsulot yangilandi","success")}else{data.createdAt=serverTimestamp();const ref=await addDoc(collection(db,"products"),data);await updateDoc(doc(db,"products",ref.id),{qrData:JSON.stringify({...qrObj,id:ref.id})});showToast("Mahsulot qo'shildi","success")}await addLog("product","Mahsulot: "+name);await loadProds();renderP();updProdSelects();updDashStats();updAllLSB();closeM("pm")}catch(e){showToast("Xato: "+e.message,"error");btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Saqlash'}};
+window.deleteProd=async function(id){const p=products.find(x=>x.id===id);showConfirm(`"${p?.name}" o'chirilsin?`,async()=>{await deleteDoc(doc(db,"products",id));await addLog("product","O'chirildi: "+p?.name);await loadProds();renderP();updDashStats();updAllLSB();showToast("O'chirildi","success")})};
+window.viewProd=function(id){const p=products.find(x=>x.id===id);if(!p)return;const c=categories.find(x=>x.id===p.category);const wh=warehouses.find(x=>x.id===p.warehouse);const st=stSt(p);const qrd=p.qrData||getQRD(p);document.getElementById("pdbody").innerHTML=`<div style="display:flex;gap:16px;margin-bottom:16px;align-items:flex-start"><div style="flex-shrink:0">${p.imageUrl?`<img src="${p.imageUrl}" style="width:100px;height:100px;border-radius:10px;object-fit:cover;border:2px solid var(--bo)">`:c?.icon?`<div style="width:100px;height:100px;border-radius:10px;background:var(--bg);border:2px solid var(--bo);display:flex;align-items:center;justify-content:center;font-size:36px">${c.icon}</div>`:""}<div style="margin-top:8px;text-align:center"><span class="sku">${p.sku||"SKU yo'q"}</span></div></div><div style="flex:1"><h3 style="font-size:16px;margin-bottom:8px">${p.name}</h3><div class="ib"><div><strong>Kategoriya:</strong> ${c?.icon||"📦"} ${c?.name||"—"}</div><div><strong>Ombor:</strong> ${wh?.name||p.warehouse||"—"}</div><div><strong>Narx:</strong> ${fN(p.price)} so'm</div><div><strong>Miqdor:</strong> ${p.quantity||0} ${p.unit||"dona"}</div><div><strong>Min zaxira:</strong> ${p.minQuantity||5}</div><div><strong>Holat:</strong> <span class="badge ${st.cls}">${st.label}</span></div>${p.brand?`<div><strong>Brend:</strong> ${p.brand}</div>`:""}</div></div></div><div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div class="fw6 f13" style="margin-bottom:8px">QR Kod</div><div id="vpqrc" class="qrc" style="justify-content:center"></div></div>`;document.getElementById("pdfooter").innerHTML=`<button class="btn bse" onclick="closeM('pdm')">Yopish</button><button class="btn bp" onclick="closeM('pdm');openPM('${id}')"><i class="fas fa-edit"></i> Tahrirlash</button>`;openM("pdm");setTimeout(()=>genQR("vpqrc",qrd,130),100)};
+function renderP(){filtP=[...products];applyPF()}
+function applyPF(){const s=(document.getElementById("psrch")?.value||"").toLowerCase();const cf=document.getElementById("cf")?.value||"";const sf=document.getElementById("sf")?.value||"";const wf=document.getElementById("wf")?.value||"";let arr=[...products];if(s)arr=arr.filter(p=>p.name?.toLowerCase().includes(s)||p.sku?.toLowerCase().includes(s)||p.brand?.toLowerCase().includes(s));if(cf)arr=arr.filter(p=>p.category===cf);if(sf)arr=arr.filter(p=>stSt(p).val===sf);if(wf)arr=arr.filter(p=>p.warehouse===wf);arr.sort((a,b)=>{let va=a[sortK]||"",vb=b[sortK]||"";if(typeof va==="string"){va=va.toLowerCase();vb=(vb+"").toLowerCase()}return va<vb?-sortD:va>vb?sortD:0});filtP=arr;pPage=1;renderPT()}
+window.filterP=applyPF;
+window.clrF=function(){document.getElementById("psrch").value="";document.getElementById("cf").value="";document.getElementById("sf").value="";document.getElementById("wf").value="";applyPF()};
+window.sortP=function(k){if(sortK===k)sortD*=-1;else{sortK=k;sortD=1}applyPF()};
+function renderPT(){const start=(pPage-1)*pPS;const pd=filtP.slice(start,start+pPS);const tb=document.getElementById("ptbody");document.getElementById("pcb").textContent=filtP.length;if(!pd.length){tb.innerHTML=`<tr><td colspan="10"><div class="es"><i class="fas fa-boxes"></i><h3>Mahsulotlar yo'q</h3></div></td></tr>`;return}tb.innerHTML=pd.map(p=>{const c=categories.find(x=>x.id===p.category);const wh=warehouses.find(x=>x.id===p.warehouse);const st=stSt(p);const tw=Math.min(100,((p.quantity||0)/Math.max(p.minQuantity||5,1)*100).toFixed(0));const bc=st.val==="out"?"rd":st.val==="low"?"og":"gn";return`<tr><td>${p.imageUrl?`<img src="${p.imageUrl}" class="pit" loading="lazy" onerror="this.style.display='none'">`:c?.icon?`<div class="pip">${c.icon}</div>`:''}</td><td><div class="fw6">${p.name}</div><div class="f12 tm">${p.brand||""}</div></td><td>${c?`<span style="background:${c.color||"#1a56db"}22;color:${c.color||"#1a56db"};padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600">${c.icon||"📦"} ${c.name}</span>`:"—"}</td><td>${wh?`<span class="badge bge">${wh.name}</span>`:"—"}</td><td><div class="fw6">${p.quantity||0} ${p.unit||"dona"}</div><div class="prog" style="margin-top:3px;min-width:80px"><div class="pb2 ${bc}" style="width:${tw}%"></div></div></td><td>${fN(p.price)} so'm</td><td><span class="f11" style="padding:2px 8px;border-radius:20px;background:#fef3c7;color:#b45309">${p.minQuantity||5}</span></td><td><span class="badge ${st.cls}">${st.label}</span></td><td><span class="sku">${p.sku||"—"}</span></td><td><div class="df g8"><button class="btn bse bxs" onclick="viewProd('${p.id}')"><i class="fas fa-eye"></i></button><button class="btn bse bxs" onclick="openPM('${p.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteProd('${p.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`}).join("");const tp=Math.ceil(filtP.length/pPS);document.getElementById("pi").textContent=filtP.length+" ta mahsulot";const pp=document.getElementById("pp");pp.innerHTML="";for(let i=1;i<=Math.min(tp,8);i++){const b=document.createElement("button");b.className="pb"+(i===pPage?" active":"");b.textContent=i;b.onclick=()=>{pPage=i;renderPT()};pp.appendChild(b)}}
+function updProdSelects(){const op1='<option value="">Tanlang...</option>'+products.map(p=>`<option value="${p.id}">${p.name} (${p.quantity||0} ${p.unit||"dona"})</option>`).join("");const op2='<option value="">Mahsulot tanlang...</option>'+products.map(p=>`<option value="${p.id}">${p.name} - ${fN(p.price)} so'm</option>`).join("");["retm-prod"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=op1});["salem-prodslt","purchm-prodslt"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=op2})}
+function filterSIProd(){const whId=document.getElementById("si-wh")?.value||"";const el=document.getElementById("si-prodslt");if(!el)return;const arr=whId?products.filter(p=>p.warehouse===whId):products;el.innerHTML='<option value="">Mahsulot tanlang...</option>'+arr.map(p=>`<option value="${p.id}">${p.name} (${p.quantity||0} ${p.unit||"dona"})</option>`).join("")}
+function filterSOProd(){const whId=document.getElementById("so-wh")?.value||"";const el=document.getElementById("so-prodslt");if(!el)return;const arr=whId?products.filter(p=>p.warehouse===whId):products;el.innerHTML='<option value="">Mahsulot tanlang...</option>'+arr.map(p=>`<option value="${p.id}">${p.name} (${p.quantity||0} ${p.unit||"dona"})</option>`).join("")}
+window.filterSIProd=filterSIProd;
+window.filterSOProd=filterSOProd;
+
+// STOCK IN (to'liq)
+async function loadSIs(){try{let snap;try{snap=await getDocs(query(collection(db,"stockIns"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"stockIns"))}stockIns=snap.docs.map(d=>({id:d.id,...d.data()}));stockIns.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("SI:",e.message)}}
+window.openSIM=function(){siItems=[];["si-doc","si-note"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("si-total").textContent="0 so'm";document.getElementById("si-items").innerHTML="";updWHSelects();updSuppSelects();updCatSelects();filterSIProd();openM("sim")};
+window.addSIItem=function(){const pid=document.getElementById("si-prodslt").value;const qty=parseInt(document.getElementById("si-qty2").value)||1;const prc=parseFloat(document.getElementById("si-prc2").value)||0;if(!pid)return showToast("Mahsulot tanlang!","warning");const p=products.find(x=>x.id===pid);if(!p)return;const ex=siItems.find(x=>x.productId===pid);if(ex){ex.qty+=qty}else{siItems.push({productId:pid,name:p.name,unit:p.unit||"dona",price:prc,qty,category:p.category,warehouse:p.warehouse})}document.getElementById("si-qty2").value="1";document.getElementById("si-prc2").value="";renderSIItems()};
+function renderSIItems(){const c=document.getElementById("si-items");if(!siItems.length){c.innerHTML='<div class="tm f12" style="padding:8px 0">Mahsulot qo\'shilmagan</div>';document.getElementById("si-total").textContent="0 so'm";return}c.innerHTML=siItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><input type="number" value="${it.qty}" min="1" style="width:60px" class="fc" oninput="updSIQ(${i},this.value)"><input type="number" value="${it.price}" placeholder="narx" style="width:90px" class="fc" oninput="updSIP(${i},this.value)"><span style="width:100px;text-align:right;font-size:13px">${fN(it.price*it.qty)} so'm</span><button class="btn bd bxs" onclick="rmSIItem(${i})"><i class="fas fa-times"></i></button></div>`).join("");document.getElementById("si-total").textContent=fN(siItems.reduce((s,x)=>s+x.price*x.qty,0))+" so'm"}
+window.updSIQ=(i,v)=>{siItems[i].qty=parseInt(v)||1;renderSIItems()};
+window.updSIP=(i,v)=>{siItems[i].price=parseFloat(v)||0;renderSIItems()};
+window.rmSIItem=i=>{siItems.splice(i,1);renderSIItems()};
+window.saveSI=async function(){const whId=document.getElementById("si-wh").value;if(!whId)return showToast("Ombor tanlang!","error");if(!siItems.length)return showToast("Mahsulot qo'shing!","error");const suppId=document.getElementById("si-supp").value;const supp=suppliers.find(x=>x.id===suppId);const wh=warehouses.find(x=>x.id===whId);try{for(const it of siItems){await addDoc(collection(db,"stockIns"),{productId:it.productId,productName:it.name,category:it.category||"",quantity:it.qty,price:it.price,totalPrice:it.price*it.qty,supplierId:suppId,supplierName:supp?.name||"",warehouse:whId,warehouseName:wh?.name||"",document:document.getElementById("si-doc").value.trim(),note:document.getElementById("si-note").value.trim(),createdAt:serverTimestamp()});const prod=products.find(p=>p.id===it.productId);if(prod){await updateDoc(doc(db,"products",it.productId),{quantity:(prod.quantity||0)+it.qty,warehouse:whId,updatedAt:serverTimestamp()})}}await addLog("stock_in",`Kirim: ${siItems.length} mahsulot, ombor: ${wh?.name||whId}`);await loadSIs();await loadProds();renderSI();renderP();updDashStats();updAllLSB();closeM("sim");showToast(`${siItems.length} ta mahsulot kiritildi ✓`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+function filterSI(){const s=(document.getElementById("sisrch")?.value||"").toLowerCase();const wf=document.getElementById("siwf")?.value||"";const cf=document.getElementById("sicatf")?.value||"";filtSI=stockIns.filter(x=>(!s||(x.productName||"").toLowerCase().includes(s)||(x.supplierName||"").toLowerCase().includes(s)||(x.warehouseName||"").toLowerCase().includes(s))&&(!wf||x.warehouse===wf)&&(!cf||x.category===cf));renderSIT()}
+window.filterSI=filterSI;
+function renderSI(){filterSI()}
+function renderSIT(){const tb=document.getElementById("sitbody");document.getElementById("sicb").textContent=filtSI.length;document.getElementById("sii").textContent=filtSI.length+" ta kirim";if(!filtSI.length){tb.innerHTML=`<tr><td colspan="11"><div class="es"><i class="fas fa-arrow-circle-down"></i><h3>Kirimlar yo'q</h3></div></td></tr>`;return}const start=(sIPage-1)*sIPS;const pd=filtSI.slice(start,start+sIPS);tb.innerHTML=pd.map((s,i)=>{const c=categories.find(x=>x.id===s.category);return`<tr><td>${start+i+1}</td><td class="fw6">${s.productName||"—"}</td><td>${c?.name||"—"}</td><td><span class="badge bgs">+${s.quantity}</span></td><td>${fN(s.price)} so'm</td><td class="fw6">${fN(s.totalPrice||s.price*s.quantity)} so'm</td><td>${s.supplierName||"—"}</td><td>${s.warehouseName||s.warehouse||"—"}</td><td>${s.document||"—"}</td><td class="f12 tm">${fD(s.createdAt)}</td><td class="f12">${s.note||"—"}</td></tr>`}).join("");const tp=Math.ceil(filtSI.length/sIPS);const pp=document.getElementById("sip");pp.innerHTML="";for(let i=1;i<=Math.min(tp,8);i++){const b=document.createElement("button");b.className="pb"+(i===sIPage?" active":"");b.textContent=i;b.onclick=()=>{sIPage=i;renderSIT()};pp.appendChild(b)}}
+window.expSICSV=function(){const h=["#","Mahsulot","Kategoriya","Miqdor","Narx/dona","Jami","Yetkazuvchi","Ombor","Faktura","Sana","Izoh"];const r=filtSI.map((s,i)=>{const c=categories.find(x=>x.id===s.category);return[i+1,s.productName||"",c?.name||"",s.quantity,s.price,s.totalPrice||s.price*s.quantity,s.supplierName||"",s.warehouseName||"",s.document||"",fD(s.createdAt),s.note||""]});const csv=[h,...r].map(row=>row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");const b=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="kirim.csv";a.click()};
+
+// STOCK OUT (to'liq, 20 sabab)
+async function loadSOs(){try{let snap;try{snap=await getDocs(query(collection(db,"stockOuts"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"stockOuts"))}stockOuts=snap.docs.map(d=>({id:d.id,...d.data()}));stockOuts.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("SO:",e.message)}}
+window.openSOM=function(){soItems=[];["so-note"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("so-total").textContent="0 dona";document.getElementById("so-items").innerHTML="";document.getElementById("so-reason").value="";document.getElementById("so-custom-reason").style.display="none";const d=new Date();document.getElementById("so-date").value=d.toISOString().slice(0,10);updWHSelects();updCustSelects();filterSOProd();openM("som")};
+window.togSOCustom=function(v){const el=document.getElementById("so-custom-reason");if(el)el.style.display=v==="custom"?"block":"none"};
+window.addSOItem=function(){const pid=document.getElementById("so-prodslt").value;const qty=parseInt(document.getElementById("so-qty2").value)||1;if(!pid)return showToast("Mahsulot tanlang!","warning");const p=products.find(x=>x.id===pid);if(!p)return;if((p.quantity||0)<qty)return showToast(`${p.name}: yetarli miqdor yo'q! (${p.quantity||0} ta bor),"error"`);const ex=soItems.find(x=>x.productId===pid);if(ex){const tot=ex.qty+qty;if(tot>(p.quantity||0))return showToast("Yetarli miqdor yo'q!","error");ex.qty=tot}else{soItems.push({productId:pid,name:p.name,unit:p.unit||"dona",qty,category:p.category,warehouse:p.warehouse,maxQty:p.quantity||0})}document.getElementById("so-qty2").value="1";renderSOItems()};
+function renderSOItems(){const c=document.getElementById("so-items");if(!soItems.length){c.innerHTML='<div class="tm f12" style="padding:8px 0">Mahsulot qo\'shilmagan</div>';document.getElementById("so-total").textContent="0 dona";return}c.innerHTML=soItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><input type="number" value="${it.qty}" min="1" max="${it.maxQty}" style="width:70px" class="fc" oninput="updSOQ(${i},this.value)"><span class="f12 tm">(max: ${it.maxQty})</span><button class="btn bd bxs" onclick="rmSOItem(${i})"><i class="fas fa-times"></i></button></div>`).join("");document.getElementById("so-total").textContent=soItems.reduce((s,x)=>s+x.qty,0)+" dona"}
+window.updSOQ=(i,v)=>{soItems[i].qty=Math.min(parseInt(v)||1,soItems[i].maxQty);renderSOItems()};
+window.rmSOItem=i=>{soItems.splice(i,1);renderSOItems()};
+window.saveSO=async function(){const whId=document.getElementById("so-wh").value;if(!whId)return showToast("Ombor tanlang!","error");if(!soItems.length)return showToast("Mahsulot qo'shing!","error");let reason=document.getElementById("so-reason").value;if(!reason)return showToast("Sabab tanlang!","error");if(reason==="custom"){reason=document.getElementById("so-custom-reason").value.trim();if(!reason)return showToast("Sabab kiriting!","error")}const reasonLabel=REASONS[reason]||reason;const wh=warehouses.find(x=>x.id===whId);const custId=document.getElementById("so-cust").value;const cust=customers.find(x=>x.id===custId);const date=document.getElementById("so-date").value;try{for(const it of soItems){const prod=products.find(p=>p.id===it.productId);if(!prod)continue;if((prod.quantity||0)<it.qty){showToast(`${prod.name}: yetarli miqdor yo'q!`,"error");continue}await addDoc(collection(db,"stockOuts"),{productId:it.productId,productName:it.name,category:it.category||"",quantity:it.qty,reason,reasonLabel,customerId:custId,customerName:cust?.name||"",warehouse:whId,warehouseName:wh?.name||"",note:document.getElementById("so-note").value.trim(),date,createdAt:serverTimestamp()});await updateDoc(doc(db,"products",it.productId),{quantity:Math.max(0,(prod.quantity||0)-it.qty),updatedAt:serverTimestamp()})}await addLog("stock_out",`Chiqim: ${soItems.length} mahsulot, sabab: ${reasonLabel}`);await loadSOs();await loadProds();renderSO();renderP();updDashStats();updAllLSB();closeM("som");showToast(`${soItems.length} ta mahsulot chiqarildi ✓`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+function filterSO(){const s=(document.getElementById("sosrch")?.value||"").toLowerCase();const wf=document.getElementById("sowf")?.value||"";const rf=document.getElementById("sorf")?.value||"";filtSO=stockOuts.filter(x=>(!s||(x.productName||"").toLowerCase().includes(s)||(x.reasonLabel||"").toLowerCase().includes(s)||(x.warehouseName||"").toLowerCase().includes(s))&&(!wf||x.warehouse===wf)&&(!rf||x.reason===rf));renderSOT()}
+window.filterSO=filterSO;
+function renderSO(){filterSO()}
+function renderSOT(){const tb=document.getElementById("sotbody");document.getElementById("socb").textContent=filtSO.length;document.getElementById("soi").textContent=filtSO.length+" ta chiqim";if(!filtSO.length){tb.innerHTML=`<tr><td colspan="9"><div class="es"><i class="fas fa-arrow-circle-up"></i><h3>Chiqimlar yo'q</h3></div></td></tr>`;return}const start=(sOPage-1)*sOPS;const pd=filtSO.slice(start,start+sOPS);tb.innerHTML=pd.map((s,i)=>{const c=categories.find(x=>x.id===s.category);return`<tr><td>${start+i+1}</td><td class="fw6">${s.productName||"—"}</td><td>${c?.name||"—"}</td><td><span class="badge bgd">-${s.quantity}</span></td><td>${s.warehouseName||s.warehouse||"—"}</td><td><span class="badge bgw">${s.reasonLabel||s.reason||"—"}</span></td><td>${s.customerName||"—"}</td><td class="f12 tm">${fD(s.createdAt)}</td><td class="f12">${s.note||"—"}</td></tr>`}).join("");const tp=Math.ceil(filtSO.length/sOPS);const pp=document.getElementById("sop");pp.innerHTML="";for(let i=1;i<=Math.min(tp,8);i++){const b=document.createElement("button");b.className="pb"+(i===sOPage?" active":"");b.textContent=i;b.onclick=()=>{sOPage=i;renderSOT()};pp.appendChild(b)}}
+window.expSOCSV=function(){const h=["#","Mahsulot","Kategoriya","Miqdor","Ombor","Sabab","Mijoz","Sana","Izoh"];const r=filtSO.map((s,i)=>{const c=categories.find(x=>x.id===s.category);return[i+1,s.productName||"",c?.name||"",s.quantity,s.warehouseName||"",s.reasonLabel||s.reason||"",s.customerName||"",fD(s.createdAt),s.note||""]});const csv=[h,...r].map(row=>row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");const b=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="chiqim.csv";a.click()};
+
+// TRANSFERS (ombor → ombor, ko'p mahsulot)
+async function loadTrs(){try{let snap;try{snap=await getDocs(query(collection(db,"transfers"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"transfers"))}transfers=snap.docs.map(d=>({id:d.id,...d.data()}));transfers.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("TR:",e.message)}}
+window.openTrM=function(){trItems=[];document.getElementById("tr-note").value="";document.getElementById("tr-reason").value="rebalance";document.getElementById("tr-items").innerHTML="";updWHSelects();openM("trm")};
+function filterTrProd(){const whId=document.getElementById("tr-from")?.value||"";const el=document.getElementById("tr-prodslt");if(!el)return;const arr=whId?products.filter(p=>p.warehouse===whId):products;el.innerHTML='<option value="">Mahsulot tanlang...</option>'+arr.map(p=>`<option value="${p.id}">${p.name} (${p.quantity||0} ${p.unit||"dona"})</option>`).join("")}
+window.filterTrProd=filterTrProd;
+window.addTrItem=function(){const pid=document.getElementById("tr-prodslt").value;const qty=parseInt(document.getElementById("tr-qty2").value)||1;if(!pid)return showToast("Mahsulot tanlang!","warning");const p=products.find(x=>x.id===pid);if(!p)return;if((p.quantity||0)<qty)return showToast(`Yetarli miqdor yo'q! (${p.quantity||0} ta bor)`,"error");const ex=trItems.find(x=>x.productId===pid);if(ex){const t=ex.qty+qty;if(t>(p.quantity||0))return showToast("Yetarli yo'q!","error");ex.qty=t}else{trItems.push({productId:pid,name:p.name,unit:p.unit||"dona",qty,maxQty:p.quantity||0,category:p.category})}document.getElementById("tr-qty2").value="1";renderTrItems()};
+function renderTrItems(){const c=document.getElementById("tr-items");if(!trItems.length){c.innerHTML='<div class="tm f12" style="padding:8px 0">Mahsulot qo\'shilmagan</div>';return}c.innerHTML=trItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><input type="number" value="${it.qty}" min="1" max="${it.maxQty}" style="width:70px" class="fc" oninput="updTrQ(${i},this.value)"><span class="f12 tm">/${it.maxQty}</span><button class="btn bd bxs" onclick="rmTrItem(${i})"><i class="fas fa-times"></i></button></div>`).join("")}
+window.updTrQ=(i,v)=>{trItems[i].qty=Math.min(parseInt(v)||1,trItems[i].maxQty);renderTrItems()};
+window.rmTrItem=i=>{trItems.splice(i,1);renderTrItems()};
+window.saveTr=async function(){const from=document.getElementById("tr-from").value;const to=document.getElementById("tr-to").value;if(!from)return showToast("Manba ombor tanlang!","error");if(!to)return showToast("Manzil ombor tanlang!","error");if(from===to)return showToast("Boshqa ombor tanlang!","error");if(!trItems.length)return showToast("Mahsulot qo'shing!","error");const fromWH=warehouses.find(x=>x.id===from);const toWH=warehouses.find(x=>x.id===to);const reason=document.getElementById("tr-reason").value;try{for(const it of trItems){const prod=products.find(p=>p.id===it.productId);if(!prod)continue;if((prod.quantity||0)<it.qty){showToast(`${prod.name}: yetarli yo'q!`,"error");continue}await addDoc(collection(db,"transfers"),{productId:it.productId,productName:it.name,category:it.category||"",quantity:it.qty,fromWarehouse:from,fromWarehouseName:fromWH?.name||from,toWarehouse:to,toWarehouseName:toWH?.name||to,reason,note:document.getElementById("tr-note").value.trim(),createdAt:serverTimestamp()});await updateDoc(doc(db,"products",it.productId),{quantity:Math.max(0,(prod.quantity||0)-it.qty),warehouse:to,updatedAt:serverTimestamp()})}await addLog("transfer",`Ko'chirish: ${trItems.length} mahsulot ${fromWH?.name||from} → ${toWH?.name||to}`);await loadTrs();await loadProds();renderTr();renderP();updDashStats();closeM("trm");showToast(`${trItems.length} ta mahsulot ko'chirildi ✓`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+function filterTr(){const s=(document.getElementById("trsrch")?.value||"").toLowerCase();const wf=document.getElementById("trwff")?.value||"";trFilt=transfers.filter(x=>(!s||(x.productName||"").toLowerCase().includes(s)||(x.fromWarehouseName||"").toLowerCase().includes(s)||(x.toWarehouseName||"").toLowerCase().includes(s))&&(!wf||x.fromWarehouse===wf||x.toWarehouse===wf));renderTrT()}
+window.filterTr=filterTr;
+function renderTr(){filterTr()}
+function renderTrT(){const tb=document.getElementById("trtbody");document.getElementById("trcb").textContent=trFilt.length;if(!trFilt.length){tb.innerHTML=`<tr><td colspan="9"><div class="es"><i class="fas fa-exchange-alt"></i><h3>Ko'chirishlar yo'q</h3></div></td></tr>`;return}const start=(trPage-1)*trPS;const pd=trFilt.slice(start,start+trPS);tb.innerHTML=pd.map((t,i)=>{const c=categories.find(x=>x.id===t.category);return`<tr><td>${start+i+1}</td><td class="fw6">${t.productName||"—"}</td><td>${c?.name||"—"}</td><td><span class="badge bgi">${t.quantity}</span></td><td>${t.fromWarehouseName||t.fromWarehouse||"—"}</td><td>${t.toWarehouseName||t.toWarehouse||"—"}</td><td>${t.reason||"—"}</td><td class="f12 tm">${fD(t.createdAt)}</td><td class="f12">${t.note||"—"}</td></tr>`}).join("");const tp=Math.ceil(trFilt.length/trPS);const pp=document.getElementById("trtbody").closest(".card")?.querySelector(".pbs")||null;if(!pp)return;pp.innerHTML="";for(let i=1;i<=Math.min(tp,8);i++){const b=document.createElement("button");b.className="pb"+(i===trPage?" active":"");b.textContent=i;b.onclick=()=>{trPage=i;renderTrT()};pp.appendChild(b)}}
+
+// CUSTOMERS
+async function loadCusts(){try{const snap=await getDocs(query(collection(db,"customers"),orderBy("name")));customers=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.warn("Cust:",e.message)}}
+window.openCustM=function(id=null){editCustId=id;document.getElementById("custmtitle").textContent=id?"Mijozni tahrirlash":"Mijoz qo'shish";["custm-name","custm-ph","custm-email","custm-adr","custm-note","custm-tg","custm-tgid"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("custm-id").value="";document.getElementById("custm-type").value="individual";if(id){const c=customers.find(x=>x.id===id);if(c){document.getElementById("custm-id").value=id;document.getElementById("custm-name").value=c.name||"";document.getElementById("custm-ph").value=c.phone||"";document.getElementById("custm-email").value=c.email||"";document.getElementById("custm-adr").value=c.address||"";document.getElementById("custm-note").value=c.notes||"";document.getElementById("custm-type").value=c.type||"individual";document.getElementById("custm-tg").value=(c.telegramUsername||"").replace("@","");document.getElementById("custm-tgid").value=c.telegramId||""}}openM("custm")};
+window.saveCust=async function(){const name=document.getElementById("custm-name").value.trim();if(!name)return showToast("Ism kerak!","error");const data={name,phone:document.getElementById("custm-ph").value.trim(),email:document.getElementById("custm-email").value.trim(),address:document.getElementById("custm-adr").value.trim(),notes:document.getElementById("custm-note").value.trim(),type:document.getElementById("custm-type").value,telegramUsername:document.getElementById("custm-tg").value.trim().replace("@",""),telegramId:document.getElementById("custm-tgid").value.trim(),updatedAt:serverTimestamp()};try{if(editCustId){await updateDoc(doc(db,"customers",editCustId),data);showToast("Mijoz yangilandi","success")}else{data.createdAt=serverTimestamp();data.debt=0;data.orderCount=0;await addDoc(collection(db,"customers"),data);showToast("Mijoz qo'shildi","success")}await loadCusts();renderCust();updCustSelects();updDashStats();closeM("custm")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.deleteCust=async function(id){const c=customers.find(x=>x.id===id);showConfirm(`"${c?.name}" o'chirilsin?`,async()=>{await deleteDoc(doc(db,"customers",id));await loadCusts();renderCust();updDashStats();showToast("O'chirildi","success")})};
+window.filterCust=function(){const s=(document.getElementById("custsrch")?.value||"").toLowerCase();const tf=document.getElementById("custtf")?.value||"";let arr=[...customers];if(s)arr=arr.filter(c=>c.name?.toLowerCase().includes(s)||c.phone?.includes(s)||c.telegramUsername?.includes(s));if(tf)arr=arr.filter(c=>c.type===tf);document.getElementById("custcb").textContent=arr.length;document.getElementById("custinfo").textContent=arr.length+" ta mijoz";const tb=document.getElementById("custtbody");if(!arr.length){tb.innerHTML=`<tr><td colspan="10"><div class="es"><i class="fas fa-users"></i><h3>Mijozlar yo'q</h3></div></td></tr>`;return}tb.innerHTML=arr.map((c,i)=>`<tr><td>${i+1}</td><td class="fw6">${c.name}</td><td>${c.phone?`<a href="tel:${c.phone}" style="color:var(--p);font-weight:600;text-decoration:none">${c.phone}</a>`:"—"}</td><td>${c.telegramUsername?`<a href="https://t.me/${c.telegramUsername}" target="_blank" style="color:#2ca5e0;font-weight:600;text-decoration:none">@${c.telegramUsername}</a>`:c.telegramId?`<span class="f12 tm">ID:${c.telegramId}</span>`:"—"}</td><td>${c.email||"—"}</td><td>${c.address||"—"}</td><td><span class="badge ${c.type==="company"?"bgi":"bge"}">${c.type==="company"?"Yuridik":"Jismoniy"}</span></td><td>${c.orderCount||0}</td><td class="f12 tm">${fD(c.createdAt)}</td><td><div class="df g8"><button class="btn bse bxs" onclick="openCustM('${c.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteCust('${c.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join("")};
+function renderCust(){window.filterCust()}
+function updCustSelects(){const opts='<option value="">Naqd mijoz</option>'+customers.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");["poscust","salem-cust","so-cust"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts})}
+window.expCust=function(){const h=["Ism","Telefon","Telegram","Email","Manzil","Tur"];const r=customers.map(c=>[c.name,c.phone||"",c.telegramUsername||"",c.email||"",c.address||"",c.type||""]);const csv=[h,...r].map(row=>row.join(",")).join("\n");const b=new Blob([csv],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="mijozlar.csv";a.click()};
+
+// SUPPLIERS
+async function loadSupps(){try{const snap=await getDocs(query(collection(db,"suppliers"),orderBy("name")));suppliers=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.warn("Supp:",e.message)}}
+window.openSuppM=function(id=null){editSuppId=id;document.getElementById("suppmtitle").textContent=id?"Tahrirlash":"Yetkazuvchi qo'shish";["suppm-name","suppm-cont","suppm-ph","suppm-email","suppm-adr"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("suppm-id").value="";document.getElementById("suppm-stat").value="active";if(id){const s=suppliers.find(x=>x.id===id);if(s){document.getElementById("suppm-id").value=id;document.getElementById("suppm-name").value=s.name||"";document.getElementById("suppm-cont").value=s.contactPerson||"";document.getElementById("suppm-ph").value=s.phone||"";document.getElementById("suppm-email").value=s.email||"";document.getElementById("suppm-adr").value=s.address||"";document.getElementById("suppm-stat").value=s.status||"active"}}openM("suppm")};
+window.saveSupp=async function(){const name=document.getElementById("suppm-name").value.trim();if(!name)return showToast("Kompaniya nomi kerak!","error");const data={name,contactPerson:document.getElementById("suppm-cont").value.trim(),phone:document.getElementById("suppm-ph").value.trim(),email:document.getElementById("suppm-email").value.trim(),address:document.getElementById("suppm-adr").value.trim(),status:document.getElementById("suppm-stat").value,updatedAt:serverTimestamp()};try{if(editSuppId){await updateDoc(doc(db,"suppliers",editSuppId),data);showToast("Yangilandi","success")}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"suppliers"),data);showToast("Qo'shildi","success")}await loadSupps();renderSupp();updSuppSelects();closeM("suppm")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.deleteSupp=async function(id){const s=suppliers.find(x=>x.id===id);showConfirm(`"${s?.name}" o'chirilsin?`,async()=>{await deleteDoc(doc(db,"suppliers",id));await loadSupps();renderSupp();showToast("O'chirildi","success")})};
+window.filterSupp=function(){const s=(document.getElementById("suppsrch")?.value||"").toLowerCase();let arr=[...suppliers].filter(x=>!s||x.name?.toLowerCase().includes(s)||x.phone?.includes(s));document.getElementById("suppcb").textContent=arr.length;const tb=document.getElementById("supptbody");if(!arr.length){tb.innerHTML=`<tr><td colspan="8"><div class="es"><i class="fas fa-truck"></i><h3>Yetkazuvchilar yo'q</h3></div></td></tr>`;return}tb.innerHTML=arr.map((s,i)=>`<tr><td>${i+1}</td><td class="fw6">${s.name}</td><td>${s.contactPerson||"—"}</td><td>${s.phone||"—"}</td><td>${s.email||"—"}</td><td>${s.address||"—"}</td><td><span class="badge ${s.status==="active"?"bgs":"bgd"}">${s.status==="active"?"Faol":"Faol emas"}</span></td><td><div class="df g8"><button class="btn bse bxs" onclick="openSuppM('${s.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteSupp('${s.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join("")};
+function renderSupp(){window.filterSupp()}
+function updSuppSelects(){const opts='<option value="">Tanlang...</option>'+suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join("");["si-supp","purchm-supp"].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts})}
+
+// SALES
+async function loadSales(){try{let snap;try{snap=await getDocs(query(collection(db,"sales"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"sales"))}sales=snap.docs.map(d=>({id:d.id,...d.data()}));sales.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("Sales:",e.message)}}
+window.openSaleM=function(){saleItems=[];document.getElementById("salem-note").value="";document.getElementById("salem-pay").value="cash";updCustSelects();updProdSelects();renderSalItems();openM("salem")};
+window.addSalItem=function(){const pid=document.getElementById("salem-prodslt").value;const qty=parseInt(document.getElementById("salem-qty").value)||1;if(!pid)return showToast("Mahsulot tanlang!","warning");const p=products.find(x=>x.id===pid);if(!p)return;const ex=saleItems.find(x=>x.productId===pid);if(ex)ex.qty+=qty;else saleItems.push({productId:pid,name:p.name,price:p.price||0,qty});document.getElementById("salem-qty").value="1";renderSalItems()};
+function renderSalItems(){const c=document.getElementById("salem-items");if(!saleItems.length){c.innerHTML='<div class="tm f12" style="padding:8px 0">Mahsulot qo\'shilmagan</div>';document.getElementById("salem-total").textContent="0 so'm";return}c.innerHTML=saleItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><input type="number" value="${it.qty}" min="1" style="width:60px" class="fc" oninput="updSalQ(${i},this.value)"><span style="width:100px;text-align:right;font-size:13px">${fN(it.price*it.qty)} so'm</span><button class="btn bd bxs" onclick="rmSalItem(${i})"><i class="fas fa-times"></i></button></div>`).join("");document.getElementById("salem-total").textContent=fN(saleItems.reduce((s,x)=>s+x.price*x.qty,0))+" so'm"}
+window.updSalQ=(i,v)=>{saleItems[i].qty=parseInt(v)||1;renderSalItems()};
+window.rmSalItem=i=>{saleItems.splice(i,1);renderSalItems()};
+window.saveSale=async function(){if(!saleItems.length)return showToast("Mahsulot qo'shing!","error");const total=saleItems.reduce((s,x)=>s+x.price*x.qty,0);const custId=document.getElementById("salem-cust").value;const cust=customers.find(c=>c.id===custId);try{await addDoc(collection(db,"sales"),{customerId:custId,customerName:cust?.name||"Naqd",items:saleItems,total,payment:document.getElementById("salem-pay").value,note:document.getElementById("salem-note").value.trim(),status:"completed",createdAt:serverTimestamp()});for(const it of saleItems){const p=products.find(x=>x.id===it.productId);if(p)await updateDoc(doc(db,"products",it.productId),{quantity:Math.max(0,(p.quantity||0)-it.qty),updatedAt:serverTimestamp()})}await addLog("sale","Sotuv: "+(cust?.name||"Naqd")+" - "+fN(total)+" so'm");await loadSales();await loadProds();renderSales();renderP();updDashStats();updAllLSB();closeM("salem");showToast(`Sotuv saqlandi: ${fN(total)} so'm`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+function renderSales(){const tb=document.getElementById("salbody");if(!sales.length){tb.innerHTML=`<tr><td colspan="7"><div class="es"><i class="fas fa-shopping-cart"></i><h3>Sotuvlar yo'q</h3></div></td></tr>`;return}tb.innerHTML=sales.map((s,i)=>`<tr><td>${i+1}</td><td>${s.customerName||"Naqd"}</td><td>${(s.items||[]).length} mahsulot</td><td class="fw6">${fN(s.total)} so'm</td><td><span class="badge bgi">${PL[s.payment]||s.payment||"—"}</span></td><td><span class="badge bgs">Bajarildi</span></td><td class="f12 tm">${fD(s.createdAt)}</td></tr>`).join("")}
+
+// PURCHASES
+async function loadPurch(){try{let snap;try{snap=await getDocs(query(collection(db,"purchases"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"purchases"))}purchases=snap.docs.map(d=>({id:d.id,...d.data()}));purchases.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("Purch:",e.message)}}
+window.openPurchM=function(){purchItems=[];document.getElementById("purchm-inv").value="";updSuppSelects();updProdSelects();renderPurchItems();openM("purchm")};
+window.addPurchItem=function(){const pid=document.getElementById("purchm-prodslt").value;const qty=parseInt(document.getElementById("purchm-qty").value)||1;const prc=parseFloat(document.getElementById("purchm-prc").value)||0;if(!pid)return showToast("Mahsulot tanlang!","warning");const p=products.find(x=>x.id===pid);purchItems.push({productId:pid,name:p?.name||"",qty,price:prc});renderPurchItems()};
+function renderPurchItems(){const c=document.getElementById("purchm-items");if(!purchItems.length){c.innerHTML='<div class="tm f12" style="padding:8px 0">Mahsulot qo\'shilmagan</div>';document.getElementById("purchm-total").textContent="0 so'm";return}c.innerHTML=purchItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><span class="f12 tm">${it.qty}×${fN(it.price)}</span><span class="fw6">${fN(it.qty*it.price)}</span><button class="btn bd bxs" onclick="rmPurchItem(${i})"><i class="fas fa-times"></i></button></div>`).join("");document.getElementById("purchm-total").textContent=fN(purchItems.reduce((s,x)=>s+x.qty*x.price,0))+" so'm"}
+window.rmPurchItem=i=>{purchItems.splice(i,1);renderPurchItems()};
+window.savePurch=async function(){if(!purchItems.length)return showToast("Mahsulot qo'shing!","error");const total=purchItems.reduce((s,x)=>s+x.qty*x.price,0);const suppId=document.getElementById("purchm-supp").value;const supp=suppliers.find(s=>s.id===suppId);try{await addDoc(collection(db,"purchases"),{supplierId:suppId,supplierName:supp?.name||"—",items:purchItems,total,payment:document.getElementById("purchm-pay").value,invoice:document.getElementById("purchm-inv").value.trim(),status:"completed",createdAt:serverTimestamp()});for(const it of purchItems){const p=products.find(x=>x.id===it.productId);if(p)await updateDoc(doc(db,"products",it.productId),{quantity:(p.quantity||0)+it.qty,updatedAt:serverTimestamp()})}await addLog("purchase","Xarid: "+(supp?.name||"—")+" - "+fN(total)+" so'm");await loadPurch();await loadProds();renderPurch();renderP();updDashStats();updAllLSB();closeM("purchm");showToast("Xarid saqlandi","success")}catch(e){showToast("Xato: "+e.message,"error")}};
+function renderPurch(){const tb=document.getElementById("purchbody");if(!purchases.length){tb.innerHTML=`<tr><td colspan="6"><div class="es"><i class="fas fa-file-invoice"></i><h3>Xaridlar yo'q</h3></div></td></tr>`;return}tb.innerHTML=purchases.map((p,i)=>`<tr><td>${i+1}</td><td>${p.supplierName||"—"}</td><td>${(p.items||[]).length} mahsulot</td><td class="fw6">${fN(p.total)} so'm</td><td><span class="badge bgi">${PL[p.payment]||p.payment||"—"}</span></td><td class="f12 tm">${fD(p.createdAt)}</td></tr>`).join("")}
+
+// RETURNS
+async function loadRets(){try{let snap;try{snap=await getDocs(query(collection(db,"returns"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"returns"))}returns=snap.docs.map(d=>({id:d.id,...d.data()}));returns.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("Ret:",e.message)}}
+window.openRetM=function(){updProdSelects();openM("retm")};
+window.saveRet=async function(){const pid=document.getElementById("retm-prod").value;const qty=parseInt(document.getElementById("retm-qty").value)||0;if(!pid)return showToast("Mahsulot tanlang!","error");if(qty<=0)return showToast("Miqdor kerak!","error");const p=products.find(x=>x.id===pid);try{await addDoc(collection(db,"returns"),{productId:pid,productName:p?.name||"",quantity:qty,type:document.getElementById("retm-type").value,reason:document.getElementById("retm-reason").value.trim(),status:document.getElementById("retm-stat").value,createdAt:serverTimestamp()});await addLog("return","Qaytarish: "+(p?.name||"")+" "+qty+" ta");await loadRets();renderRet();closeM("retm");showToast("Qaytarish qo'shildi","success")}catch(e){showToast("Xato: "+e.message,"error")}};
+function renderRet(){const tb=document.getElementById("retbody");if(!returns.length){tb.innerHTML=`<tr><td colspan="6"><div class="es"><i class="fas fa-undo"></i><h3>Qaytarishlar yo'q</h3></div></td></tr>`;return}const sm={pending:{cls:"bgw",l:"Kutilmoqda"},approved:{cls:"bgi",l:"Tasdiqlangan"},completed:{cls:"bgs",l:"Bajarildi"}};tb.innerHTML=returns.map((r,i)=>`<tr><td>${i+1}</td><td>${r.productName||"—"}</td><td>${r.quantity}</td><td class="f12">${r.reason||"—"}</td><td class="f12 tm">${fD(r.createdAt)}</td><td><span class="badge ${sm[r.status]?.cls||"bge"}">${sm[r.status]?.l||r.status}</span></td></tr>`).join("")}
+
+// ORDERS
+window.loadOrders=async function(){document.getElementById("otbody").innerHTML=`<tr><td colspan="12"><div class="lo"><div class="spinner"></div><span>Yuklanmoqda...</span></div></td></tr>`;try{let snap;try{snap=await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")))}catch(e){snap=await getDocs(collection(db,"orders"))}orders=snap.docs.map(d=>({id:d.id,...d.data()}));orders.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));filterO();updOStats();updOBadge();showToast(`${orders.length} ta buyurtma yuklandi`,"success")}catch(e){showToast("Xatolik: "+e.message,"error")}};
+function updOStats(){const c=s=>orders.filter(o=>o.status===s).length;const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};set("osp",c("pending")+c("paid_pending")+c("confirmed")+c("processing"));set("osc",c("confirmed"));set("oss",c("shipped"));set("osd",c("delivered")+c("completed"));set("osca",c("cancelled"));const rev=orders.filter(o=>o.status!=="cancelled").reduce((s,o)=>s+(o.grandTotal||o.total||0),0);set("osr",fN(rev)+" so'm")}
+function updOBadge(){const p=orders.filter(o=>["pending","paid_pending"].includes(o.status)).length;const nb=document.getElementById("nb-orders");if(nb)nb.textContent=p||""}
+window.filterO=function(){const s=(document.getElementById("osrch")?.value||"").toLowerCase();const stf=document.getElementById("ostf")?.value||"";const pf=document.getElementById("opf")?.value||"";oFilt=orders.filter(o=>{const ms=!s||(o.orderNumber||"").toLowerCase().includes(s)||(o.customerName||"").toLowerCase().includes(s)||(o.customerPhone||"").toLowerCase().includes(s)||(o.telegramUsername||"").toLowerCase().includes(s)||(o.deliveryAddress||"").toLowerCase().includes(s);return ms&&(!stf||o.status===stf)&&(!pf||o.paymentType===pf)});oPage=1;renderOT()};
+window.clrOF=function(){document.getElementById("osrch").value="";document.getElementById("ostf").value="";document.getElementById("opf").value="";filterO()};
+function renderOT(){const tb=document.getElementById("otbody");document.getElementById("ocb").textContent=oFilt.length;document.getElementById("oi").textContent=oFilt.length+" ta buyurtma";if(!oFilt.length){tb.innerHTML=`<tr><td colspan="12"><div class="es"><i class="fas fa-clipboard-list"></i><h3>Buyurtmalar yo'q</h3></div></td></tr>`;document.getElementById("op").innerHTML="";return}const start=(oPage-1)*oPS;const pg=oFilt.slice(start,start+oPS);tb.innerHTML=pg.map((o,i)=>{const st=STM[o.status]||{lbl:o.status||"—",cls:"bge"};const hl=!!(o.location?.lat&&o.location?.lng);const cn=o.customerName||o.name||"—";const ph=o.customerPhone||o.phone||"—";const tg=o.telegramUsername||"";const tgid=o.telegramId||"";const ad=o.deliveryAddress||o.address||"—";return`<tr class="or" onclick="showODetail('${o.id}')"><td class="f12 tm">${start+i+1}</td><td><span class="fw6" style="color:var(--p)">${o.orderNumber||"#"+o.id.slice(-6)}</span><br><span class="f11 tm">${fD(o.createdAt)}</span></td><td><div class="fw6">${cn}</div>${o.note?`<div class="f11 tm">💬 ${o.note.substring(0,28)}</div>`:""}</td><td>${ph!=="—"?`<a href="tel:${ph}" onclick="event.stopPropagation()" style="color:var(--p);font-weight:600;text-decoration:none">${ph}</a>`:"—"}</td><td>${tg?`<a href="https://t.me/${tg}" target="_blank" onclick="event.stopPropagation()" style="color:#2ca5e0;font-weight:600;text-decoration:none"><i class="fab fa-telegram"></i> @${tg}</a>`:tgid?`<span class="f12 tm">ID:${tgid}</span>`:"—"}</td><td><div class="f13">${ad.length>28?ad.substring(0,28)+"...":ad}</div></td><td>${hl?`<span class="badge bgs" style="font-size:10px">📍GPS ✓</span>`:""}</td><td><div class="fw6">${fN(o.grandTotal||o.total||0)} so'm</div></td><td><span class="badge bge">${PL[o.paymentType]||o.paymentType||"—"}</span></td><td onclick="event.stopPropagation()"><select class="stsel" onchange="quickUpdO('${o.id}',this.value)">${Object.entries(STM).map(([k,v])=>`<option value="${k}"${o.status===k?" selected":""}>${v.lbl}</option>`).join("")}</select></td><td class="f12 tm">${fD(o.createdAt)}</td><td onclick="event.stopPropagation()"><div class="df g8"><button class="btn bp bxs" onclick="showODetail('${o.id}')"><i class="fas fa-eye"></i></button><button class="btn bd bxs" onclick="deleteO('${o.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`}).join("");const tp=Math.ceil(oFilt.length/oPS);const op=document.getElementById("op");op.innerHTML="";for(let i=1;i<=Math.min(tp,10);i++){const b=document.createElement("button");b.className="pb"+(i===oPage?" active":"");b.textContent=i;b.onclick=()=>{oPage=i;renderOT()};op.appendChild(b)}}
+window.quickUpdO=async function(id,status){try{await updateDoc(doc(db,"orders",id),{status,updatedAt:serverTimestamp()});const o=orders.find(x=>x.id===id);if(o){o.status=status;const st=STM[status];const tgid=o.telegramId||"",tg=o.telegramUsername||"";if(tgid||tg){const msg=`📦 <b>Buyurtma yangilandi</b>\n\n📋 № <b>${o.orderNumber||o.id.slice(-6)}</b>\n📌 Holat: <b>${st?.lbl||status}</b>`;if(tgid)await tgSend(tgid,msg);else await tgSend("@"+tg,msg)}}updOStats();updOBadge();renderOT();showToast("Holat yangilandi ✓","success")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.deleteO=function(id){const o=orders.find(x=>x.id===id);showConfirm(`"${o?.orderNumber||id}" o'chirilsin?`,async()=>{try{await deleteDoc(doc(db,"orders",id));orders=orders.filter(x=>x.id!==id);filterO();updOStats();updOBadge();showToast("O'chirildi","success")}catch(e){showToast("Xato: "+e.message,"error")}})};
+window.showODetail=function(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  const st=STM[o.status]||{lbl:o.status||"—",cls:"bge",icon:"fa-question-circle"};
+  const hl=!!(o.location?.lat&&o.location?.lng);
+  const cn=o.customerName||o.name||"—";const ph=o.customerPhone||o.phone||"—";const tg=o.telegramUsername||"";const tgid=o.telegramId||"";const ad=o.deliveryAddress||o.address||"—";
+  const items=o.items||[];const prodT=items.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);const dlv=o.deliveryFee||0;const disc=o.discount||0;const grand=o.grandTotal||(prodT-disc+dlv);
+  const steps=["pending","confirmed","processing","shipped","delivered"];const curI=steps.indexOf(o.status);
+  const sicons={pending:"fa-inbox",confirmed:"fa-check-circle",processing:"fa-cog",shipped:"fa-truck",delivered:"fa-home"};
+  const slbls={pending:"Qabul",confirmed:"Tasdiqlangan",processing:"Tayyorlanmoqda",shipped:"Yo'lda",delivered:"Yetkazildi"};
+  document.getElementById("odtitle").textContent="Buyurtma: "+(o.orderNumber||"#"+id.slice(-6));
+  document.getElementById("odbody").innerHTML=`
+<div class="sf">${steps.map((s,i)=>`<div class="ss${i<curI?" done":""}${s===o.status?" cur":""}"><i class="fas ${sicons[s]}"></i>${slbls[s]}</div>`).join("")}</div>
+<div class="ch2"><div class="cav">${(cn[0]||"?").toUpperCase()}</div><div style="flex:1"><div class="cn">${cn}</div><div class="cm">${ph!=="—"?`<div><i class="fas fa-phone" style="width:18px;color:#60a5fa"></i><a href="tel:${ph}">${ph}</a></div>`:""} ${tg?`<div><i class="fab fa-telegram" style="width:18px;color:#2ca5e0"></i><a href="https://t.me/${tg}" target="_blank">@${tg}</a></div>`:""} ${tgid?`<div><i class="fas fa-id-badge" style="width:18px;color:#94a3b8"></i><span style="color:#94a3b8">TG ID: ${tgid}</span></div>`:""} ${o.source?`<div><i class="fas fa-globe" style="width:18px"></i><span style="color:#64748b">Manba: ${o.source}</span></div>`:""}</div></div><span class="badge ${st.cls}" style="font-size:12px;padding:6px 12px;align-self:flex-start"><i class="fas ${st.icon}"></i> ${st.lbl}</span></div>
+<div class="sdv"><i class="fas fa-info-circle"></i> Buyurtma ma'lumotlari</div>
+<div class="ig2"><div class="ii"><div class="il">Buyurtma №</div><div class="iv" style="color:var(--p)">${o.orderNumber||"—"}</div></div><div class="ii"><div class="il">Sana</div><div class="iv sm">${fD(o.createdAt)}</div></div><div class="ii"><div class="il">To'lov turi</div><div class="iv">${PL[o.paymentType]||o.paymentType||"—"}</div></div><div class="ii"><div class="il">To'lov holati</div><div class="iv">${o.paymentStatus||"pending"}</div></div>${o.note?`<div class="ii" style="grid-column:1/-1"><div class="il">Izoh</div><div class="iv sm">💬 ${o.note}</div></div>`:""}</div>
+<div class="sdv"><i class="fas fa-map-marker-alt"></i> Manzil</div>
+${hl?`<div class="lb"><div class="lt"><i class="fas fa-map-marker-alt"></i> GPS aniqlangan ✓</div><div class="lg"><div class="lgi"><label>Lat</label><span>${o.location.lat.toFixed(6)}</span></div><div class="lgi"><label>Lng</label><span>${o.location.lng.toFixed(6)}</span></div><div class="lgi" style="grid-column:1/-1"><label>Manzil</label><span style="font-size:13px;font-weight:500">${ad}</span></div>${o.deliveryDistance?`<div class="lgi"><label>Masofa</label><span>${o.deliveryDistance} km</span></div>`:""}</div><div class="ml"><a class="mb3 go" href="https://maps.google.com/?q=${o.location.lat},${o.location.lng}" target="_blank"><i class="fab fa-google"></i> Google Maps</a><a class="mb3 ya" href="https://yandex.com/maps/?pt=${o.location.lng},${o.location.lat}&z=16" target="_blank"><i class="fas fa-map"></i> Yandex</a><a class="mb3 ro" href="https://www.google.com/maps/dir/41.299496,69.240073/${o.location.lat},${o.location.lng}" target="_blank"><i class="fas fa-route"></i> Marshrut</a></div></div>`:`<div class="nlb"><div style="font-weight:700;color:#b45309;margin-bottom:6px"><i class="fas fa-exclamation-triangle"></i> GPS yo'q</div><div style="font-size:13px;color:#92400e">Manzil: <strong>${ad}</strong></div></div>`}
+<div class="sdv"><i class="fas fa-boxes"></i> Mahsulotlar (${items.length})</div>
+${items.length?`<table class="oit"><thead><tr><th>Mahsulot</th><th style="text-align:center">Miqdor</th><th style="text-align:right">Narx</th><th style="text-align:right">Jami</th></tr></thead><tbody>${items.map(it=>`<tr><td><div class="fw6">${it.name||"—"}</div></td><td style="text-align:center">${it.qty||1}</td><td style="text-align:right">${fN(it.price||0)} so'm</td><td style="text-align:right;font-weight:700">${fN((it.price||0)*(it.qty||1))} so'm</td></tr>`).join("")}</tbody></table>`:`<div class="tm f13" style="margin-bottom:14px">Mahsulotlar topilmadi</div>`}
+<div class="sdv"><i class="fas fa-coins"></i> Moliyaviy xulosa</div>
+<div class="smb"><div class="smr"><span>Mahsulotlar:</span><span>${fN(prodT)} so'm</span></div>${disc?`<div class="smr gn"><span>🎁 Chegirma:</span><span>−${fN(disc)} so'm</span></div>`:""} ${dlv?`<div class="smr"><span>🚚 Yetkazib berish:</span><span>${fN(dlv)} so'm</span></div>`:""}<div class="smr"><span>JAMI:</span><span style="color:var(--p)">${fN(grand)} so'm</span></div></div>
+<div class="sdv"><i class="fas fa-edit"></i> Holatni o'zgartirish</div>
+<div class="df g8" style="flex-wrap:wrap">${Object.entries(STM).map(([k,v])=>`<button class="btn bsm ${o.status===k?"bp":"bse"}" onclick="updOFromModal('${id}','${k}')"><i class="fas ${v.icon}"></i> ${v.lbl}</button>`).join("")}</div>`;
+  document.getElementById("odfooter").innerHTML=`<button class="btn bse" onclick="closeM('odm')"><i class="fas fa-times"></i> Yopish</button>${tg?`<a href="https://t.me/${tg}" target="_blank" class="btn bi"><i class="fab fa-telegram"></i> Telegram</a>`:""} ${tgid||tg?`<button class="btn bi" onclick="sendTG('${id}')"><i class="fas fa-paper-plane"></i> Xabar yuborish</button>`:""}<button class="btn bd" onclick="deleteO('${id}');closeM('odm')"><i class="fas fa-trash"></i></button>`;
+  openM("odm");
+};
+window.updOFromModal=async function(id,status){try{await updateDoc(doc(db,"orders",id),{status,updatedAt:serverTimestamp()});const o=orders.find(x=>x.id===id);if(o){o.status=status;const tgid=o.telegramId||"",tg=o.telegramUsername||"";const st=STM[status];const msg=`📦 <b>Buyurtma yangilandi</b>\n\n📋 № <b>${o.orderNumber||id.slice(-6)}</b>\n📌 Holat: <b>${st?.lbl||status}</b>`;if(tgid)await tgSend(tgid,msg);else if(tg)await tgSend("@"+tg,msg)}updOStats();updOBadge();renderOT();showODetail(id);showToast("Holat yangilandi: "+STM[status]?.lbl,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.sendTG=async function(id){const o=orders.find(x=>x.id===id);if(!o)return;const tgid=o.telegramId||"",tg=o.telegramUsername||"";if(!tgid&&!tg)return showToast("Telegram ma'lumoti yo'q!","error");const st=STM[o.status];const msg=`📦 <b>Buyurtma holati</b>\n\n📋 № <b>${o.orderNumber||id.slice(-6)}</b>\n📌 Holat: <b>${st?.lbl||o.status}</b>\n💰 Jami: <b>${fN(o.grandTotal||o.total)} so'm</b>\n📍 ${o.deliveryAddress||"—"}`;try{if(tgid)await tgSend(tgid,msg);else await tgSend("@"+tg,msg);showToast("Telegram xabari yuborildi ✓","success")}catch(e){showToast("TG xato: "+e.message,"error")}};
+window.expOCSV=function(){const h=["#","Buyurtma №","Mijoz","Telefon","Telegram","Manzil","Lat","Lng","Masofa","Jami","To'lov","Holat","Sana"];const r=oFilt.map((o,i)=>[i+1,o.orderNumber||o.id.slice(-6),o.customerName||o.name||"",o.customerPhone||o.phone||"",o.telegramUsername||"",(o.deliveryAddress||"").replace(/,/g," "),o.location?.lat?.toFixed(6)||"",o.location?.lng?.toFixed(6)||"",o.deliveryDistance||"",o.grandTotal||o.total||0,o.paymentType||"",STM[o.status]?.lbl||o.status||"",fD(o.createdAt)]);const csv=[h,...r].map(row=>row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");const b=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="buyurtmalar.csv";a.click();showToast("CSV yuklab olindi","success")};
+
+// POS
+window.initPOS=function(){cartItems=[];updCustSelects();updWHSelects();renderPosProds();renderCart()};
+window.renderPosProds=function(){const g=document.getElementById("posgrid");const s=(document.getElementById("possrch")?.value||"").toLowerCase();const wf=document.getElementById("poswf")?.value||"";const arr=products.filter(p=>p.status!=="inactive"&&(!s||p.name?.toLowerCase().includes(s))&&(!wf||p.warehouse===wf));g.innerHTML=arr.map(p=>`<div onclick="addToCart('${p.id}')" style="background:var(--bg);border-radius:6px;padding:10px;cursor:pointer;border:1px solid var(--bo);text-align:center;transition:all .15s" onmouseover="this.style.borderColor='var(--p)'" onmouseout="this.style.borderColor='var(--bo)'">${p.imageUrl?`<img src="${p.imageUrl}" style="width:50px;height:50px;border-radius:6px;object-fit:cover;margin-bottom:4px" onerror="this.style.display='none'">`:""}<div style="font-size:12px;font-weight:600">${p.name}</div><div style="font-size:11px;color:var(--p)">${fN(p.price)} so'm</div><div style="font-size:10px;color:var(--tl)">${p.quantity||0} qoldi</div></div>`).join("")};
+window.addToCart=function(pid){const p=products.find(x=>x.id===pid);if(!p)return;const ex=cartItems.find(x=>x.productId===pid);if(ex){if(ex.qty>=(p.quantity||0))return showToast("Yetarli yo'q!","warning");ex.qty++}else{if((p.quantity||0)<=0)return showToast("Tugagan!","error");cartItems.push({productId:pid,name:p.name,price:p.price||0,qty:1,maxQty:p.quantity||0})}renderCart()};
+function renderCart(){const c=document.getElementById("poscart");if(!cartItems.length){c.innerHTML='<div class="es" style="padding:20px"><i class="fas fa-shopping-basket"></i><p>Savat bo\'sh</p></div>';document.getElementById("postotal").textContent="0 so'm";return}c.innerHTML=cartItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><button class="btn bse bxs" onclick="updCart(${i},-1)">−</button><span style="min-width:24px;text-align:center">${it.qty}</span><button class="btn bse bxs" onclick="updCart(${i},1)">+</button><span style="font-size:13px;font-weight:600;min-width:90px;text-align:right">${fN(it.price*it.qty)}</span><button class="btn bd bxs" onclick="rmCart(${i})"><i class="fas fa-times"></i></button></div>`).join("");document.getElementById("postotal").textContent=fN(cartItems.reduce((s,x)=>s+x.price*x.qty,0))+" so'm"}
+window.updCart=(i,d)=>{cartItems[i].qty=Math.max(1,Math.min(cartItems[i].qty+d,cartItems[i].maxQty));renderCart()};
+window.rmCart=i=>{cartItems.splice(i,1);renderCart()};
+window.clrCart=()=>{cartItems=[];renderCart()};
+window.completeSale=async function(){if(!cartItems.length)return showToast("Savat bo'sh!","warning");const total=cartItems.reduce((s,x)=>s+x.price*x.qty,0);const custId=document.getElementById("poscust").value;const cust=customers.find(c=>c.id===custId);try{await addDoc(collection(db,"sales"),{customerId:custId,customerName:cust?.name||"Naqd",items:cartItems.map(x=>({...x})),total,payment:document.getElementById("pospay").value,status:"completed",source:"pos",createdAt:serverTimestamp()});for(const it of cartItems){const p=products.find(x=>x.id===it.productId);if(p)await updateDoc(doc(db,"products",it.productId),{quantity:Math.max(0,(p.quantity||0)-it.qty),updatedAt:serverTimestamp()})}await addLog("sale","POS Sotuv: "+fN(total)+" so'm");await loadSales();await loadProds();renderPosProds();updDashStats();updAllLSB();showToast(`Sotuv: ${fN(total)} so'm 🎉`,"success",4000);cartItems=[];renderCart()}catch(e){showToast("Xato: "+e.message,"error")}};
+
+// INVENTORY CHECK
+window.loadIC=function(){updWHSelects();const wf=document.getElementById("icwf")?.value||"";const tb=document.getElementById("ictbody");const arr=wf?products.filter(p=>p.warehouse===wf):products;if(!arr.length){tb.innerHTML=`<tr><td colspan="6"><div class="es"><i class="fas fa-boxes"></i><h3>Mahsulotlar yo'q</h3></div></td></tr>`;return}tb.innerHTML=arr.map(p=>{const wh=warehouses.find(x=>x.id===p.warehouse);return`<tr><td class="fw6">${p.name}</td><td>${wh?.name||p.warehouse||"—"}</td><td>${p.quantity||0} ${p.unit||"dona"}</td><td><input type="number" value="${p.quantity||0}" id="ic-${p.id}" class="fc" style="width:80px" oninput="updIC('${p.id}',this.value)"></td><td id="icd-${p.id}" style="font-weight:600">0</td><td id="ics-${p.id}"><span class="badge bgs">Mos</span></td></tr>`}).join("")};
+window.updIC=function(id,val){const p=products.find(x=>x.id===id);if(!p)return;const a=parseInt(val)||0;const d=a-(p.quantity||0);const de=document.getElementById("icd-"+id);const se=document.getElementById("ics-"+id);if(de){de.textContent=(d>0?"+":"")+d;de.style.color=d===0?"var(--s)":d>0?"var(--p)":"var(--d)"}if(se)se.innerHTML=d===0?'<span class="badge bgs">Mos</span>':d>0?'<span class="badge bgi">Ortiqcha</span>':'<span class="badge bgd">Kam</span>'};
+window.saveIC=async function(){const wf=document.getElementById("icwf")?.value||"";const arr=wf?products.filter(p=>p.warehouse===wf):products;let cnt=0;try{for(const p of arr){const inp=document.getElementById("ic-"+p.id);if(!inp)continue;const v=parseInt(inp.value)||0;if(v!==(p.quantity||0)){await updateDoc(doc(db,"products",p.id),{quantity:v,updatedAt:serverTimestamp()});cnt++}}await addLog("inventory","Inventarizatsiya: "+cnt+" ta mahsulot yangilandi");await loadProds();renderP();updAllLSB();loadIC();showToast(`${cnt} ta mahsulot yangilandi ✓`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+
+// ANALYTICS
+window.loadAnalytics=function(){document.getElementById("ants").textContent=sales.length;document.getElementById("antr").textContent=fN(sales.reduce((s,x)=>s+(x.total||0),0))+" so'm";document.getElementById("antp").textContent=purchases.length;document.getElementById("antw").textContent=warehouses.length;const cc=document.getElementById("ancc");if(categories.length){const rows=categories.map(c=>({name:c.name,cnt:products.filter(p=>p.category===c.id).length,color:c.color||"#1a56db"})).filter(x=>x.cnt>0);const mx=Math.max(1,...rows.map(x=>x.cnt));cc.innerHTML=rows.map(r=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="f12">${r.name}</span><span class="f12 fw6">${r.cnt} ta</span></div><div style="background:var(--bg);height:8px;border-radius:20px;overflow:hidden"><div style="background:${r.color};height:100%;width:${(r.cnt/mx*100).toFixed(0)}%;border-radius:20px"></div></div></div>`).join("")}const aw=document.getElementById("anwh");const whrows=warehouses.map(w=>{const cnt=products.filter(p=>p.warehouse===w.id).length;const tv=products.filter(p=>p.warehouse===w.id).reduce((s,p)=>s+(p.price||0)*(p.quantity||0),0);return{name:w.name,cnt,tv}});aw.innerHTML=whrows.map(w=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bo)"><span class="f13 fw6">${w.name}</span><div style="text-align:right"><div class="f13">${w.cnt} ta mahsulot</div><div class="f12 tm">${fN(w.tv)} so'm</div></div></div>`).join("")};
+
+// REPORTS
+window.genRep=function(type){const titles={stock:"Inventar Hisoboti",orders:"Buyurtmalar",lowstock:"Kam Qolgan",warehouse:"Omborlar",sales:"Sotuv",qrcodes:"QR Kodlar"};document.getElementById("reptitle").textContent=titles[type]||"Hisobot";document.getElementById("prbtn").style.display="inline-flex";const c=document.getElementById("repcontent");
+if(type==="stock"){c.innerHTML=`<table><thead><tr><th>Nomi</th><th>SKU</th><th>Kategoriya</th><th>Ombor</th><th>Miqdor</th><th>Min</th><th>Narx</th><th>Jami qiymat</th><th>Holat</th></tr></thead><tbody>${products.map(p=>{const cat=categories.find(x=>x.id===p.category);const wh=warehouses.find(x=>x.id===p.warehouse);const st=stSt(p);return`<tr><td class="fw6">${p.name}</td><td><span class="sku">${p.sku||"—"}</span></td><td>${cat?.icon||"📦"} ${cat?.name||"—"}</td><td>${wh?.name||p.warehouse||"—"}</td><td>${p.quantity||0} ${p.unit||"dona"}</td><td>${p.minQuantity||5}</td><td>${fN(p.price)}</td><td>${fN((p.price||0)*(p.quantity||0))}</td><td><span class="badge ${st.cls}">${st.label}</span></td></tr>`}).join("")}</tbody></table><div style="margin-top:12px;text-align:right;font-weight:600">Jami: ${fN(products.reduce((s,p)=>s+(p.price||0)*(p.quantity||0),0))} so'm</div>`}
+else if(type==="orders"){c.innerHTML=`<table><thead><tr><th>Buyurtma №</th><th>Mijoz</th><th>Telefon</th><th>Manzil</th><th>Jami</th><th>To'lov</th><th>Holat</th><th>Sana</th></tr></thead><tbody>${orders.map(o=>{const st=STM[o.status]||{lbl:o.status||"—",cls:"bge"};return`<tr><td class="fw6">${o.orderNumber||o.id.slice(-6)}</td><td>${o.customerName||"—"}</td><td>${o.customerPhone||"—"}</td><td>${(o.deliveryAddress||"—").substring(0,30)}</td><td class="fw6">${fN(o.grandTotal||o.total||0)} so'm</td><td>${PL[o.paymentType]||"—"}</td><td><span class="badge ${st.cls}">${st.lbl}</span></td><td class="f12 tm">${fD(o.createdAt)}</td></tr>`}).join("")}</tbody></table>`}
+else if(type==="lowstock"){const low=products.filter(p=>stSt(p).val!=="ok");c.innerHTML=low.length?`<table><thead><tr><th>Mahsulot</th><th>SKU</th><th>Ombor</th><th>Miqdor</th><th>Min</th><th>Holat</th></tr></thead><tbody>${low.map(p=>{const wh=warehouses.find(x=>x.id===p.warehouse);const st=stSt(p);return`<tr><td>${p.name}</td><td><span class="sku">${p.sku||"—"}</span></td><td>${wh?.name||"—"}</td><td class="fw6">${p.quantity||0}</td><td>${p.minQuantity||5}</td><td><span class="badge ${st.cls}">${st.label}</span></td></tr>`}).join("")}</tbody></table>`:'<div class="es"><i class="fas fa-check-circle" style="color:var(--s)"></i><h3>Barcha mahsulotlar normada</h3></div>'}
+else if(type==="warehouse"){c.innerHTML=`<div>${warehouses.map(wh=>{const prods=products.filter(p=>p.warehouse===wh.id);const tv=prods.reduce((s,p)=>s+(p.price||0)*(p.quantity||0),0);return`<div style="margin-bottom:20px"><h3 style="margin-bottom:8px;color:var(--p)"><i class="fas fa-warehouse"></i> ${wh.name}</h3><div class="ib">Manzil: ${wh.address||"—"} | Manager: ${wh.manager||"—"} | Mahsulotlar: ${prods.length} ta | Qiymat: ${fN(tv)} so'm</div><table><thead><tr><th>Mahsulot</th><th>Kategoriya</th><th>Miqdor</th><th>Narx</th><th>Jami</th><th>Holat</th></tr></thead><tbody>${prods.map(p=>{const c=categories.find(x=>x.id===p.category);const st=stSt(p);return`<tr><td>${p.name}</td><td>${c?.name||"—"}</td><td>${p.quantity||0} ${p.unit||"dona"}</td><td>${fN(p.price)}</td><td>${fN((p.price||0)*(p.quantity||0))}</td><td><span class="badge ${st.cls}">${st.label}</span></td></tr>`}).join("")}</tbody></table></div>`}).join("")}</div>`}
+else if(type==="sales"){c.innerHTML=`<table><thead><tr><th>Sana</th><th>Mijoz</th><th>Mahsulotlar</th><th>Jami</th><th>To'lov</th></tr></thead><tbody>${sales.map(s=>`<tr><td class="f12">${fD(s.createdAt)}</td><td>${s.customerName||"Naqd"}</td><td>${(s.items||[]).length} ta</td><td class="fw6">${fN(s.total)} so'm</td><td>${PL[s.payment]||"—"}</td></tr>`).join("")}</tbody></table><div style="margin-top:12px;text-align:right;font-weight:600">Jami daromad: ${fN(sales.reduce((s,x)=>s+(x.total||0),0))} so'm</div>`}
+else if(type==="qrcodes"){const pr=products.slice(0,50);c.innerHTML=`<div style="margin-bottom:12px"><strong>QR kodlar</strong> <button class="btn bse bsm" onclick="window.print()"><i class="fas fa-print"></i> Chop etish</button></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px">${pr.map(p=>`<div style="border:1px solid var(--bo);border-radius:8px;padding:10px;text-align:center" id="qrw-${p.id}"><div id="qrr-${p.id}" style="display:flex;justify-content:center"></div><div class="fw6 f12" style="margin-top:6px;word-break:break-word">${p.name}</div><div class="sku" style="margin-top:4px;display:block">${p.sku||"—"}</div><div class="f12 tm">${fN(p.price)} so'm</div></div>`).join("")}</div>`;setTimeout(()=>{pr.forEach(p=>genQR("qrr-"+p.id,p.qrData||getQRD(p),100))},200)}};
+
+// LOGS
+async function loadLogs(){try{let snap;try{snap=await getDocs(query(collection(db,"logs"),orderBy("createdAt","desc"),limit(300)))}catch(e){snap=await getDocs(collection(db,"logs"))}logs=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.warn("Logs:",e.message)}}
+async function addLog(type,msg){try{await addDoc(collection(db,"logs"),{type,message:msg,createdAt:serverTimestamp()});logs.unshift({type,message:msg,createdAt:null});if(curSec==="logs")renderLogs()}catch(e){}}
+window.renderLogs=function(){filterLogs("")};
+window.filterLogs=function(s){const tc={product:"bl",stock_in:"gn",stock_out:"rd",sale:"bl",order:"bl",customer:"og",category:"og",warehouse:"bl",supplier:"bl",purchase:"gn",transfer:"bl",return:"og",inventory:"og"};const arr=logs.filter(l=>!s||l.message?.toLowerCase().includes(s.toLowerCase()));const c=document.getElementById("logslist");if(!arr.length){c.innerHTML='<div class="es"><i class="fas fa-history"></i><h3>Loglar yo\'q</h3></div>';return}c.innerHTML=arr.map(l=>`<div class="li"><div class="ld ${tc[l.type]||"bl"}"></div><div style="flex:1"><div class="f13">${l.message||""}</div><div class="f12 tm">${fD(l.createdAt)}</div></div><span class="badge bge f12">${l.type||""}</span></div>`).join("")};
+window.clrLogs=function(){showConfirm("Barcha loglarni o'chirish?",async()=>{try{const snap=await getDocs(collection(db,"logs"));const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));await batch.commit();logs=[];renderLogs();showToast("Loglar tozalandi","success")}catch(e){showToast("Xato: "+e.message,"error")}})};
+
+// USERS
+async function loadUsers(){try{const snap=await getDocs(collection(db,"users"));users=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.warn("Users:",e.message)}}
+window.openUM=function(){["um-name","um-email"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});openM("um")};
+window.saveUser=async function(){const name=document.getElementById("um-name").value.trim();const email=document.getElementById("um-email").value.trim();if(!name||!email)return showToast("Ism va email kerak!","error");try{await addDoc(collection(db,"users"),{name,email,role:document.getElementById("um-role").value,status:document.getElementById("um-stat").value,createdAt:serverTimestamp()});await loadUsers();renderUsers();closeM("um");showToast("Foydalanuvchi qo'shildi","success")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.deleteUser=async function(id){showConfirm("Foydalanuvchini o'chirish?",async()=>{await deleteDoc(doc(db,"users",id));await loadUsers();renderUsers();showToast("O'chirildi","success")})};
+function renderUsers(){const tb=document.getElementById("usertbody");if(!users.length){tb.innerHTML=`<tr><td colspan="8"><div class="es"><i class="fas fa-user-shield"></i><h3>Foydalanuvchilar yo'q</h3></div></td></tr>`;return}const roles={admin:"Admin",manager:"Menejer",cashier:"Kassir",viewer:"Ko'ruvchi"};tb.innerHTML=users.map((u,i)=>`<tr><td>${i+1}</td><td class="fw6">${u.fullName||u.name||"—"}</td><td>${u.phone||"—"}</td><td>${u.telegramUsername?"@"+u.telegramUsername:u.telegramId?"ID:"+u.telegramId:"—"}</td><td><span class="badge bgi">${roles[u.role]||u.role||"—"}</span></td><td>${u.orderCount||0}</td><td class="f12 tm">${fD(u.createdAt)}</td><td><button class="btn bd bxs" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join("")}
+
+// DASHBOARD
+function loadDash(){updDashStats();updDashLogs();renderLSDash();renderCCh();renderTP();updAllLSB()}
+function updDashStats(){document.getElementById("stp").textContent=products.length;document.getElementById("stv").textContent=fN(products.reduce((s,p)=>s+(p.price||0)*(p.quantity||0),0));document.getElementById("stc").textContent=customers.length;document.getElementById("stw").textContent=warehouses.length;document.getElementById("sto").textContent=orders.length}
+function updDashLogs(){const c=document.getElementById("rl");const rec=logs.slice(0,10);if(!rec.length){c.innerHTML='<div class="tm f12" style="padding:10px">Harakatlar yo\'q</div>';return}const tc={product:"bl",stock_in:"gn",stock_out:"rd",sale:"bl",customer:"og",category:"og"};c.innerHTML=rec.map(l=>`<div class="li"><div class="ld ${tc[l.type]||"bl"}"></div><div style="flex:1"><div class="f13">${l.message||""}</div><div class="f12 tm">${fD(l.createdAt)}</div></div></div>`).join("")}
+function renderLSDash(){const c=document.getElementById("lsl");const low=products.filter(p=>stSt(p).val!=="ok");if(!low.length){c.innerHTML='<div class="es" style="padding:20px"><i class="fas fa-check-circle" style="color:var(--s)"></i><h3>Hammasi yaxshi!</h3></div>';return}c.innerHTML=low.map(p=>{const st=stSt(p);const wh=warehouses.find(x=>x.id===p.warehouse);return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bo)">${p.imageUrl?`<img src="${p.imageUrl}" style="width:32px;height:32px;border-radius:6px;object-fit:cover" onerror="this.style.display='none'">`:""}<div style="flex:1"><div class="f13 fw6">${p.name}</div><div class="f12 tm">${p.quantity||0} ${p.unit||"dona"} | ${wh?.name||"—"}</div></div><span class="badge ${st.cls}">${st.label}</span></div>`}).join("")}
+function renderCCh(){const c=document.getElementById("cc");if(!categories.length){c.innerHTML='<div class="es" style="padding:20px"><i class="fas fa-tags"></i><h3>Kategoriyalar yo\'q</h3></div>';return}const rows=categories.map(cat=>({name:cat.name,icon:cat.icon||"📦",cnt:products.filter(p=>p.category===cat.id).length,color:cat.color||"#1a56db"}));const mx=Math.max(1,...rows.map(x=>x.cnt));c.innerHTML=rows.map(r=>`<div style="margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px;justify-content:space-between;margin-bottom:3px"><span>${r.icon}</span><span class="f12" style="flex:1">${r.name}</span><span class="f12 fw6">${r.cnt} ta</span></div><div style="background:var(--bg);height:8px;border-radius:20px;overflow:hidden"><div style="background:${r.color};height:100%;width:${(r.cnt/mx*100).toFixed(0)}%;border-radius:20px"></div></div></div>`).join("")}
+function renderTP(){const c=document.getElementById("tp");const sorted=[...products].sort((a,b)=>(b.price||0)-(a.price||0)).slice(0,5);if(!sorted.length){c.innerHTML='<div class="es" style="padding:20px"><i class="fas fa-star"></i><h3>Mahsulotlar yo\'q</h3></div>';return}c.innerHTML=sorted.map((p,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bo)"><div style="width:24px;height:24px;background:var(--p);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>${p.imageUrl?`<img src="${p.imageUrl}" style="width:36px;height:36px;border-radius:6px;object-fit:cover" onerror="this.style.display='none'">`:""}<div style="flex:1"><div class="f13 fw6">${p.name}</div><div class="f12 tm">${fN(p.price)} so'm | ${p.quantity||0} ${p.unit||"dona"}</div></div></div>`).join("")}
+
+// SETTINGS
+window.saveSett=function(){showToast("Sozlamalar saqlandi","success")};
+window.expAll=function(){const data={products,categories,customers,suppliers,warehouses,stockIns,stockOuts,sales,purchases,orders,transfers,returns,exportedAt:new Date().toISOString()};const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="boomstroy-export.json";a.click();showToast("Ma'lumotlar yuklab olindi","success")};
+window.expCSV=function(){const h=["Nomi","SKU","Kategoriya","Ombor","Miqdor","Narx","Min zaxira","Holat"];const r=products.map(p=>{const c=categories.find(x=>x.id===p.category);const w=warehouses.find(x=>x.id===p.warehouse);return[p.name,p.sku||"",c?.name||"",w?.name||"",p.quantity||0,p.price||0,p.minQuantity||5,p.status||""]});const csv=[h,...r].map(row=>row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\n");const b=new Blob([csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="mahsulotlar.csv";a.click();showToast("CSV yuklab olindi","success")};
+
+// GLOBAL SEARCH
+window.gSearch=function(val){if(!val.trim()||val.length<2)return;const o=orders.filter(x=>(x.orderNumber||"").toLowerCase().includes(val.toLowerCase())||(x.customerName||"").toLowerCase().includes(val.toLowerCase()));const p=products.filter(x=>x.name?.toLowerCase().includes(val.toLowerCase())||x.sku?.toLowerCase().includes(val.toLowerCase()));const c=customers.filter(x=>x.name?.toLowerCase().includes(val.toLowerCase()));if(o.length){nav("orders");setTimeout(()=>{document.getElementById("osrch").value=val;filterO()},100)}else if(p.length){nav("products");setTimeout(()=>{document.getElementById("psrch").value=val;filterP()},100)}else if(c.length){nav("customers");setTimeout(()=>{document.getElementById("custsrch").value=val;filterCust()},100)}};
+
+// NOTIFICATIONS
+window.showNotif=function(){const low=products.filter(p=>stSt(p).val!=="ok");const pend=orders.filter(o=>["pending","paid_pending"].includes(o.status));if(!low.length&&!pend.length){showToast("Hamma narsa yaxshi!","success");return}const out=low.filter(p=>stSt(p).val==="out"),lw=low.filter(p=>stSt(p).val==="low");if(out.length)showToast(`🔴 ${out.length} ta mahsulot TUGAGAN!`,"error",5000);if(lw.length)showToast(`🟡 ${lw.length} ta mahsulot kam qolgan!`,"warning",5000);if(pend.length)showToast(`📦 ${pend.length} ta yangi buyurtma!`,"warning",5000)};
+
+// INIT
+loadAll();
+</script>
+</body>
+</html>
