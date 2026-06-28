@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v6.3</title>
+<title>Boomstroy v6.4</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -48,7 +48,10 @@ body.sbc #main{margin-left:0}
 #cd.on{background:var(--s)}
 #pc{padding:20px;flex:1}
 .ps{display:none}
-.ps.active{display:block}
+.ps.active{display:block;animation:psin .28s ease}
+.ps.active.rev{animation:psinr .28s ease}
+@keyframes psin{from{opacity:.3;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes psinr{from{opacity:.3;transform:translateX(-26px)}to{opacity:1;transform:none}}
 .sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
 .sc{background:var(--ca);border-radius:var(--r);padding:16px;box-shadow:var(--sh);display:flex;align-items:center;gap:14px}
 .si{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
@@ -234,7 +237,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.3</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.4</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -573,7 +576,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.3.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.4.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
@@ -922,6 +925,8 @@ textarea.fc{resize:vertical;min-height:80px}
 <!-- QUICK ACTIONS FAB -->
 <div id="fabwrap">
 <div id="fabmenu">
+<button class="fabi" onclick="navStep(-1)" style="background:var(--sb);color:#fff"><i class="fas fa-arrow-left"></i> Oldingi bo'lim</button>
+<button class="fabi" onclick="navStep(1)" style="background:var(--p);color:#fff"><i class="fas fa-arrow-right"></i> Keyingi bo'lim</button>
 <button class="fabi" onclick="qa('products')"><i class="fas fa-box"></i> Mahsulot qo'shish</button>
 <button class="fabi" onclick="qa('stock-in')"><i class="fas fa-arrow-circle-down"></i> Kirim</button>
 <button class="fabi" onclick="qa('stock-out')"><i class="fas fa-arrow-circle-up"></i> Chiqim</button>
@@ -1351,15 +1356,18 @@ document.addEventListener("click",e=>{const w=document.getElementById("fabwrap")
 // KEYBOARD SHORTCUTS
 const NAVKEYS={d:"dashboard",a:"analytics",p:"products",k:"categories",o:"warehouses",i:"stock-in",u:"stock-out",t:"transfers",q:"pos",c:"customers",b:"orders",r:"reports",e:"announcements",w:"users",g:"settings",h:"help"};
 const NEWMODAL={products:"openPM",categories:"openCM",warehouses:"openWHM","stock-in":"openSIM","stock-out":"openSOM",transfers:"openTrM",customers:"openCustM",suppliers:"openSuppM",users:"openUM",announcements:"openAnnM",sales:"openSaleM",purchases:"openPurchM",returns:"openRetM"};
-const SHORTCUTS=[["Esc","Ochiq oynani yopish"],["Ctrl + Enter","Oynadagini saqlash"],["/","Qidiruvga o'tish"],["N","Yangi qo'shish (joriy bo'lim)"],["F","Tezkor amallar menyusi"],["?","Shu ro'yxat"],["Alt + D","Dashboard"],["Alt + A","Tahlil"],["Alt + P","Mahsulotlar"],["Alt + K","Kategoriyalar"],["Alt + O","Omborlar"],["Alt + I","Kirim"],["Alt + U","Chiqim"],["Alt + T","Ko'chirish"],["Alt + Q","Kassa (POS)"],["Alt + C","Mijozlar"],["Alt + B","Buyurtmalar"],["Alt + R","Hisobotlar"],["Alt + E","E'lonlar"],["Alt + W","Ishchilar"],["Alt + G","Sozlamalar"],["Alt + H","Yo'riqnoma"]];
+const SHORTCUTS=[["Alt + →","Keyingi bo'lim (surish)"],["Alt + ←","Oldingi bo'lim"],["Alt + Tab","Keyingi bo'lim"],["Esc","Ochiq oynani yopish"],["Ctrl + Enter","Oynadagini saqlash"],["/","Qidiruvga o'tish"],["N","Yangi qo'shish (joriy bo'lim)"],["F","Tezkor amallar menyusi"],["?","Shu ro'yxat"],["Alt + D","Dashboard"],["Alt + A","Tahlil"],["Alt + P","Mahsulotlar"],["Alt + K","Kategoriyalar"],["Alt + O","Omborlar"],["Alt + I","Kirim"],["Alt + U","Chiqim"],["Alt + T","Ko'chirish"],["Alt + Q","Kassa (POS)"],["Alt + C","Mijozlar"],["Alt + B","Buyurtmalar"],["Alt + R","Hisobotlar"],["Alt + E","E'lonlar"],["Alt + W","Ishchilar"],["Alt + G","Sozlamalar"],["Alt + H","Yo'riqnoma"]];
 window.renderSC=function(){const c=document.getElementById("scbody");if(!c)return;c.innerHTML='<div class="ib">Tezroq ishlash uchun klaviatura tugmalari. (Matn yozayotganda ham Alt va Esc ishlaydi.)</div>'+SHORTCUTS.map(s=>`<div class="scrow"><span class="f13">${s[1]}</span><span style="white-space:nowrap">${s[0].split(" + ").map(k=>`<span class="kbd">${k}</span>`).join(' + ')}</span></div>`).join("")};
 function lastOpenModal(){const a=[...document.querySelectorAll(".mo.open")];return a[a.length-1]}
+function sectionOrder(){return [...document.querySelectorAll(".nav-item")].map(n=>{const m=(n.getAttribute("onclick")||"").match(/nav\('([^']+)'\)/);return m?m[1]:null}).filter(k=>k&&document.getElementById("sec-"+k)&&(!CURUSER||(hasPerm(k)&&featEnabled(k))))}
+window.navStep=function(dir){const order=sectionOrder();if(order.length<2)return;let i=order.indexOf(curSec);if(i<0)i=0;nav(order[(i+dir+order.length)%order.length])};
+(function(){let sx=0,sy=0,st=0;document.addEventListener("touchstart",e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;st=Date.now()},{passive:true});document.addEventListener("touchend",e=>{if(document.querySelector(".mo.open")||document.getElementById("loginov"))return;const t=e.changedTouches[0];const dx=t.clientX-sx,dy=t.clientY-sy;if(Date.now()-st>600)return;if(Math.abs(dx)>70&&Math.abs(dy)<55){if(e.target.closest&&e.target.closest(".tc"))return;navStep(dx<0?1:-1)}},{passive:true})})();
 function qaNew(){const fn=NEWMODAL[curSec];if(fn&&window[fn]){if(CURUSER&&!hasPerm(curSec))return showToast("Ruxsat yo'q","error");window[fn]()}else toggleFab()}
 window.addEventListener("keydown",e=>{
   const tag=(e.target.tagName||"").toLowerCase();const typing=tag==="input"||tag==="textarea"||tag==="select"||e.target.isContentEditable;
   if(e.key==="Escape"){const m=lastOpenModal();if(m){m.classList.remove("open");e.preventDefault();return}const fb=document.getElementById("fabwrap");if(fb&&fb.classList.contains("on")){fb.classList.remove("on");return}if(document.getElementById("sidebar")?.classList.contains("open")){clos();return}if(typing)e.target.blur();return}
   if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){const m=lastOpenModal();if(m){const btn=m.querySelector(".mf .bp,.mf .bs,.mf .bw,.mf .bd,.mf .bi");if(btn){e.preventDefault();btn.click()}}return}
-  if(e.altKey&&!e.ctrlKey&&!e.metaKey){const s=NAVKEYS[(e.key||"").toLowerCase()];if(s){e.preventDefault();nav(s)}return}
+  if(e.altKey&&!e.ctrlKey&&!e.metaKey){if(e.key==="ArrowRight"||e.key==="Tab"){e.preventDefault();navStep(1);return}if(e.key==="ArrowLeft"){e.preventDefault();navStep(-1);return}const s=NAVKEYS[(e.key||"").toLowerCase()];if(s){e.preventDefault();nav(s)}return}
   if(typing)return;
   if(document.getElementById("loginov"))return;
   if(e.key==="/"){e.preventDefault();document.getElementById("gsearch")?.focus();return}
@@ -1381,7 +1389,7 @@ ${sec("📢 E'lon / Chegirma",["E'lon yoki chegirma yarating — u barcha sahifa
 ${sec("👥 Mijozlar",["Mijoz turini belgilang: oddiy, qarzdor, VIP yoki ulgurji.","Qarzdorga qarz miqdori va sababini yozing — Firebase'da saqlanadi."])}
 ${sec("⚙️ Admin sozlamalari",["Sozlamalar → <b>Bo'limlarni yoqish/o'chirish</b>: istalgan bo'limni butun tizim uchun o'chirib qo'ying.","Groq va imgbb API kalitlarini shu yerda saqlang."])}
 ${sec("⚡ Tezkor tugmalar",["O'ng pastdagi <i class='fas fa-bolt'></i> tugmasi — har qanday amalni bir bosishda ochadi.","Yuqori chapdagi <i class='fas fa-bars'></i> tugmasi — menyuni ochib/yopadi."])}
-${sec("⌨️ Klaviatura tugmalari (juda tez)",["<b>Esc</b> — ochiq oynani yopadi.","<b>Ctrl+Enter</b> — oynadagi ma'lumotni saqlaydi.","<b>/</b> — qidiruvga o'tadi. <b>N</b> — joriy bo'limda yangi qo'shadi. <b>F</b> — tezkor amallar.","<b>Alt+P</b> Mahsulotlar, <b>Alt+I</b> Kirim, <b>Alt+U</b> Chiqim, <b>Alt+Q</b> Kassa, <b>Alt+C</b> Mijozlar...","<b>?</b> tugmasi yoki yuqoridagi <i class='fas fa-keyboard'></i> — barcha tugmalar ro'yxati."])}`}
+${sec("⌨️ Klaviatura tugmalari (juda tez)",["<b>Alt + → / Alt + ←</b> (yoki Alt+Tab) — bo'lim-bo'lim surib o'tish. Telefonda chapga/o'ngga <b>surish (swipe)</b> ham ishlaydi.","<b>Esc</b> — ochiq oynani yopadi.","<b>Ctrl+Enter</b> — oynadagi ma'lumotni saqlaydi.","<b>/</b> — qidiruvga o'tadi. <b>N</b> — joriy bo'limda yangi qo'shadi. <b>F</b> — tezkor amallar.","<b>Alt+P</b> Mahsulotlar, <b>Alt+I</b> Kirim, <b>Alt+U</b> Chiqim, <b>Alt+Q</b> Kassa, <b>Alt+C</b> Mijozlar...","<b>?</b> tugmasi yoki yuqoridagi <i class='fas fa-keyboard'></i> — barcha tugmalar ro'yxati."])}`}
 
 // DASHBOARD
 function loadDash(){updDashStats();updDashLogs();renderLSDash();renderCCh();renderTP();updAllLSB()}
