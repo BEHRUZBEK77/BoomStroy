@@ -118,6 +118,9 @@ textarea.fc{resize:vertical;min-height:80px}
 .fabi:hover{background:var(--p);color:#fff;border-color:var(--p)}
 .fabi i{width:18px;text-align:center;color:var(--p)}
 .fabi:hover i{color:#fff}
+.kbd{display:inline-block;background:var(--bg);border:1px solid var(--bo);border-bottom-width:2px;border-radius:5px;padding:2px 8px;font-family:monospace;font-size:12px;font-weight:700;min-width:22px;text-align:center;color:var(--tx)}
+.scrow{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:1px solid var(--bo);gap:12px}
+.scrow:last-child{border-bottom:none}
 #tc{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
 .toast{background:#1e293b;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:var(--shm);animation:si .3s ease;min-width:240px}
 .toast.success{background:var(--s)}.toast.error{background:var(--d)}.toast.warning{background:var(--w)}
@@ -256,6 +259,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <div id="usdbadge" style="font-size:12px;color:var(--s);background:#dcfce7;padding:4px 10px;border-radius:20px;font-weight:600;white-space:nowrap"></div>
 <div id="cs"><div id="cd"></div><span id="ct">Ulanmoqda...</span></div>
 <input class="tbs" placeholder="Qidirish..." oninput="gSearch(this.value)" id="gsearch">
+<button class="bti" onclick="openM('scm');renderSC()" title="Tezkor tugmalar (?)"><i class="fas fa-keyboard"></i></button>
 <button class="bti" onclick="showNotif()"><i class="fas fa-bell"></i><span class="ndot" id="ndot" style="display:none"></span></button>
 <div class="avatar">BS</div>
 </div></div>
@@ -884,6 +888,13 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="mf"><button class="btn bse" onclick="closeM('confm')">Bekor</button><button class="btn bd" id="confbtn" onclick="execConf()">Tasdiqlash</button></div>
 </div></div>
 
+<!-- SHORTCUTS MODAL -->
+<div class="mo" id="scm">
+<div class="modal">
+<div class="mh"><i class="fas fa-keyboard"></i><span class="mt">Tezkor tugmalar (klaviatura)</span><button class="mc" onclick="closeM('scm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2" id="scbody"></div>
+</div></div>
+
 <!-- QUICK ACTIONS FAB -->
 <div id="fabwrap">
 <div id="fabmenu">
@@ -1293,6 +1304,26 @@ const QA_OPEN={products:"openPM",categories:"openCM",warehouses:"openWHM","stock
 window.toggleFab=function(){document.getElementById("fabwrap").classList.toggle("on")};
 window.qa=function(sec){const w=document.getElementById("fabwrap");if(w)w.classList.remove("on");if(CURUSER&&(!hasPerm(sec)||!featEnabled(sec)))return showToast("Sizda bu amalga ruxsat yo'q","error");nav(sec);const fn=QA_OPEN[sec];if(fn)setTimeout(()=>{try{window[fn]()}catch(e){}},300)};
 document.addEventListener("click",e=>{const w=document.getElementById("fabwrap");if(w&&w.classList.contains("on")&&!w.contains(e.target))w.classList.remove("on")});
+// KEYBOARD SHORTCUTS
+const NAVKEYS={d:"dashboard",a:"analytics",p:"products",k:"categories",o:"warehouses",i:"stock-in",u:"stock-out",t:"transfers",q:"pos",c:"customers",b:"orders",r:"reports",e:"announcements",w:"users",g:"settings",h:"help"};
+const NEWMODAL={products:"openPM",categories:"openCM",warehouses:"openWHM","stock-in":"openSIM","stock-out":"openSOM",transfers:"openTrM",customers:"openCustM",suppliers:"openSuppM",users:"openUM",announcements:"openAnnM",sales:"openSaleM",purchases:"openPurchM",returns:"openRetM"};
+const SHORTCUTS=[["Esc","Ochiq oynani yopish"],["Ctrl + Enter","Oynadagini saqlash"],["/","Qidiruvga o'tish"],["N","Yangi qo'shish (joriy bo'lim)"],["F","Tezkor amallar menyusi"],["?","Shu ro'yxat"],["Alt + D","Dashboard"],["Alt + A","Tahlil"],["Alt + P","Mahsulotlar"],["Alt + K","Kategoriyalar"],["Alt + O","Omborlar"],["Alt + I","Kirim"],["Alt + U","Chiqim"],["Alt + T","Ko'chirish"],["Alt + Q","Kassa (POS)"],["Alt + C","Mijozlar"],["Alt + B","Buyurtmalar"],["Alt + R","Hisobotlar"],["Alt + E","E'lonlar"],["Alt + W","Ishchilar"],["Alt + G","Sozlamalar"],["Alt + H","Yo'riqnoma"]];
+window.renderSC=function(){const c=document.getElementById("scbody");if(!c)return;c.innerHTML='<div class="ib">Tezroq ishlash uchun klaviatura tugmalari. (Matn yozayotganda ham Alt va Esc ishlaydi.)</div>'+SHORTCUTS.map(s=>`<div class="scrow"><span class="f13">${s[1]}</span><span style="white-space:nowrap">${s[0].split(" + ").map(k=>`<span class="kbd">${k}</span>`).join(' + ')}</span></div>`).join("")};
+function lastOpenModal(){const a=[...document.querySelectorAll(".mo.open")];return a[a.length-1]}
+function qaNew(){const fn=NEWMODAL[curSec];if(fn&&window[fn]){if(CURUSER&&!hasPerm(curSec))return showToast("Ruxsat yo'q","error");window[fn]()}else toggleFab()}
+window.addEventListener("keydown",e=>{
+  const tag=(e.target.tagName||"").toLowerCase();const typing=tag==="input"||tag==="textarea"||tag==="select"||e.target.isContentEditable;
+  if(e.key==="Escape"){const m=lastOpenModal();if(m){m.classList.remove("open");e.preventDefault();return}const fb=document.getElementById("fabwrap");if(fb&&fb.classList.contains("on")){fb.classList.remove("on");return}if(document.getElementById("sidebar")?.classList.contains("open")){clos();return}if(typing)e.target.blur();return}
+  if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){const m=lastOpenModal();if(m){const btn=m.querySelector(".mf .bp,.mf .bs,.mf .bw,.mf .bd,.mf .bi");if(btn){e.preventDefault();btn.click()}}return}
+  if(e.altKey&&!e.ctrlKey&&!e.metaKey){const s=NAVKEYS[(e.key||"").toLowerCase()];if(s){e.preventDefault();nav(s)}return}
+  if(typing)return;
+  if(document.getElementById("loginov"))return;
+  if(e.key==="/"){e.preventDefault();document.getElementById("gsearch")?.focus();return}
+  if(e.key==="?"){e.preventDefault();openM("scm");renderSC();return}
+  const k=(e.key||"").toLowerCase();
+  if(k==="n"){e.preventDefault();qaNew();return}
+  if(k==="f"){e.preventDefault();toggleFab();return}
+});
 // HELP / YO'RIQNOMA
 function renderHelp(){const c=document.getElementById("helpbody");if(!c)return;const sec=(t,items)=>`<div class="sdv">${t}</div><div class="ib" style="line-height:1.9">${items.map(x=>"• "+x).join("<br>")}</div>`;c.innerHTML=`
 <div class="lsa" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#bfdbfe"><i class="fas fa-lightbulb ai" style="color:var(--p)"></i><div><div class="fw6">Boomstroy Inventar tizimiga xush kelibsiz!</div><div class="f12 tm">Quyida har bir bo'lim qanday ishlashi tushuntirilgan.</div></div></div>
@@ -1305,7 +1336,8 @@ ${sec("💵 Dollar kursi",["Yuqorida joriy jonli dollar kursi ko'rsatiladi va av
 ${sec("📢 E'lon / Chegirma",["E'lon yoki chegirma yarating — u barcha sahifalar tepasida banner bo'lib chiqadi.","Faol/o'chiq qilib qo'ysa bo'ladi."])}
 ${sec("👥 Mijozlar",["Mijoz turini belgilang: oddiy, qarzdor, VIP yoki ulgurji.","Qarzdorga qarz miqdori va sababini yozing — Firebase'da saqlanadi."])}
 ${sec("⚙️ Admin sozlamalari",["Sozlamalar → <b>Bo'limlarni yoqish/o'chirish</b>: istalgan bo'limni butun tizim uchun o'chirib qo'ying.","Groq va imgbb API kalitlarini shu yerda saqlang."])}
-${sec("⚡ Tezkor tugmalar",["O'ng pastdagi <i class='fas fa-bolt'></i> tugmasi — har qanday amalni bir bosishda ochadi.","Yuqori chapdagi <i class='fas fa-bars'></i> tugmasi — menyuni ochib/yopadi."])}`}
+${sec("⚡ Tezkor tugmalar",["O'ng pastdagi <i class='fas fa-bolt'></i> tugmasi — har qanday amalni bir bosishda ochadi.","Yuqori chapdagi <i class='fas fa-bars'></i> tugmasi — menyuni ochib/yopadi."])}
+${sec("⌨️ Klaviatura tugmalari (juda tez)",["<b>Esc</b> — ochiq oynani yopadi.","<b>Ctrl+Enter</b> — oynadagi ma'lumotni saqlaydi.","<b>/</b> — qidiruvga o'tadi. <b>N</b> — joriy bo'limda yangi qo'shadi. <b>F</b> — tezkor amallar.","<b>Alt+P</b> Mahsulotlar, <b>Alt+I</b> Kirim, <b>Alt+U</b> Chiqim, <b>Alt+Q</b> Kassa, <b>Alt+C</b> Mijozlar...","<b>?</b> tugmasi yoki yuqoridagi <i class='fas fa-keyboard'></i> — barcha tugmalar ro'yxati."])}`}
 
 // DASHBOARD
 function loadDash(){updDashStats();updDashLogs();renderLSDash();renderCCh();renderTP();updAllLSB()}
