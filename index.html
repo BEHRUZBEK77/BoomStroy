@@ -541,6 +541,14 @@ textarea.fc{resize:vertical;min-height:80px}
 <div id="s-groqst"></div><div class="ib" style="margin-top:8px">AI mahsulot/kategoriya rasmini topish uchun. <a href="https://console.groq.com/keys" target="_blank" style="color:var(--p)">console.groq.com/keys</a> dan oling.</div></div>
 <button class="btn bs" onclick="saveGroq()"><i class="fas fa-cloud-upload-alt"></i> Firebase'ga saqlash</button>
 </div></div>
+<div class="card"><div class="ch"><i class="fab fa-google tm"></i><span class="ct">Google rasm qidiruv (ixtiyoriy)</span></div>
+<div class="cb">
+<div class="fg"><label class="fl">Google API Key</label><input class="fc" id="s-gkey" placeholder="AIza..." type="password"></div>
+<div class="fg"><label class="fl">Search Engine ID (cx)</label><input class="fc" id="s-gcx" placeholder="017..."></div>
+<div id="s-gst"></div>
+<div class="ib" style="margin-top:8px">Haqiqiy Google rasm qidiruvi uchun. <a href="https://programmablesearchengine.google.com/" target="_blank" style="color:var(--p)">Programmable Search</a> dan <b>cx</b>, <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--p)">Cloud Console</a> dan <b>API key</b> oling. Bo'sh qoldirsangiz — Openverse (kalitsiz) ishlatiladi.</div>
+<button class="btn bs" onclick="saveGoogle()"><i class="fas fa-cloud-upload-alt"></i> Firebase'ga saqlash</button>
+</div></div>
 <div class="card"><div class="ch"><i class="fas fa-sliders-h tm"></i><span class="ct">Tizim Sozlamalari</span></div>
 <div class="cb">
 <div class="sr"><div><div class="fw6 f13">Avtomatik SKU</div></div><div class="tgl on" id="t-sku" onclick="togSet(this)"></div></div>
@@ -928,6 +936,7 @@ async function tgSend(id,txt){if(!id)return;try{await fetch(`https://api.telegra
 
 let IMGBB="";
 let GROQKEY="";
+let GKEY="",GCX="";
 let USDRATE=12650;
 let products=[],categories=[],customers=[],suppliers=[],warehouses=[],stockIns=[],stockOuts=[],sales=[],purchases=[],orders=[],transfers=[],returns=[],logs=[],users=[],announcements=[],features={},customReasons=[];
 let CURUSER=null;
@@ -944,7 +953,8 @@ let sOPage=1,sOPS=20,filtSO=[];
 let trFilt=[],trPage=1,trPS=20;
 let sortK="name",sortD=1;
 let confCB=null;
-let pendImgFile=null,pendAutoImg=null;
+let pendImgFile=null,pendAutoImg=null,pendAiFallback="";
+window.imgFallback=function(img){if(pendAiFallback&&img.src!==pendAiFallback){img.src=pendAiFallback;pendAutoImg=pendAiFallback;const st=document.getElementById("pm-istat");if(st)st.innerHTML='<i class="fas fa-check-circle" style="color:var(--s)"></i> AI rasm yaratildi'}};
 let cartItems=[],saleItems=[],purchItems=[],siItems=[],soItems=[],trItems=[];
 let editPId=null,editCatId=null,editCustId=null,editWHId=null,editSuppId=null;
 
@@ -996,14 +1006,14 @@ window.nav=function(sec){
   else if(sec==="logs")renderLogs();
   else if(sec==="users")renderUsers();
   else if(sec==="inventory-check")loadIC();
-  else if(sec==="settings"){updAPIStatus();updGroqStatus()}
+  else if(sec==="settings"){updAPIStatus();updGroqStatus();updGoogleStatus()}
 };
 
 // LOAD ALL
 async function loadAll(){
   loadUSD();
   try{
-    await Promise.all([loadAPIKey(),loadGroqKey(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers(),loadFeatures(),loadAnns(),loadCustomReasons()]);
+    await Promise.all([loadAPIKey(),loadGroqKey(),loadGoogleKeys(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers(),loadFeatures(),loadAnns(),loadCustomReasons()]);
     setConn(true);loadDash();updAllLSB();updAllSelects();updUSDBadge();renderFeatureToggles();renderAnnBanner();if(CURUSER)applyAccess();
   }catch(e){setConn(false);showToast("Firebase xatosi: "+e.message,"error")}
 }
@@ -1015,6 +1025,9 @@ window.saveAPI=async function(){const k=document.getElementById("s-imgbb").value
 async function loadGroqKey(){try{const d=await getDoc(doc(db,"settings","groq"));if(d.exists()){GROQKEY=d.data().apiKey||"";if(GROQKEY)localStorage.setItem("groqk",GROQKEY)}else{const c=localStorage.getItem("groqk");if(c)GROQKEY=c}}catch(e){const c=localStorage.getItem("groqk");if(c)GROQKEY=c}updGroqStatus()}
 function updGroqStatus(){const el=document.getElementById("s-groqst");const inp=document.getElementById("s-groq");if(!el)return;if(GROQKEY){if(inp)inp.value=GROQKEY;el.innerHTML='<span class="aks sv"><i class="fas fa-check-circle"></i> Saqlangan</span>'}else{el.innerHTML='<span class="aks ms"><i class="fas fa-times-circle"></i> Kiritilmagan</span>'}}
 window.saveGroq=async function(){const k=document.getElementById("s-groq").value.trim();if(!k)return showToast("Groq kalit bo'sh!","error");try{await setDoc(doc(db,"settings","groq"),{apiKey:k,updatedAt:serverTimestamp()});GROQKEY=k;localStorage.setItem("groqk",k);updGroqStatus();showToast("Groq kalit saqlandi ✅","success",4000)}catch(e){showToast("Xato: "+e.message,"error")}};
+async function loadGoogleKeys(){try{const d=await getDoc(doc(db,"settings","google"));if(d.exists()){GKEY=d.data().apiKey||"";GCX=d.data().cx||"";if(GKEY)localStorage.setItem("gimgk",GKEY);if(GCX)localStorage.setItem("gimgcx",GCX)}else{GKEY=localStorage.getItem("gimgk")||"";GCX=localStorage.getItem("gimgcx")||""}}catch(e){GKEY=localStorage.getItem("gimgk")||"";GCX=localStorage.getItem("gimgcx")||""}updGoogleStatus()}
+function updGoogleStatus(){const el=document.getElementById("s-gst");const i1=document.getElementById("s-gkey");const i2=document.getElementById("s-gcx");if(!el)return;if(i1&&GKEY)i1.value=GKEY;if(i2&&GCX)i2.value=GCX;el.innerHTML=(GKEY&&GCX)?'<span class="aks sv"><i class="fas fa-check-circle"></i> Google qidiruv yoqilgan</span>':'<span class="aks ms"><i class="fas fa-info-circle"></i> Ixtiyoriy — Openverse ishlatiladi</span>'}
+window.saveGoogle=async function(){const k=document.getElementById("s-gkey").value.trim();const cx=document.getElementById("s-gcx").value.trim();try{await setDoc(doc(db,"settings","google"),{apiKey:k,cx,updatedAt:serverTimestamp()});GKEY=k;GCX=cx;localStorage.setItem("gimgk",k);localStorage.setItem("gimgcx",cx);updGoogleStatus();showToast("Google sozlamasi saqlandi ✅","success",4000)}catch(e){showToast("Xato: "+e.message,"error")}};
 window.togAPI=function(){const i=document.getElementById("s-imgbb");const ic=document.getElementById("apieyei");if(i.type==="password"){i.type="text";ic.className="fas fa-eye-slash"}else{i.type="password";ic.className="fas fa-eye"}};
 
 // IMAGE
@@ -1023,8 +1036,12 @@ const UZ2EN={"sement":"grey cement bag","tsement":"grey cement bag","beton":"con
 const UZKEYS=Object.keys(UZ2EN).sort((a,b)=>b.length-a.length);
 const UZADJ={"oq":"white","oppoq":"white","qora":"black","qizil":"red","kok":"blue","havorang":"sky blue","zangori":"blue","yashil":"green","sariq":"yellow","kulrang":"grey","jigarrang":"brown","pushti":"pink","binafsha":"purple","oltin":"golden","kumush":"silver","shaffof":"transparent"};
 function uzToEn(name,cat){const s=" "+((name||"")+" "+(cat||"")).toLowerCase().replace(/[''ʻ`'']/g,"")+" ";const hits=[];for(const k of UZKEYS){if(s.includes(k)){const v=UZ2EN[k];if(!hits.includes(v))hits.push(v)}}let res=hits.slice(0,3).join(", ");const cols=[];for(const c in UZADJ){if(new RegExp("\\b"+c+"\\b").test(s)){const v=UZADJ[c];if(!cols.includes(v))cols.push(v)}}if(cols.length)res=(cols.join(" ")+(res?" "+res:"")).trim();return res.replace(/\b(\w+)\s+\1\b/gi,"$1")}
-async function findImg(name,cat){let kw=uzToEn(name,cat);if(!kw&&GROQKEY){try{kw=await groqAsk(`Convert this Uzbek/Russian construction-store product name into 3-6 concise ENGLISH keywords describing the physical product for a catalog photo. Output ONLY keywords separated by spaces, no quotes, no sentences. Examples: "Sement M400"=>grey cement bag construction; "Gisht qizil"=>red clay bricks stack; "Boyoq oq"=>white paint bucket; "Armatura 12mm"=>steel rebar rods. Product: "${name} ${cat||""}"`)}catch(e){}}kw=(kw||"").replace(/["'\n.]/g,"").trim();if(!kw||kw.length>90)kw=(name||"construction material").trim();const seed=Math.abs([...((name||"x")+(cat||""))].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7));return`https://image.pollinations.ai/prompt/${encodeURIComponent(kw+", professional product photography, isolated on plain white background, studio lighting, e-commerce catalog photo, sharp focus, centered, high detail")}?width=600&height=600&nologo=true&model=flux&seed=${seed}`}
-window.autoFindImg=async function(){const name=document.getElementById("pm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");const catId=document.getElementById("pm-cat").value;const cat=categories.find(c=>c.id===catId);const st=document.getElementById("pm-istat");st.innerHTML='<i class="fas fa-spinner fa-spin"></i> AI rasm yaratmoqda...';try{const url=await findImg(name,cat?.name||"");pendAutoImg=url;document.getElementById("pm-iprev").innerHTML=`<img src="${url}" class="ipv" alt="" onload="document.getElementById('pm-istat').innerHTML='<i class=\\'fas fa-check-circle\\' style=\\'color:var(--s)\\'></i> Rasm topildi ✓'" onerror="document.getElementById('pm-istat').innerHTML='<i class=\\'fas fa-times-circle\\' style=\\'color:var(--d)\\'></i> Rasm yuklanmadi'">`}catch(e){st.innerHTML='<i class="fas fa-times-circle" style="color:var(--d)"></i> Topilmadi'}};
+async function imgKeywords(name,cat){let kw=uzToEn(name,cat);if(!kw&&GROQKEY){try{kw=await groqAsk(`Convert this Uzbek/Russian construction-store product name into 3-6 concise ENGLISH keywords describing the physical product for a catalog photo. Output ONLY keywords separated by spaces, no quotes, no sentences. Examples: "Sement M400"=>grey cement bag construction; "Gisht qizil"=>red clay bricks stack; "Boyoq oq"=>white paint bucket; "Armatura 12mm"=>steel rebar rods. Product: "${name} ${cat||""}"`)}catch(e){}}kw=(kw||"").replace(/["'\n.]/g,"").trim();if(!kw||kw.length>90)kw=(name||"construction material").trim();return kw}
+async function googleImg(q){if(!GKEY||!GCX)return"";try{const r=await fetch(`https://www.googleapis.com/customsearch/v1?key=${GKEY}&cx=${GCX}&q=${encodeURIComponent(q+" product")}&searchType=image&num=5&safe=active&imgType=photo`);const j=await r.json();const it=(j.items||[]).find(x=>x.link&&/^https/.test(x.link));return it?it.link:""}catch(e){return""}}
+async function openverseImg(q){try{const r=await fetch(`https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&page_size=8&mature=false`);const j=await r.json();const it=(j.results||[]).find(x=>(x.url||x.thumbnail));return it?(it.url||it.thumbnail):""}catch(e){return""}}
+function aiImg(kw,name,cat){const seed=Math.abs([...((name||"x")+(cat||""))].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7));return`https://image.pollinations.ai/prompt/${encodeURIComponent(kw+", professional product photography, isolated on plain white background, studio lighting, e-commerce catalog photo, sharp focus, centered, high detail")}?width=600&height=600&nologo=true&model=flux&seed=${seed}`}
+async function findImg(name,cat){const kw=await imgKeywords(name,cat);let u=await googleImg(kw);if(!u)u=await openverseImg(kw);if(u)return u;return aiImg(kw,name,cat)}
+window.autoFindImg=async function(){const name=document.getElementById("pm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");const catId=document.getElementById("pm-cat").value;const cat=categories.find(c=>c.id===catId);const st=document.getElementById("pm-istat");st.innerHTML='<i class="fas fa-spinner fa-spin"></i> Internetdan rasm qidirilmoqda...';try{const kw=await imgKeywords(name,cat?.name||"");pendAiFallback=aiImg(kw,name,cat?.name||"");let url=await googleImg(kw);if(!url)url=await openverseImg(kw);if(!url)url=pendAiFallback;pendAutoImg=url;document.getElementById("pm-iprev").innerHTML=`<img src="${url}" class="ipv" alt="" onload="document.getElementById('pm-istat').innerHTML='<i class=\\'fas fa-check-circle\\' style=\\'color:var(--s)\\'></i> Rasm topildi ✓'" onerror="imgFallback(this)">`}catch(e){st.innerHTML='<i class="fas fa-times-circle" style="color:var(--d)"></i> Topilmadi'}};
 window.autoFindCatImg=async function(){const name=document.getElementById("cm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");showToast("AI rasm yaratmoqda...","",2000);try{const u=await findImg(name,"construction");document.getElementById("cm-img").value=u;showToast("Rasm topildi ✓","success")}catch(e){showToast("Rasm topilmadi","error")}};
 window.handlePI=function(e){const f=e.target.files[0];if(!f)return;if(f.size>10*1024*1024)return showToast("10MB dan katta!","error");pendImgFile=f;pendAutoImg=null;const r=new FileReader();r.onload=ev=>document.getElementById("pm-iprev").innerHTML=`<img src="${ev.target.result}" class="ipv">`;r.readAsDataURL(f);document.getElementById("pm-istat").innerHTML=`<i class="fas fa-info-circle"></i> ${f.name}`};
 
@@ -1337,7 +1354,7 @@ function renderHelp(){const c=document.getElementById("helpbody");if(!c)return;c
 ${sec("🔑 Tizimga kirish",["Admin (egasi): login <b>admin</b>, parol <b>admin</b> — hamma narsaga ruxsat.","Ishchilar o'z login va paroli bilan kiradi (adminni ozi yaratadi).","Chiqish uchun yuqori o'ngdagi dumaloq avatarni bosing."])}
 ${sec("👷 Ishchi qanday kiradi",["Admin <b>Ishchilar / Ruxsatlar</b> bo'limidan ishchi yaratadi: ism, login, parol va ruxsatlar.","Ishchiga aytasiz: saytni oching → login va parolini kiriting → Kirish.","Ishchi faqat unga ruxsat berilgan bo'limlarni ko'radi.","Parolni ko'rish/o'zgartirish: Ishchilar jadvalida ko'z belgisini bosing yoki tahrirlash (qalam) tugmasini bosing."])}
 ${sec("📂 Birinchi qadamlar (muhim tartib)",["1. <b>Kategoriyalar</b> bo'limidan kategoriya qo'shing (masalan: Sement, G'isht).","2. <b>Omborlar</b> bo'limidan ombor qo'shing.","3. Endi <b>Mahsulotlar</b> qo'shganda kategoriya va ombor ro'yxatda chiqadi."])}
-${sec("📦 Mahsulot qo'shish",["Mahsulotlar → Mahsulot qo'shish. Valyuta (so'm yoki dollar) tanlang — dollar bo'lsa sayt joriy kursda so'mga hisoblaydi.","Rasmni avtomatik topish: AI mahsulot rasmini yaratadi (Sozlamalarda Groq kaliti bo'lishi kerak).","Mahsulotni Kirim oynasi ichidan ham qo'shsa bo'ladi (Yangi mahsulot tugmasi)."])}
+${sec("📦 Mahsulot qo'shish",["Mahsulotlar → Mahsulot qo'shish. Valyuta (so'm yoki dollar) tanlang — dollar bo'lsa sayt joriy kursda so'mga hisoblaydi.","Rasmni avtomatik topish: internetdan (Openverse/Google) haqiqiy mahsulot rasmini qidiradi; topilmasa AI rasm yaratadi.","Haqiqiy Google qidiruvi uchun Sozlamalardan Google API key va cx kiriting (ixtiyoriy).","Mahsulotni Kirim oynasi ichidan ham qo'shsa bo'ladi (Yangi mahsulot tugmasi)."])}
 ${sec("🔄 Kirim / Chiqim / Ko'chirish",["<b>Kirim</b>: omborga mahsulot kirgani. Miqdor avtomatik qo'shiladi.","<b>Chiqim</b>: sababini tanlang yoki o'zingiz yozing — yozilgan sabab saqlanib qoladi va keyingi safar ro'yxatda chiqadi.","<b>Ko'chirish</b>: bir ombordan ikkinchisiga — biridan ayiriladi, ikkinchisiga qo'shiladi."])}
 ${sec("💵 Dollar kursi",["Yuqorida joriy jonli dollar kursi ko'rsatiladi va avtomatik yangilanadi.","Dollarda kiritilgan narxlar shu kursda so'mga hisoblanadi."])}
 ${sec("📢 E'lon / Chegirma",["E'lon yoki chegirma yarating — u barcha sahifalar tepasida banner bo'lib chiqadi.","Faol/o'chiq qilib qo'ysa bo'ladi."])}
