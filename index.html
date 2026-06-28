@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v6.4</title>
+<title>Boomstroy v6.5</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -135,6 +135,12 @@ textarea.fc{resize:vertical;min-height:80px}
 .fabi:hover{background:var(--p);color:#fff;border-color:var(--p)}
 .fabi i{width:18px;text-align:center;color:var(--p)}
 .fabi:hover i{color:#fff}
+.nav-arrow{position:fixed;top:50%;transform:translateY(-50%);width:38px;height:62px;background:var(--wh);border:1px solid var(--bo);color:var(--p);cursor:pointer;z-index:60;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shm);opacity:.55;transition:opacity .2s,background .2s}
+.nav-arrow:hover{opacity:1;background:var(--p);color:#fff}
+.nav-arrow.left{left:248px;border-radius:0 12px 12px 0}
+.nav-arrow.right{right:0;border-radius:12px 0 0 12px}
+body.sbc .nav-arrow.left{left:8px}
+@media(max-width:768px){.nav-arrow.left{left:0}.nav-arrow{width:30px;height:50px;font-size:14px;opacity:.45}}
 .kbd{display:inline-block;background:var(--bg);border:1px solid var(--bo);border-bottom-width:2px;border-radius:5px;padding:2px 8px;font-family:monospace;font-size:12px;font-weight:700;min-width:22px;text-align:center;color:var(--tx)}
 .scrow{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:1px solid var(--bo);gap:12px}
 .scrow:last-child{border-bottom:none}
@@ -237,7 +243,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.4</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.5</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -576,7 +582,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.4.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.5.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
@@ -921,6 +927,12 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="mh"><i class="fas fa-keyboard"></i><span class="mt">Tezkor tugmalar (klaviatura)</span><button class="mc" onclick="closeM('scm')"><i class="fas fa-times"></i></button></div>
 <div class="mb2" id="scbody"></div>
 </div></div>
+
+<!-- SECTION NAV ARROWS -->
+<div id="navarrows">
+<button class="nav-arrow left" onclick="navStep(-1)" title="Oldingi bo'lim (Alt+←)"><i class="fas fa-chevron-left"></i></button>
+<button class="nav-arrow right" onclick="navStep(1)" title="Keyingi bo'lim (Alt+→)"><i class="fas fa-chevron-right"></i></button>
+</div>
 
 <!-- QUICK ACTIONS FAB -->
 <div id="fabwrap">
@@ -1319,7 +1331,7 @@ const ROLEPERMS={admin:[...SECKEYS],manager:SECKEYS.filter(k=>!["users","setting
 function hasPerm(s){if(!CURUSER)return true;if(CURUSER.role==="admin")return true;return(CURUSER.permissions||[]).includes(s)}
 function featEnabled(s){return features[s]!==false}
 function firstAllowed(){return SECKEYS.find(k=>featEnabled(k)&&hasPerm(k))||"dashboard"}
-function applyAccess(){document.querySelectorAll(".nav-item").forEach(n=>{const m=(n.getAttribute("onclick")||"").match(/nav\('([^']+)'\)/);if(!m)return;const k=m[1];n.style.display=(featEnabled(k)&&hasPerm(k))?"":"none"});const av=document.querySelector(".avatar");if(av&&CURUSER){av.textContent=(CURUSER.name||"U").substring(0,2).toUpperCase();av.title=CURUSER.name+" — chiqish";av.style.cursor="pointer";av.onclick=()=>showConfirm("Tizimdan chiqasizmi?",logout)}}
+function applyAccess(){document.querySelectorAll(".nav-item").forEach(n=>{const m=(n.getAttribute("onclick")||"").match(/nav\('([^']+)'\)/);if(!m)return;const k=m[1];n.style.display=(featEnabled(k)&&hasPerm(k))?"":"none"});const av=document.querySelector(".avatar");if(av&&CURUSER){av.textContent=(CURUSER.name||"U").substring(0,2).toUpperCase();av.title=CURUSER.name+" — chiqish";av.style.cursor="pointer";av.onclick=()=>showConfirm("Tizimdan chiqasizmi?",logout)}try{updNavArrows()}catch(e){}}
 // LOGIN
 function buildLogin(){if(document.getElementById("loginov"))return;const d=document.createElement("div");d.id="loginov";d.style.cssText="position:fixed;inset:0;background:linear-gradient(135deg,#1e293b,#334155);z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px";d.innerHTML=`<div style="background:#fff;border-radius:12px;padding:28px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)"><div style="text-align:center;margin-bottom:18px"><i class="fas fa-building" style="font-size:36px;color:var(--p)"></i><h2 style="margin-top:8px;font-size:20px">Boomstroy</h2><div class="f12 tm">Tizimga kirish</div></div><div class="fg"><label class="fl">Login</label><input class="fc" id="lg-login" placeholder="admin"></div><div class="fg"><label class="fl">Parol</label><input class="fc" type="password" id="lg-pass" placeholder="parol" onkeydown="if(event.key==='Enter')doLogin()"></div><div id="lg-err" class="f12 tdc" style="margin-bottom:8px"></div><button class="btn bp" style="width:100%;justify-content:center" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Kirish</button><div class="f11 tm" style="text-align:center;margin-top:10px">Birinchi marta: admin / admin</div></div>`;document.body.appendChild(d)}
 window.doLogin=function(){const l=document.getElementById("lg-login").value.trim();const p=document.getElementById("lg-pass").value;let u=null;if((l===OWNER.login&&p===OWNER.pass)){u={name:"Administrator",login:"admin",role:"admin",permissions:[...SECKEYS]}}else{const f=users.find(x=>x.login===l&&x.password===p&&x.status!=="inactive");if(f)u={id:f.id,name:f.name,login:f.login,role:f.role,permissions:f.permissions||ROLEPERMS[f.role]||[]}}if(!u){document.getElementById("lg-err").textContent="Login yoki parol xato!";return}CURUSER=u;localStorage.setItem("bsuser",JSON.stringify(u));document.getElementById("loginov")?.remove();applyAccess();renderAnnBanner();showToast("Xush kelibsiz, "+u.name+" 👋","success");if(!hasPerm(curSec)||!featEnabled(curSec))nav(firstAllowed())};
@@ -1361,6 +1373,7 @@ window.renderSC=function(){const c=document.getElementById("scbody");if(!c)retur
 function lastOpenModal(){const a=[...document.querySelectorAll(".mo.open")];return a[a.length-1]}
 function sectionOrder(){return [...document.querySelectorAll(".nav-item")].map(n=>{const m=(n.getAttribute("onclick")||"").match(/nav\('([^']+)'\)/);return m?m[1]:null}).filter(k=>k&&document.getElementById("sec-"+k)&&(!CURUSER||(hasPerm(k)&&featEnabled(k))))}
 window.navStep=function(dir){const order=sectionOrder();if(order.length<2)return;let i=order.indexOf(curSec);if(i<0)i=0;nav(order[(i+dir+order.length)%order.length])};
+function updNavArrows(){const el=document.getElementById("navarrows");if(el)el.style.display=sectionOrder().length>1?"":"none"}
 (function(){let sx=0,sy=0,st=0;document.addEventListener("touchstart",e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;st=Date.now()},{passive:true});document.addEventListener("touchend",e=>{if(document.querySelector(".mo.open")||document.getElementById("loginov"))return;const t=e.changedTouches[0];const dx=t.clientX-sx,dy=t.clientY-sy;if(Date.now()-st>600)return;if(Math.abs(dx)>70&&Math.abs(dy)<55){if(e.target.closest&&e.target.closest(".tc"))return;navStep(dx<0?1:-1)}},{passive:true})})();
 function qaNew(){const fn=NEWMODAL[curSec];if(fn&&window[fn]){if(CURUSER&&!hasPerm(curSec))return showToast("Ruxsat yo'q","error");window[fn]()}else toggleFab()}
 window.addEventListener("keydown",e=>{
