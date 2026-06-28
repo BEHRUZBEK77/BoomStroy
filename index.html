@@ -6,9 +6,11 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v6.6</title>
+<title>Boomstroy v6.7</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{--p:#1a56db;--pd:#1e40af;--s:#16a34a;--d:#dc2626;--w:#d97706;--i:#0891b2;--bg:#f1f5f9;--sb:#1e293b;--st:#cbd5e1;--wh:#fff;--bo:#e2e8f0;--tx:#1e293b;--tl:#64748b;--ca:#fff;--sh:0 1px 3px rgba(0,0,0,.1);--shm:0 4px 12px rgba(0,0,0,.1);--r:8px}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -243,7 +245,7 @@ body.sbc .nav-arrow.left{left:14px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.6</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.7</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -582,7 +584,7 @@ body.sbc .nav-arrow.left{left:14px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.6.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.7.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
@@ -739,7 +741,15 @@ body.sbc .nav-arrow.left{left:14px}
 <div class="mb2">
 <input type="hidden" id="whm-id">
 <div class="fg"><label class="fl">Ombor nomi *</label><input class="fc" id="whm-name"></div>
-<div class="fg"><label class="fl">Manzil</label><input class="fc" id="whm-adr"></div>
+<div class="fg"><label class="fl">Manzil</label><input class="fc" id="whm-adr" placeholder="Xaritadan tanlasangiz avtomatik to'ladi"></div>
+<div class="fg"><label class="fl">Joylashuv (GPS / xaritada bosing)</label>
+<div class="df g8 mb2b" style="flex-wrap:wrap">
+<button type="button" class="btn bp bsm" onclick="whGPS()"><i class="fas fa-location-crosshairs"></i> GPS orqali aniqlash</button>
+<button type="button" class="btn bse bsm" onclick="whClearLoc()"><i class="fas fa-times"></i> Tozalash</button>
+</div>
+<div id="whmap" style="height:230px;border-radius:8px;border:1px solid var(--bo);overflow:hidden;background:var(--bg);z-index:1"></div>
+<div id="whlocinfo" class="f12 tm" style="margin-top:6px">Joylashuv tanlanmagan</div>
+</div>
 <div class="fr">
 <div class="fg"><label class="fl">Sig'im (m²)</label><input class="fc" type="number" id="whm-cap"></div>
 <div class="fg"><label class="fl">Mas'ul shaxs</label><input class="fc" id="whm-mgr"></div>
@@ -1000,8 +1010,8 @@ let minimized={};
 window.closeM=id=>{const mo=document.getElementById(id);if(!mo)return;mo.classList.remove("open");mo.querySelector(".modal")?.classList.remove("maxed");if(minimized[id]){delete minimized[id];renderTaskbar()}};
 function openM(id){const mo=document.getElementById(id);if(!mo)return;mo.classList.add("open");if(minimized[id]){delete minimized[id];renderTaskbar()}}
 window.minimizeM=function(id){const mo=document.getElementById(id);if(!mo)return;minimized[id]=mo.querySelector(".mt")?.textContent||"Oyna";mo.classList.remove("open");renderTaskbar()};
-window.maxM=function(id){const m=document.getElementById(id)?.querySelector(".modal");if(!m)return;m.classList.toggle("maxed");const b=document.getElementById(id).querySelector(".mwbtn.mx i");if(b)b.className=m.classList.contains("maxed")?"fas fa-compress":"fas fa-expand"};
-window.restoreM=function(id){delete minimized[id];const mo=document.getElementById(id);if(mo)mo.classList.add("open");renderTaskbar()};
+window.maxM=function(id){const m=document.getElementById(id)?.querySelector(".modal");if(!m)return;m.classList.toggle("maxed");const b=document.getElementById(id).querySelector(".mwbtn.mx i");if(b)b.className=m.classList.contains("maxed")?"fas fa-compress":"fas fa-expand";if(id==="whm")setTimeout(()=>{try{whMap&&whMap.invalidateSize()}catch(e){}},260)};
+window.restoreM=function(id){delete minimized[id];const mo=document.getElementById(id);if(mo)mo.classList.add("open");renderTaskbar();if(id==="whm")setTimeout(()=>{try{whMap&&whMap.invalidateSize()}catch(e){}},260)};
 window.closeMinimized=function(id){delete minimized[id];const mo=document.getElementById(id);if(mo){mo.classList.remove("open");mo.querySelector(".modal")?.classList.remove("maxed")}renderTaskbar()};
 function renderTaskbar(){let tb=document.getElementById("taskbar");if(!tb){tb=document.createElement("div");tb.id="taskbar";document.body.appendChild(tb)}tb.innerHTML=Object.keys(minimized).map(id=>`<div class="tbchip" onclick="restoreM('${id}')"><i class="fas fa-window-restore"></i><span>${minimized[id]}</span><span class="tbx" onclick="event.stopPropagation();closeMinimized('${id}')"><i class="fas fa-times"></i></span></div>`).join("")}
 function injectWinControls(){document.querySelectorAll(".mo").forEach(mo=>{if(!mo.id)return;const mh=mo.querySelector(".mh");if(!mh||mh.querySelector(".mwbtn"))return;const mc=mh.querySelector(".mc");const mkBtn=(cls,icon,title,fn)=>{const b=document.createElement("button");b.className="mwbtn "+cls;b.title=title;b.innerHTML=`<i class="fas ${icon}"></i>`;b.onclick=e=>{e.stopPropagation();fn(mo.id)};return b};const min=mkBtn("mn","fa-window-minimize","Kichraytirish",minimizeM);const mx=mkBtn("mx","fa-expand","Kattalashtirish",maxM);if(mc){mc.classList.add("cl");mc.title="Yopish";mh.insertBefore(min,mc);mh.insertBefore(mx,mc)}else{mh.appendChild(min);mh.appendChild(mx)}})}
@@ -1115,15 +1125,22 @@ function updCatSelects(){["pm-cat","cf","sicatf"].forEach(id=>{const el=document
 
 // WAREHOUSES
 async function loadWHs(){const snap=await getDocs(collection(db,"warehouses"));warehouses=snap.docs.map(d=>({id:d.id,...d.data()}))}
-window.openWHM=function(id=null){editWHId=id;document.getElementById("whmtitle").textContent=id?"Ombor tahrirlash":"Ombor qo'shish";["whm-name","whm-adr","whm-cap","whm-mgr","whm-ph","whm-note"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("whm-id").value="";document.getElementById("whm-stat").value="active";if(id){const w=warehouses.find(x=>x.id===id);if(w){document.getElementById("whm-id").value=id;document.getElementById("whm-name").value=w.name||"";document.getElementById("whm-adr").value=w.address||"";document.getElementById("whm-cap").value=w.capacity||"";document.getElementById("whm-mgr").value=w.manager||"";document.getElementById("whm-ph").value=w.phone||"";document.getElementById("whm-note").value=w.note||"";document.getElementById("whm-stat").value=w.status||"active"}}openM("whm")};
-window.saveWH=async function(){const name=document.getElementById("whm-name").value.trim();if(!name)return showToast("Ombor nomi kerak!","error");const data={name,address:document.getElementById("whm-adr").value.trim(),capacity:parseFloat(document.getElementById("whm-cap").value)||0,manager:document.getElementById("whm-mgr").value.trim(),phone:document.getElementById("whm-ph").value.trim(),note:document.getElementById("whm-note").value.trim(),status:document.getElementById("whm-stat").value,updatedAt:serverTimestamp()};try{if(editWHId){await updateDoc(doc(db,"warehouses",editWHId),data)}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"warehouses"),data)}await loadWHs();renderWH();updWHSelects();closeM("whm");showToast("Saqlandi","success")}catch(e){showToast("Xato: "+e.message,"error")}};
+let whLat=null,whLng=null,whMap=null,whMarker=null;
+function updWHLocInfo(){const el=document.getElementById("whlocinfo");if(!el)return;el.innerHTML=(whLat!=null)?`<i class="fas fa-map-pin" style="color:var(--d)"></i> ${(+whLat).toFixed(5)}, ${(+whLng).toFixed(5)} · <a href="https://www.google.com/maps?q=${whLat},${whLng}" target="_blank" style="color:var(--p);font-weight:600">Google Maps'da ochish</a>`:"Joylashuv tanlanmagan"}
+async function whRevGeo(lat,lng){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=uz`);const j=await r.json();if(j&&j.display_name){const a=document.getElementById("whm-adr");if(a)a.value=j.display_name}}catch(e){}}
+function whSetLoc(lat,lng,fly){whLat=lat;whLng=lng;if(whMap&&typeof L!=="undefined"){if(whMarker){whMarker.setLatLng([lat,lng])}else{whMarker=L.marker([lat,lng],{draggable:true}).addTo(whMap);whMarker.on("dragend",e=>{const ll=e.target.getLatLng();whLat=ll.lat;whLng=ll.lng;whRevGeo(ll.lat,ll.lng);updWHLocInfo()})}try{if(fly&&whMap.flyTo)whMap.flyTo([lat,lng],16);else whMap.setView([lat,lng],16)}catch(e){}}updWHLocInfo()}
+window.whGPS=function(){if(!navigator.geolocation)return showToast("GPS qo'llab-quvvatlanmaydi","error");showToast("GPS aniqlanmoqda...","",2500);navigator.geolocation.getCurrentPosition(pos=>{whSetLoc(pos.coords.latitude,pos.coords.longitude,true);whRevGeo(pos.coords.latitude,pos.coords.longitude);showToast("Joylashuv aniqlandi ✓","success")},err=>showToast("GPS xatosi: "+err.message,"error"),{enableHighAccuracy:true,timeout:10000})};
+window.whClearLoc=function(){whLat=null;whLng=null;if(whMarker&&whMap){whMap.removeLayer(whMarker);whMarker=null}const a=document.getElementById("whm-adr");if(a)a.value="";updWHLocInfo()};
+function initWHMap(){const el=document.getElementById("whmap");if(!el)return;if(typeof L==="undefined"){el.innerHTML='<div style="padding:28px;text-align:center" class="tm f12"><i class="fas fa-map" style="font-size:22px"></i><br>Xarita yuklanmadi (internet yo\'q). GPS tugmasidan foydalaning.</div>';return}if(whMap){whMap.remove();whMap=null;whMarker=null}const c=(whLat!=null)?[whLat,whLng]:[41.3111,69.2797];whMap=L.map(el).setView(c,whLat!=null?16:11);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap",maxZoom:19}).addTo(whMap);whMap.on("click",e=>{whSetLoc(e.latlng.lat,e.latlng.lng);whRevGeo(e.latlng.lat,e.latlng.lng)});if(whLat!=null){whMarker=L.marker([whLat,whLng],{draggable:true}).addTo(whMap);whMarker.on("dragend",ev=>{const ll=ev.target.getLatLng();whLat=ll.lat;whLng=ll.lng;whRevGeo(ll.lat,ll.lng);updWHLocInfo()})}setTimeout(()=>whMap&&whMap.invalidateSize(),250)}
+window.openWHM=function(id=null){editWHId=id;document.getElementById("whmtitle").textContent=id?"Ombor tahrirlash":"Ombor qo'shish";["whm-name","whm-adr","whm-cap","whm-mgr","whm-ph","whm-note"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("whm-id").value="";document.getElementById("whm-stat").value="active";whLat=null;whLng=null;whMarker=null;if(id){const w=warehouses.find(x=>x.id===id);if(w){document.getElementById("whm-id").value=id;document.getElementById("whm-name").value=w.name||"";document.getElementById("whm-adr").value=w.address||"";document.getElementById("whm-cap").value=w.capacity||"";document.getElementById("whm-mgr").value=w.manager||"";document.getElementById("whm-ph").value=w.phone||"";document.getElementById("whm-note").value=w.note||"";document.getElementById("whm-stat").value=w.status||"active";if(w.location?.lat!=null){whLat=w.location.lat;whLng=w.location.lng}}}openM("whm");updWHLocInfo();setTimeout(initWHMap,300)};
+window.saveWH=async function(){const name=document.getElementById("whm-name").value.trim();if(!name)return showToast("Ombor nomi kerak!","error");const data={name,address:document.getElementById("whm-adr").value.trim(),capacity:parseFloat(document.getElementById("whm-cap").value)||0,manager:document.getElementById("whm-mgr").value.trim(),phone:document.getElementById("whm-ph").value.trim(),note:document.getElementById("whm-note").value.trim(),status:document.getElementById("whm-stat").value,location:(whLat!=null&&whLng!=null)?{lat:whLat,lng:whLng}:null,updatedAt:serverTimestamp()};try{if(editWHId){await updateDoc(doc(db,"warehouses",editWHId),data)}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"warehouses"),data)}await loadWHs();renderWH();updWHSelects();closeM("whm");showToast("Saqlandi","success")}catch(e){showToast("Xato: "+e.message,"error")}};
 window.deleteWH=async function(id){const used=products.some(p=>p.warehouse===id);if(used)return showToast("Bu omborda mahsulotlar bor! Avval ko'chiring.","error");showConfirm("Omborni o'chirish?",async()=>{await deleteDoc(doc(db,"warehouses",id));await loadWHs();renderWH();updWHSelects();showToast("O'chirildi","success")})};
 function getAllWH(){return[...warehouses]}
 function getWHName(id){const w=warehouses.find(x=>x.id===id);return w?.name||id||"Noma'lum ombor"}
 function renderWH(){
   const g=document.getElementById("whgrid");
   if(!warehouses.length){g.innerHTML=`<div class="ccard" style="grid-column:1/-1;text-align:center"><div class="cib" style="background:#dbeafe;color:#1d4ed8;margin:0 auto"><i class="fas fa-warehouse"></i></div><div class="fw6 f13">Hali ombor qo'shilmagan</div><div class="f12 tm">Yuqoridagi tugma bilan ombor qo'shing</div></div>`;renderWHProds();return}
-  g.innerHTML=warehouses.map(w=>{const cnt=products.filter(p=>p.warehouse===w.id).length;const tv=products.filter(p=>p.warehouse===w.id).reduce((s,p)=>(s+(p.price||0)*(p.quantity||0)),0);return`<div class="ccard"><div class="cib" style="background:#dbeafe;color:#1d4ed8"><i class="fas fa-warehouse" style="font-size:24px"></i></div><div class="fw6 f13">${w.name}</div><div class="f12 tm">${w.address||"Manzil yo'q"}</div><div class="f12 tm">${cnt} ta mahsulot turi</div><div class="f12 tm">💰 ${fN(tv)} so'm</div>${w.manager?`<div class="f12 tm"><i class="fas fa-user"></i> ${w.manager}</div>`:""}<div class="badge ${w.status==="active"?"bgs":"bgd"}" style="margin-top:6px">${w.status==="active"?"Faol":"Faol emas"}</div><div style="margin-top:10px;display:flex;gap:6px"><button class="btn bse bxs" onclick="openWHM('${w.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteWH('${w.id}')"><i class="fas fa-trash"></i></button><button class="btn bp bxs" onclick="showWHProds('${w.id}')"><i class="fas fa-boxes"></i> Ko'rish</button></div></div>`}).join("");
+  g.innerHTML=warehouses.map(w=>{const cnt=products.filter(p=>p.warehouse===w.id).length;const tv=products.filter(p=>p.warehouse===w.id).reduce((s,p)=>(s+(p.price||0)*(p.quantity||0)),0);return`<div class="ccard"><div class="cib" style="background:#dbeafe;color:#1d4ed8"><i class="fas fa-warehouse" style="font-size:24px"></i></div><div class="fw6 f13">${w.name}</div><div class="f12 tm">${w.address||"Manzil yo'q"}</div>${w.location?.lat?`<a href="https://www.google.com/maps?q=${w.location.lat},${w.location.lng}" target="_blank" class="f12" style="color:var(--p);font-weight:600;display:inline-block;margin:2px 0"><i class="fas fa-map-marker-alt"></i> Xaritada ko'rish</a>`:""}<div class="f12 tm">${cnt} ta mahsulot turi</div><div class="f12 tm">💰 ${fN(tv)} so'm</div>${w.manager?`<div class="f12 tm"><i class="fas fa-user"></i> ${w.manager}</div>`:""}<div class="badge ${w.status==="active"?"bgs":"bgd"}" style="margin-top:6px">${w.status==="active"?"Faol":"Faol emas"}</div><div style="margin-top:10px;display:flex;gap:6px"><button class="btn bse bxs" onclick="openWHM('${w.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteWH('${w.id}')"><i class="fas fa-trash"></i></button><button class="btn bp bxs" onclick="showWHProds('${w.id}')"><i class="fas fa-boxes"></i> Ko'rish</button></div></div>`}).join("");
   renderWHProds();
 }
 window.showWHProds=function(whId){
