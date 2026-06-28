@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v6.5</title>
+<title>Boomstroy v6.6</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -135,12 +135,12 @@ textarea.fc{resize:vertical;min-height:80px}
 .fabi:hover{background:var(--p);color:#fff;border-color:var(--p)}
 .fabi i{width:18px;text-align:center;color:var(--p)}
 .fabi:hover i{color:#fff}
-.nav-arrow{position:fixed;top:50%;transform:translateY(-50%);width:38px;height:62px;background:var(--wh);border:1px solid var(--bo);color:var(--p);cursor:pointer;z-index:60;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--shm);opacity:.55;transition:opacity .2s,background .2s}
-.nav-arrow:hover{opacity:1;background:var(--p);color:#fff}
-.nav-arrow.left{left:248px;border-radius:0 12px 12px 0}
-.nav-arrow.right{right:0;border-radius:12px 0 0 12px}
-body.sbc .nav-arrow.left{left:8px}
-@media(max-width:768px){.nav-arrow.left{left:0}.nav-arrow{width:30px;height:50px;font-size:14px;opacity:.45}}
+.nav-arrow{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:var(--p);border:none;color:#fff;cursor:pointer;z-index:95;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 14px rgba(26,86,219,.45);opacity:.9;transition:opacity .2s,transform .15s}
+.nav-arrow:active{transform:translateY(-50%) scale(.9)}
+.nav-arrow.left{left:256px}
+.nav-arrow.right{right:14px}
+body.sbc .nav-arrow.left{left:14px}
+@media(max-width:768px){.nav-arrow.left{left:10px}.nav-arrow.right{right:10px}.nav-arrow{width:42px;height:42px;opacity:.95}}
 .kbd{display:inline-block;background:var(--bg);border:1px solid var(--bo);border-bottom-width:2px;border-radius:5px;padding:2px 8px;font-family:monospace;font-size:12px;font-weight:700;min-width:22px;text-align:center;color:var(--tx)}
 .scrow{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:1px solid var(--bo);gap:12px}
 .scrow:last-child{border-bottom:none}
@@ -243,7 +243,7 @@ body.sbc .nav-arrow.left{left:8px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.5</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.6</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -582,7 +582,7 @@ body.sbc .nav-arrow.left{left:8px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.5.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.6.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
