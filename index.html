@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v6.2</title>
+<title>Boomstroy v6.3</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -85,6 +85,17 @@ tr:last-child td{border-bottom:none}
 .mf{padding:14px 20px;border-top:1px solid var(--bo);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
 .mc{background:none;border:none;cursor:pointer;color:var(--tl);padding:4px;border-radius:4px}
 .mc:hover{background:var(--bg)}
+.mwbtn{background:none;border:none;cursor:pointer;color:var(--tl);width:28px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.mwbtn:hover{background:var(--bg);color:var(--tx)}
+.mwbtn.cl:hover{background:#fee2e2;color:var(--d)}
+.modal.maxed{max-width:96vw!important;width:96vw;height:94vh;max-height:94vh;display:flex;flex-direction:column}
+.modal.maxed .mb2{flex:1;overflow-y:auto}
+#taskbar{position:fixed;bottom:0;left:12px;display:flex;gap:6px;z-index:1500;flex-wrap:wrap}
+.tbchip{background:var(--sb);color:#fff;border-radius:8px 8px 0 0;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 -2px 10px rgba(0,0,0,.25);max-width:230px;white-space:nowrap}
+.tbchip>span{overflow:hidden;text-overflow:ellipsis}
+.tbchip:hover{background:var(--p)}
+.tbchip .tbx{display:flex;width:18px;height:18px;align-items:center;justify-content:center;border-radius:4px}
+.tbchip .tbx:hover{background:rgba(255,255,255,.2)}
 .fg{margin-bottom:14px}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fl{display:block;font-size:12px;font-weight:600;color:var(--tl);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
@@ -223,7 +234,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.2</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.3</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -462,14 +473,14 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="card"><div class="ch"><i class="fas fa-search tm"></i><span class="ct">Mahsulot tanlash</span>
 <select class="fc" style="width:140px" id="poswf" onchange="renderPosProds()"><option value="">Barcha ombor</option></select>
 </div><div class="cb">
-<div class="sb2 mb3b"><div class="siw" style="flex:1"><i class="fas fa-search"></i><input id="possrch" placeholder="Mahsulot qidirish..." oninput="renderPosProds()"></div></div>
+<div class="sb2 mb3b"><div class="siw" style="flex:1"><i class="fas fa-search"></i><input id="possrch" placeholder="Mahsulot qidirish..." oninput="renderPosProds()"></div><button class="btn bse bsm" onclick="openPM()" title="Yangi mahsulot"><i class="fas fa-box"></i> Yangi</button></div>
 <div id="posgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:400px;overflow-y:auto"></div>
 </div></div>
 <div class="card"><div class="ch"><i class="fas fa-shopping-basket tm"></i><span class="ct">Savat</span><button class="btn bsm bse" onclick="clrCart()"><i class="fas fa-trash"></i></button></div>
 <div class="cb" id="poscart" style="min-height:200px"></div>
 <div style="padding:12px;border-top:1px solid var(--bo)">
 <div class="df jb mb2b"><span>Jami:</span><strong id="postotal">0 so'm</strong></div>
-<div class="fg"><label class="fl">Mijoz</label><select class="fc" id="poscust"><option value="">Naqd</option></select></div>
+<div class="fg"><label class="fl">Mijoz <button class="btn bxs bse" onclick="openCustM()" title="Yangi mijoz"><i class="fas fa-user-plus"></i></button></label><select class="fc" id="poscust"><option value="">Naqd</option></select></div>
 <div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="pospay"><option value="cash">Naqd</option><option value="card">Karta</option><option value="transfer">O'tkazma</option></select></div>
 <button class="btn bs" style="width:100%" onclick="completeSale()"><i class="fas fa-check"></i> Sotuvni yakunlash</button>
 </div></div></div></div>
@@ -562,7 +573,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.2.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.3.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
@@ -766,6 +777,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <select class="fc" style="flex:1" id="tr-prodslt"><option value="">Mahsulot tanlang...</option></select>
 <input class="fc" type="number" id="tr-qty2" placeholder="Miqdor" style="width:90px" value="1">
 <button class="btn bp bsm" onclick="addTrItem()"><i class="fas fa-plus"></i></button>
+<button class="btn bse bsm" onclick="openPM()" title="Yangi mahsulot"><i class="fas fa-box"></i></button>
 </div></div>
 <div id="tr-items" style="margin-bottom:12px"></div>
 <div class="fg"><label class="fl">Sabab</label><select class="fc" id="tr-reason"><option value="rebalance">Muvozanatlash</option><option value="request">So'rov bo'yicha</option><option value="overflow">Ortiqcha</option><option value="shortage">Kamchilik</option><option value="other">Boshqa</option></select></div>
@@ -809,9 +821,9 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="modal mlg">
 <div class="mh"><i class="fas fa-shopping-cart"></i><span class="mt">Sotuv qo'shish</span><button class="mc" onclick="closeM('salem')"><i class="fas fa-times"></i></button></div>
 <div class="mb2">
-<div class="fr"><div class="fg"><label class="fl">Mijoz</label><select class="fc" id="salem-cust"><option value="">Naqd</option></select></div><div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="salem-pay"><option value="cash">Naqd</option><option value="card">Karta</option><option value="transfer">O'tkazma</option></select></div></div>
+<div class="fr"><div class="fg"><label class="fl">Mijoz <button class="btn bxs bse" onclick="openCustM()" title="Yangi mijoz"><i class="fas fa-user-plus"></i></button></label><select class="fc" id="salem-cust"><option value="">Naqd</option></select></div><div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="salem-pay"><option value="cash">Naqd</option><option value="card">Karta</option><option value="transfer">O'tkazma</option></select></div></div>
 <div class="fg"><label class="fl">Mahsulot qo'shish</label>
-<div class="df g8"><select class="fc" id="salem-prodslt"><option value="">Tanlang...</option></select><input class="fc" type="number" id="salem-qty" style="width:90px" value="1"><button class="btn bp bsm" onclick="addSalItem()"><i class="fas fa-plus"></i></button></div></div>
+<div class="df g8"><select class="fc" id="salem-prodslt"><option value="">Tanlang...</option></select><input class="fc" type="number" id="salem-qty" style="width:90px" value="1"><button class="btn bp bsm" onclick="addSalItem()"><i class="fas fa-plus"></i></button><button class="btn bse bsm" onclick="openPM()" title="Yangi mahsulot"><i class="fas fa-box"></i></button></div></div>
 <div id="salem-items" style="margin-bottom:12px"></div>
 <div class="df jb" style="border-top:1px solid var(--bo);padding-top:10px"><span class="fw6">JAMI:</span><strong id="salem-total" style="color:var(--p)">0 so'm</strong></div>
 <div class="fg" style="margin-top:10px"><label class="fl">Izoh</label><textarea class="fc" id="salem-note" rows="2"></textarea></div>
@@ -826,7 +838,8 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="mb2">
 <div class="fr"><div class="fg"><label class="fl">Yetkazuvchi</label><select class="fc" id="purchm-supp"><option value="">Tanlang...</option></select></div><div class="fg"><label class="fl">To'lov turi</label><select class="fc" id="purchm-pay"><option value="cash">Naqd</option><option value="transfer">O'tkazma</option><option value="credit">Nasiya</option></select></div></div>
 <div class="fg"><label class="fl">Mahsulot qo'shish</label>
-<div class="df g8"><select class="fc" id="purchm-prodslt"><option value="">Tanlang...</option></select><input class="fc" type="number" id="purchm-qty" placeholder="Miqdor" style="width:80px"><input class="fc" type="number" id="purchm-prc" placeholder="Narx" style="width:100px"><button class="btn bp bsm" onclick="addPurchItem()"><i class="fas fa-plus"></i></button></div></div>
+<div class="df g8"><select class="fc" id="purchm-prodslt"><option value="">Tanlang...</option></select><input class="fc" type="number" id="purchm-qty" placeholder="Miqdor" style="width:80px"><input class="fc" type="number" id="purchm-prc" placeholder="Narx" style="width:100px"><button class="btn bp bsm" onclick="addPurchItem()"><i class="fas fa-plus"></i></button>
+<button class="btn bse bsm" onclick="openPM()" title="Yangi mahsulot"><i class="fas fa-box"></i></button></div></div>
 <div id="purchm-items"></div>
 <div class="df jb" style="border-top:1px solid var(--bo);padding-top:10px"><span class="fw6">Jami:</span><span class="fw6" id="purchm-total">0 so'm</span></div>
 <div class="fg" style="margin-top:10px"><label class="fl">Faktura</label><input class="fc" id="purchm-inv"></div>
@@ -966,8 +979,15 @@ const fN=n=>(n||0).toLocaleString("uz-UZ");
 function fD(ts){if(!ts)return"—";try{const d=ts?.toDate?ts.toDate():new Date(ts);return d.toLocaleDateString("uz-UZ")+" "+d.toLocaleTimeString("uz-UZ",{hour:"2-digit",minute:"2-digit"})}catch{return"—"}}
 function setConn(ok){document.getElementById("cd").className=ok?"on":"";document.getElementById("ct").textContent=ok?"Firebase ulangan":"Ulanmagan"}
 window.showToast=function(msg,type="",dur=3000){const ic={success:"fa-check-circle",error:"fa-times-circle",warning:"fa-exclamation-triangle"};const t=document.createElement("div");t.className=`toast${type?" "+type:""}`;t.innerHTML=`<i class="fas ${ic[type]||"fa-info-circle"}"></i> ${msg}`;document.getElementById("tc2").appendChild(t);setTimeout(()=>t.remove(),dur)};
-window.closeM=id=>document.getElementById(id)?.classList.remove("open");
-function openM(id){document.getElementById(id)?.classList.add("open")}
+let minimized={};
+window.closeM=id=>{const mo=document.getElementById(id);if(!mo)return;mo.classList.remove("open");mo.querySelector(".modal")?.classList.remove("maxed");if(minimized[id]){delete minimized[id];renderTaskbar()}};
+function openM(id){const mo=document.getElementById(id);if(!mo)return;mo.classList.add("open");if(minimized[id]){delete minimized[id];renderTaskbar()}}
+window.minimizeM=function(id){const mo=document.getElementById(id);if(!mo)return;minimized[id]=mo.querySelector(".mt")?.textContent||"Oyna";mo.classList.remove("open");renderTaskbar()};
+window.maxM=function(id){const m=document.getElementById(id)?.querySelector(".modal");if(!m)return;m.classList.toggle("maxed");const b=document.getElementById(id).querySelector(".mwbtn.mx i");if(b)b.className=m.classList.contains("maxed")?"fas fa-compress":"fas fa-expand"};
+window.restoreM=function(id){delete minimized[id];const mo=document.getElementById(id);if(mo)mo.classList.add("open");renderTaskbar()};
+window.closeMinimized=function(id){delete minimized[id];const mo=document.getElementById(id);if(mo){mo.classList.remove("open");mo.querySelector(".modal")?.classList.remove("maxed")}renderTaskbar()};
+function renderTaskbar(){let tb=document.getElementById("taskbar");if(!tb){tb=document.createElement("div");tb.id="taskbar";document.body.appendChild(tb)}tb.innerHTML=Object.keys(minimized).map(id=>`<div class="tbchip" onclick="restoreM('${id}')"><i class="fas fa-window-restore"></i><span>${minimized[id]}</span><span class="tbx" onclick="event.stopPropagation();closeMinimized('${id}')"><i class="fas fa-times"></i></span></div>`).join("")}
+function injectWinControls(){document.querySelectorAll(".mo").forEach(mo=>{if(!mo.id)return;const mh=mo.querySelector(".mh");if(!mh||mh.querySelector(".mwbtn"))return;const mc=mh.querySelector(".mc");const mkBtn=(cls,icon,title,fn)=>{const b=document.createElement("button");b.className="mwbtn "+cls;b.title=title;b.innerHTML=`<i class="fas ${icon}"></i>`;b.onclick=e=>{e.stopPropagation();fn(mo.id)};return b};const min=mkBtn("mn","fa-window-minimize","Kichraytirish",minimizeM);const mx=mkBtn("mx","fa-expand","Kattalashtirish",maxM);if(mc){mc.classList.add("cl");mc.title="Yopish";mh.insertBefore(min,mc);mh.insertBefore(mx,mc)}else{mh.appendChild(min);mh.appendChild(mx)}})}
 document.querySelectorAll(".mo").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
 window.togSet=el=>{if(el.classList.contains("locked"))return showToast("O'chirilmaydi","warning");el.classList.toggle("on")};
 window.toggleSB=()=>{document.getElementById("sidebar").classList.toggle("open");document.getElementById("sov").style.display=document.getElementById("sidebar").classList.contains("open")?"block":"none"};
@@ -1108,7 +1128,7 @@ function updWHSelects(){
 // PRODUCTS
 async function loadProds(){const snap=await getDocs(query(collection(db,"products"),orderBy("name")));products=snap.docs.map(d=>({id:d.id,...d.data()}));filtP=[...products]}
 window.openPM=function(id=null){editPId=id;pendImgFile=null;pendAutoImg=null;document.getElementById("pmtitle").textContent=id?"Mahsulotni tahrirlash":"Mahsulot qo'shish";document.getElementById("pm-id").value="";["pm-name","pm-sku","pm-brand","pm-price","pm-cost","pm-qty","pm-desc"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("pm-minqty").value="5";document.getElementById("pm-unit").value="dona";document.getElementById("pm-stat").value="active";document.getElementById("pm-cur").value="UZS";document.getElementById("pm-uzs").value="";document.getElementById("pm-iprev").innerHTML=`<i class="fas fa-camera" style="font-size:28px;display:block;margin:0 auto 6px;color:var(--tl)"></i><div class="f12 tm">Rasm yuklash</div>`;document.getElementById("pm-istat").textContent="";document.getElementById("pm-qrprev").style.display="none";document.getElementById("pm-qrc").innerHTML="";updCatSelects();updWHSelects();if(!id){if(!categories.length)showToast("Avval 'Kategoriyalar' bo'limidan kategoriya qo'shing!","warning",5000);else if(!warehouses.length)showToast("Avval 'Omborlar' bo'limidan ombor qo'shing!","warning",5000)}if(id){const p=products.find(x=>x.id===id);if(p){document.getElementById("pm-id").value=p.id;document.getElementById("pm-name").value=p.name||"";document.getElementById("pm-sku").value=p.sku||"";document.getElementById("pm-brand").value=p.brand||"";document.getElementById("pm-price").value=p.price||"";document.getElementById("pm-cost").value=p.cost||"";document.getElementById("pm-qty").value=p.quantity||"";document.getElementById("pm-minqty").value=p.minQuantity||5;document.getElementById("pm-desc").value=p.description||"";document.getElementById("pm-unit").value=p.unit||"dona";document.getElementById("pm-stat").value=p.status||"active";document.getElementById("pm-cur").value=p.currency||"UZS";if(p.category)document.getElementById("pm-cat").value=p.category;if(p.warehouse)document.getElementById("pm-wh").value=p.warehouse;if(p.imageUrl)document.getElementById("pm-iprev").innerHTML=`<img src="${p.imageUrl}" class="ipv" onerror="this.style.display='none'">`;if(p.sku||p.qrData){document.getElementById("pm-qrprev").style.display="block";setTimeout(()=>genQR("pm-qrc",p.qrData||getQRD(p),100),100)}}}else{const e=document.getElementById("t-sku");if(e&&e.classList.contains("on"))document.getElementById("pm-sku").value=genSKU("PROD","")}openM("pm")};
-window.saveProd=async function(){const name=document.getElementById("pm-name").value.trim();const cat=document.getElementById("pm-cat").value;const wh=document.getElementById("pm-wh").value;if(!name)return showToast("Mahsulot nomi kerak!","error");if(!cat)return showToast("Kategoriya tanlang!","error");if(!wh)return showToast("Ombor tanlang!","error");const c=categories.find(x=>x.id===cat);let sku=document.getElementById("pm-sku").value.trim();if(!sku)sku=genSKU(name,c?.name||"");const data={name,category:cat,sku,warehouse:wh,price:parseFloat(document.getElementById("pm-price").value)||0,currency:document.getElementById("pm-cur").value||"UZS",cost:parseFloat(document.getElementById("pm-cost").value)||0,quantity:parseInt(document.getElementById("pm-qty").value)||0,minQuantity:parseInt(document.getElementById("pm-minqty").value)||5,brand:document.getElementById("pm-brand").value.trim(),unit:document.getElementById("pm-unit").value,description:document.getElementById("pm-desc").value.trim(),status:document.getElementById("pm-stat").value,updatedAt:serverTimestamp()};const btn=document.getElementById("pm-savebtn");btn.disabled=true;btn.innerHTML='<div class="spinner" style="width:14px;height:14px"></div> Saqlanmoqda...';if(pendImgFile){try{const url=await uploadImgbb(pendImgFile);if(url)data.imageUrl=url}catch(e){showToast("Rasm yuklash xatosi: "+e.message,"warning")}}else if(pendAutoImg){data.imageUrl=pendAutoImg}else if(!editPId){const ai=document.getElementById("t-img");if(ai&&ai.classList.contains("on")){try{data.imageUrl=await findImg(name,c?.name||"")}catch(e){}}}const qrObj={id:editPId||"new",sku,name,price:data.price,unit:data.unit,company:"Boomstroy"};data.qrData=JSON.stringify(qrObj);btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Saqlash';try{if(editPId){await updateDoc(doc(db,"products",editPId),data);showToast("Mahsulot yangilandi","success")}else{data.createdAt=serverTimestamp();const ref=await addDoc(collection(db,"products"),data);await updateDoc(doc(db,"products",ref.id),{qrData:JSON.stringify({...qrObj,id:ref.id})});showToast("Mahsulot qo'shildi","success")}await addLog("product","Mahsulot: "+name);await loadProds();renderP();updProdSelects();updDashStats();updAllLSB();try{filterSIProd()}catch(e){}try{filterSOProd()}catch(e){}closeM("pm")}catch(e){showToast("Xato: "+e.message,"error");btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Saqlash'}};
+window.saveProd=async function(){const name=document.getElementById("pm-name").value.trim();const cat=document.getElementById("pm-cat").value;const wh=document.getElementById("pm-wh").value;if(!name)return showToast("Mahsulot nomi kerak!","error");if(!cat)return showToast("Kategoriya tanlang!","error");if(!wh)return showToast("Ombor tanlang!","error");const c=categories.find(x=>x.id===cat);let sku=document.getElementById("pm-sku").value.trim();if(!sku)sku=genSKU(name,c?.name||"");const data={name,category:cat,sku,warehouse:wh,price:parseFloat(document.getElementById("pm-price").value)||0,currency:document.getElementById("pm-cur").value||"UZS",cost:parseFloat(document.getElementById("pm-cost").value)||0,quantity:parseInt(document.getElementById("pm-qty").value)||0,minQuantity:parseInt(document.getElementById("pm-minqty").value)||5,brand:document.getElementById("pm-brand").value.trim(),unit:document.getElementById("pm-unit").value,description:document.getElementById("pm-desc").value.trim(),status:document.getElementById("pm-stat").value,updatedAt:serverTimestamp()};const btn=document.getElementById("pm-savebtn");btn.disabled=true;btn.innerHTML='<div class="spinner" style="width:14px;height:14px"></div> Saqlanmoqda...';if(pendImgFile){try{const url=await uploadImgbb(pendImgFile);if(url)data.imageUrl=url}catch(e){showToast("Rasm yuklash xatosi: "+e.message,"warning")}}else if(pendAutoImg){data.imageUrl=pendAutoImg}else if(!editPId){const ai=document.getElementById("t-img");if(ai&&ai.classList.contains("on")){try{data.imageUrl=await findImg(name,c?.name||"")}catch(e){}}}const qrObj={id:editPId||"new",sku,name,price:data.price,unit:data.unit,company:"Boomstroy"};data.qrData=JSON.stringify(qrObj);btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Saqlash';try{if(editPId){await updateDoc(doc(db,"products",editPId),data);showToast("Mahsulot yangilandi","success")}else{data.createdAt=serverTimestamp();const ref=await addDoc(collection(db,"products"),data);await updateDoc(doc(db,"products",ref.id),{qrData:JSON.stringify({...qrObj,id:ref.id})});showToast("Mahsulot qo'shildi","success")}await addLog("product","Mahsulot: "+name);await loadProds();renderP();updProdSelects();updDashStats();updAllLSB();try{filterSIProd()}catch(e){}try{filterSOProd()}catch(e){}try{filterTrProd()}catch(e){}try{renderPosProds()}catch(e){}closeM("pm")}catch(e){showToast("Xato: "+e.message,"error");btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Saqlash'}};
 window.deleteProd=async function(id){const p=products.find(x=>x.id===id);showConfirm(`"${p?.name}" o'chirilsin?`,async()=>{await deleteDoc(doc(db,"products",id));await addLog("product","O'chirildi: "+p?.name);await loadProds();renderP();updDashStats();updAllLSB();showToast("O'chirildi","success")})};
 window.viewProd=function(id){const p=products.find(x=>x.id===id);if(!p)return;const c=categories.find(x=>x.id===p.category);const wh=warehouses.find(x=>x.id===p.warehouse);const st=stSt(p);const qrd=p.qrData||getQRD(p);document.getElementById("pdbody").innerHTML=`<div style="display:flex;gap:16px;margin-bottom:16px;align-items:flex-start"><div style="flex-shrink:0">${p.imageUrl?`<img src="${p.imageUrl}" style="width:100px;height:100px;border-radius:10px;object-fit:cover;border:2px solid var(--bo)">`:c?.icon?`<div style="width:100px;height:100px;border-radius:10px;background:var(--bg);border:2px solid var(--bo);display:flex;align-items:center;justify-content:center;font-size:36px">${c.icon}</div>`:""}<div style="margin-top:8px;text-align:center"><span class="sku">${p.sku||"SKU yo'q"}</span></div></div><div style="flex:1"><h3 style="font-size:16px;margin-bottom:8px">${p.name}</h3><div class="ib"><div><strong>Kategoriya:</strong> ${c?.icon||"📦"} ${c?.name||"—"}</div><div><strong>Ombor:</strong> ${wh?.name||p.warehouse||"—"}</div><div><strong>Narx:</strong> ${fN(Math.round(priceUZS(p)))} so'm${p.currency==="USD"?` <span class="f11 tm">($${fN(p.price)})</span>`:""}</div><div><strong>Miqdor:</strong> ${p.quantity||0} ${p.unit||"dona"}</div><div><strong>Min zaxira:</strong> ${p.minQuantity||5}</div><div><strong>Holat:</strong> <span class="badge ${st.cls}">${st.label}</span></div>${p.brand?`<div><strong>Brend:</strong> ${p.brand}</div>`:""}</div></div></div><div style="text-align:center;padding:12px;background:var(--bg);border-radius:8px"><div class="fw6 f13" style="margin-bottom:8px">QR Kod</div><div id="vpqrc" class="qrc" style="justify-content:center"></div></div>`;document.getElementById("pdfooter").innerHTML=`<button class="btn bse" onclick="closeM('pdm')">Yopish</button><button class="btn bp" onclick="closeM('pdm');openPM('${id}')"><i class="fas fa-edit"></i> Tahrirlash</button>`;openM("pdm");setTimeout(()=>genQR("vpqrc",qrd,130),100)};
 function renderP(){filtP=[...products];applyPF()}
@@ -1383,7 +1403,7 @@ window.gSearch=function(val){if(!val.trim()||val.length<2)return;const o=orders.
 window.showNotif=function(){const low=products.filter(p=>stSt(p).val!=="ok");const pend=orders.filter(o=>["pending","paid_pending"].includes(o.status));if(!low.length&&!pend.length){showToast("Hamma narsa yaxshi!","success");return}const out=low.filter(p=>stSt(p).val==="out"),lw=low.filter(p=>stSt(p).val==="low");if(out.length)showToast(`🔴 ${out.length} ta mahsulot TUGAGAN!`,"error",5000);if(lw.length)showToast(`🟡 ${lw.length} ta mahsulot kam qolgan!`,"warning",5000);if(pend.length)showToast(`📦 ${pend.length} ta yangi buyurtma!`,"warning",5000)};
 
 // INIT
-updUSDBadge();initAuth();loadAll();
+injectWinControls();updUSDBadge();initAuth();loadAll();
 </script>
 </body>
 </html>
