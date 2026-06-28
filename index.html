@@ -9,6 +9,7 @@
 <style>
 :root{--p:#1a56db;--pd:#1e40af;--s:#16a34a;--d:#dc2626;--w:#d97706;--i:#0891b2;--bg:#f1f5f9;--sb:#1e293b;--st:#cbd5e1;--wh:#fff;--bo:#e2e8f0;--tx:#1e293b;--tl:#64748b;--ca:#fff;--sh:0 1px 3px rgba(0,0,0,.1);--shm:0 4px 12px rgba(0,0,0,.1);--r:8px}
 *{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden;max-width:100vw}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;display:flex;min-height:100vh}
 #sidebar{width:240px;background:var(--sb);color:var(--st);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto;transition:transform .3s}
 .sbl{padding:20px 16px;border-bottom:1px solid #334155;display:flex;align-items:center;gap:10px}
@@ -23,8 +24,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .nav-item i{width:18px;text-align:center;font-size:14px}
 .nbadge{margin-left:auto;background:var(--d);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center}
 #sov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
-#stoggle{display:none;background:none;border:none;cursor:pointer;font-size:18px;color:var(--tx)}
-#main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+#stoggle{display:flex;align-items:center;justify-content:center;min-width:38px;height:38px;background:var(--bg);border:1px solid var(--bo);border-radius:8px;cursor:pointer;font-size:18px;color:var(--tx)}
+#stoggle:hover{background:var(--bo)}
+#main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0;max-width:100%;transition:margin-left .3s}
+body.sbc #sidebar{transform:translateX(-100%)}
+body.sbc #main{margin-left:0}
+#pc{min-width:0}
+.tc{max-width:100%}
 #topbar{background:var(--wh);border-bottom:1px solid var(--bo);padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
 .tbt{font-size:16px;font-weight:600;flex:1}
 .tba{display:flex;align-items:center;gap:8px}
@@ -101,6 +107,17 @@ textarea.fc{resize:vertical;min-height:80px}
 .ccard:hover{border-color:var(--p)}
 .cib{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:10px;overflow:hidden}
 .cib img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+#fabwrap{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+#fabbtn{width:56px;height:56px;border-radius:50%;background:var(--p);color:#fff;border:none;cursor:pointer;font-size:22px;box-shadow:0 6px 20px rgba(26,86,219,.45);transition:transform .2s,background .2s;display:flex;align-items:center;justify-content:center}
+#fabbtn:hover{background:var(--pd)}
+#fabwrap.on #fabbtn{transform:rotate(45deg);background:var(--d)}
+#fabwrap.on #fabbtn #fabicon::before{content:"\f00d"}
+#fabmenu{display:none;flex-direction:column;gap:7px;max-height:70vh;overflow-y:auto;padding:4px}
+#fabwrap.on #fabmenu{display:flex;animation:si .25s ease}
+.fabi{display:flex;align-items:center;gap:9px;background:var(--wh);border:1px solid var(--bo);border-radius:24px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:var(--shm);white-space:nowrap;color:var(--tx);transition:all .15s}
+.fabi:hover{background:var(--p);color:#fff;border-color:var(--p)}
+.fabi i{width:18px;text-align:center;color:var(--p)}
+.fabi:hover i{color:#fff}
 #tc{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
 .toast{background:#1e293b;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:var(--shm);animation:si .3s ease;min-width:240px}
 .toast.success{background:var(--s)}.toast.error{background:var(--d)}.toast.warning{background:var(--w)}
@@ -203,7 +220,8 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.0</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
-<a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a></div>
+<a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
+<a class="nav-item" onclick="nav('help')"><i class="fas fa-circle-question"></i> Yo'riqnoma</a></div>
 <div class="sbs"><div class="sbst">Inventar</div>
 <a class="nav-item" onclick="nav('products')"><i class="fas fa-boxes"></i> Mahsulotlar <span class="nbadge" id="nb-low"></span></a>
 <a class="nav-item" onclick="nav('categories')"><i class="fas fa-tags"></i> Kategoriyalar</a>
@@ -232,7 +250,7 @@ textarea.fc{resize:vertical;min-height:80px}
 
 <div id="main">
 <div id="topbar">
-<button id="stoggle" onclick="toggleSB()"><i class="fas fa-bars"></i></button>
+<button id="stoggle" onclick="toggleMenu()" title="Menyu"><i class="fas fa-bars"></i></button>
 <span class="tbt" id="tbt">Dashboard</span>
 <div class="tba">
 <div id="usdbadge" style="font-size:12px;color:var(--s);background:#dcfce7;padding:4px 10px;border-radius:20px;font-weight:600;white-space:nowrap"></div>
@@ -533,6 +551,12 @@ textarea.fc{resize:vertical;min-height:80px}
 </div></div>
 </div></div>
 
+<!-- HELP / YO'RIQNOMA -->
+<div class="ps" id="sec-help">
+<div class="card"><div class="ch"><i class="fas fa-circle-question tm"></i><span class="ct">Yo'riqnoma — tizimdan qanday foydalanish</span></div>
+<div class="cb" id="helpbody"></div></div>
+</div>
+
 <!-- ANNOUNCEMENTS -->
 <div class="ps" id="sec-announcements">
 <div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openAnnM()"><i class="fas fa-plus"></i> E'lon / Chegirma qo'shish</button></div>
@@ -545,7 +569,7 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="ps" id="sec-users">
 <div class="df jb ac mb3b"><div></div><button class="btn bp" onclick="openUM()"><i class="fas fa-plus"></i> Ishchi qo'shish</button></div>
 <div class="card"><div class="ch"><i class="fas fa-user-shield tm"></i><span class="ct">Ishchilar va ruxsatlar</span></div>
-<div class="tc"><table><thead><tr><th>#</th><th>Ism</th><th>Login</th><th>Telefon</th><th>Rol</th><th>Ruxsatlar</th><th>Holat</th><th>Amallar</th></tr></thead>
+<div class="tc"><table><thead><tr><th>#</th><th>Ism</th><th>Login</th><th>Parol</th><th>Telefon</th><th>Rol</th><th>Ruxsatlar</th><th>Holat</th><th>Amallar</th></tr></thead>
 <tbody id="usertbody"><tr><td colspan="8"><div class="lo"><div class="spinner"></div></div></td></tr></tbody></table></div>
 </div></div>
 
@@ -860,6 +884,24 @@ textarea.fc{resize:vertical;min-height:80px}
 <div class="mf"><button class="btn bse" onclick="closeM('confm')">Bekor</button><button class="btn bd" id="confbtn" onclick="execConf()">Tasdiqlash</button></div>
 </div></div>
 
+<!-- QUICK ACTIONS FAB -->
+<div id="fabwrap">
+<div id="fabmenu">
+<button class="fabi" onclick="qa('products')"><i class="fas fa-box"></i> Mahsulot qo'shish</button>
+<button class="fabi" onclick="qa('stock-in')"><i class="fas fa-arrow-circle-down"></i> Kirim</button>
+<button class="fabi" onclick="qa('stock-out')"><i class="fas fa-arrow-circle-up"></i> Chiqim</button>
+<button class="fabi" onclick="qa('transfers')"><i class="fas fa-exchange-alt"></i> Ko'chirish</button>
+<button class="fabi" onclick="qa('pos')"><i class="fas fa-cash-register"></i> Kassa (sotuv)</button>
+<button class="fabi" onclick="qa('categories')"><i class="fas fa-tags"></i> Kategoriya</button>
+<button class="fabi" onclick="qa('warehouses')"><i class="fas fa-warehouse"></i> Ombor</button>
+<button class="fabi" onclick="qa('customers')"><i class="fas fa-user"></i> Mijoz</button>
+<button class="fabi" onclick="qa('suppliers')"><i class="fas fa-truck"></i> Yetkazuvchi</button>
+<button class="fabi" onclick="qa('users')"><i class="fas fa-user-plus"></i> Ishchi</button>
+<button class="fabi" onclick="qa('announcements')"><i class="fas fa-bullhorn"></i> E'lon/Chegirma</button>
+<button class="fabi" onclick="qa('inventory-check')"><i class="fas fa-clipboard-check"></i> Inventarizatsiya</button>
+</div>
+<button id="fabbtn" onclick="toggleFab()" title="Tezkor amallar"><i class="fas fa-bolt" id="fabicon"></i></button>
+</div>
 <div id="tc2"></div>
 
 <script type="module">
@@ -873,9 +915,9 @@ async function tgSend(id,txt){if(!id)return;try{await fetch(`https://api.telegra
 let IMGBB="";
 let GROQKEY="";
 let USDRATE=12650;
-let products=[],categories=[],customers=[],suppliers=[],warehouses=[],stockIns=[],stockOuts=[],sales=[],purchases=[],orders=[],transfers=[],returns=[],logs=[],users=[],announcements=[],features={};
+let products=[],categories=[],customers=[],suppliers=[],warehouses=[],stockIns=[],stockOuts=[],sales=[],purchases=[],orders=[],transfers=[],returns=[],logs=[],users=[],announcements=[],features={},customReasons=[];
 let CURUSER=null;
-async function loadUSD(){try{const r=await fetch("https://cbu.uz/uz/arkhiv-kursov-valyut/json/");const j=await r.json();const u=(Array.isArray(j)?j:[]).find(x=>x.Ccy==="USD");if(u&&u.Rate){USDRATE=parseFloat(u.Rate);localStorage.setItem("usdrate",USDRATE)}}catch(e){const c=localStorage.getItem("usdrate");if(c)USDRATE=parseFloat(c)}updUSDBadge()}
+async function loadUSD(){const srcs=[async()=>{const r=await fetch("https://open.er-api.com/v6/latest/USD");const j=await r.json();return j?.rates?.UZS},async()=>{const r=await fetch("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json");const j=await r.json();return j?.usd?.uzs},async()=>{const r=await fetch("https://cbu.uz/uz/arkhiv-kursov-valyut/json/");const j=await r.json();const u=(Array.isArray(j)?j:[]).find(x=>x.Ccy==="USD");return u&&parseFloat(u.Rate)},async()=>{const r=await fetch("https://api.exchangerate.host/latest?base=USD&symbols=UZS");const j=await r.json();return j?.rates?.UZS}];let ok=false;for(const f of srcs){try{const v=await f();if(v&&v>1000&&v<100000){USDRATE=Math.round(parseFloat(v));localStorage.setItem("usdrate",USDRATE);ok=true;break}}catch(e){}}if(!ok){const c=localStorage.getItem("usdrate");if(c)USDRATE=parseFloat(c)}updUSDBadge();if(curSec==="products")renderP()}
 function updUSDBadge(){const el=document.getElementById("usdbadge");if(el)el.innerHTML=`<i class="fas fa-dollar-sign"></i> 1$ = ${fN(Math.round(USDRATE))} so'm`}
 function toUZS(price,cur){return (cur==="USD")?(price||0)*USDRATE:(price||0)}
 function priceUZS(p){return toUZS(p?.price,p?.currency)}
@@ -905,6 +947,7 @@ function openM(id){document.getElementById(id)?.classList.add("open")}
 document.querySelectorAll(".mo").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
 window.togSet=el=>{if(el.classList.contains("locked"))return showToast("O'chirilmaydi","warning");el.classList.toggle("on")};
 window.toggleSB=()=>{document.getElementById("sidebar").classList.toggle("open");document.getElementById("sov").style.display=document.getElementById("sidebar").classList.contains("open")?"block":"none"};
+window.toggleMenu=()=>{if(window.innerWidth<=768)toggleSB();else document.body.classList.toggle("sbc")};
 window.clos=()=>{document.getElementById("sidebar").classList.remove("open");document.getElementById("sov").style.display="none"};
 window.showConfirm=function(msg,cb){confCB=cb;document.getElementById("confmsg").textContent=msg;openM("confm")};
 window.execConf=function(){if(confCB){confCB();confCB=null}closeM("confm")};
@@ -916,10 +959,11 @@ window.nav=function(sec){
   document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
   document.getElementById("sec-"+sec)?.classList.add("active");
   document.querySelectorAll(".nav-item").forEach(n=>{if(n.getAttribute("onclick")?.includes(`'${sec}'`))n.classList.add("active")});
-  const titles={dashboard:"Dashboard",products:"Mahsulotlar",categories:"Kategoriyalar",customers:"Mijozlar",suppliers:"Yetkazuvchilar",warehouses:"Omborlar","stock-in":"Kirim","stock-out":"Chiqim",sales:"Sotuvlar",purchases:"Xaridlar",orders:"Buyurtmalar",transfers:"Ko'chirishlar",returns:"Qaytarishlar",pos:"Kassa (POS)",analytics:"Tahlil",reports:"Hisobotlar",logs:"Harakatlar",settings:"Sozlamalar",users:"Ishchilar / Ruxsatlar",announcements:"E'lon / Chegirma","inventory-check":"Inventarizatsiya"};
+  const titles={dashboard:"Dashboard",products:"Mahsulotlar",categories:"Kategoriyalar",customers:"Mijozlar",suppliers:"Yetkazuvchilar",warehouses:"Omborlar","stock-in":"Kirim","stock-out":"Chiqim",sales:"Sotuvlar",purchases:"Xaridlar",orders:"Buyurtmalar",transfers:"Ko'chirishlar",returns:"Qaytarishlar",pos:"Kassa (POS)",analytics:"Tahlil",reports:"Hisobotlar",logs:"Harakatlar",settings:"Sozlamalar",users:"Ishchilar / Ruxsatlar",announcements:"E'lon / Chegirma",help:"Yo'riqnoma","inventory-check":"Inventarizatsiya"};
   document.getElementById("tbt").textContent=titles[sec]||sec;
   curSec=sec;clos();renderAnnBanner();
   if(sec==="dashboard")loadDash();
+  else if(sec==="help")renderHelp();
   else if(sec==="announcements")renderAnns();
   else if(sec==="products"){renderP();renderLSB("plsb")}
   else if(sec==="categories")renderCats();
@@ -945,7 +989,7 @@ window.nav=function(sec){
 async function loadAll(){
   loadUSD();
   try{
-    await Promise.all([loadAPIKey(),loadGroqKey(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers(),loadFeatures(),loadAnns()]);
+    await Promise.all([loadAPIKey(),loadGroqKey(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers(),loadFeatures(),loadAnns(),loadCustomReasons()]);
     setConn(true);loadDash();updAllLSB();updAllSelects();updUSDBadge();renderFeatureToggles();renderAnnBanner();if(CURUSER)applyAccess();
   }catch(e){setConn(false);showToast("Firebase xatosi: "+e.message,"error")}
 }
@@ -1067,7 +1111,7 @@ window.addSOItem=function(){const pid=document.getElementById("so-prodslt").valu
 function renderSOItems(){const c=document.getElementById("so-items");if(!soItems.length){c.innerHTML='<div class="tm f12" style="padding:8px 0">Mahsulot qo\'shilmagan</div>';document.getElementById("so-total").textContent="0 dona";return}c.innerHTML=soItems.map((it,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bo)"><div style="flex:1;font-size:13px">${it.name}</div><input type="number" value="${it.qty}" min="1" max="${it.maxQty}" style="width:70px" class="fc" oninput="updSOQ(${i},this.value)"><span class="f12 tm">(max: ${it.maxQty})</span><button class="btn bd bxs" onclick="rmSOItem(${i})"><i class="fas fa-times"></i></button></div>`).join("");document.getElementById("so-total").textContent=soItems.reduce((s,x)=>s+x.qty,0)+" dona"}
 window.updSOQ=(i,v)=>{soItems[i].qty=Math.min(parseInt(v)||1,soItems[i].maxQty);renderSOItems()};
 window.rmSOItem=i=>{soItems.splice(i,1);renderSOItems()};
-window.saveSO=async function(){const whId=document.getElementById("so-wh").value;if(!whId)return showToast("Ombor tanlang!","error");if(!soItems.length)return showToast("Mahsulot qo'shing!","error");let reason=document.getElementById("so-reason").value;if(!reason)return showToast("Sabab tanlang!","error");if(reason==="custom"){reason=document.getElementById("so-custom-reason").value.trim();if(!reason)return showToast("Sabab kiriting!","error")}const reasonLabel=REASONS[reason]||reason;const wh=warehouses.find(x=>x.id===whId);const custId=document.getElementById("so-cust").value;const cust=customers.find(x=>x.id===custId);const date=document.getElementById("so-date").value;try{for(const it of soItems){const prod=products.find(p=>p.id===it.productId);if(!prod)continue;if((prod.quantity||0)<it.qty){showToast(`${prod.name}: yetarli miqdor yo'q!`,"error");continue}await addDoc(collection(db,"stockOuts"),{productId:it.productId,productName:it.name,category:it.category||"",quantity:it.qty,reason,reasonLabel,customerId:custId,customerName:cust?.name||"",warehouse:whId,warehouseName:wh?.name||"",note:document.getElementById("so-note").value.trim(),date,createdAt:serverTimestamp()});await updateDoc(doc(db,"products",it.productId),{quantity:Math.max(0,(prod.quantity||0)-it.qty),updatedAt:serverTimestamp()})}await addLog("stock_out",`Chiqim: ${soItems.length} mahsulot, sabab: ${reasonLabel}`);await loadSOs();await loadProds();renderSO();renderP();updDashStats();updAllLSB();closeM("som");showToast(`${soItems.length} ta mahsulot chiqarildi ✓`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
+window.saveSO=async function(){const whId=document.getElementById("so-wh").value;if(!whId)return showToast("Ombor tanlang!","error");if(!soItems.length)return showToast("Mahsulot qo'shing!","error");let reason=document.getElementById("so-reason").value;if(!reason)return showToast("Sabab tanlang!","error");if(reason==="custom"){reason=document.getElementById("so-custom-reason").value.trim();if(!reason)return showToast("Sabab kiriting!","error");await saveCustomReason(reason)}const reasonLabel=REASONS[reason]||reason;const wh=warehouses.find(x=>x.id===whId);const custId=document.getElementById("so-cust").value;const cust=customers.find(x=>x.id===custId);const date=document.getElementById("so-date").value;try{for(const it of soItems){const prod=products.find(p=>p.id===it.productId);if(!prod)continue;if((prod.quantity||0)<it.qty){showToast(`${prod.name}: yetarli miqdor yo'q!`,"error");continue}await addDoc(collection(db,"stockOuts"),{productId:it.productId,productName:it.name,category:it.category||"",quantity:it.qty,reason,reasonLabel,customerId:custId,customerName:cust?.name||"",warehouse:whId,warehouseName:wh?.name||"",note:document.getElementById("so-note").value.trim(),date,createdAt:serverTimestamp()});await updateDoc(doc(db,"products",it.productId),{quantity:Math.max(0,(prod.quantity||0)-it.qty),updatedAt:serverTimestamp()})}await addLog("stock_out",`Chiqim: ${soItems.length} mahsulot, sabab: ${reasonLabel}`);await loadSOs();await loadProds();renderSO();renderP();updDashStats();updAllLSB();closeM("som");showToast(`${soItems.length} ta mahsulot chiqarildi ✓`,"success")}catch(e){showToast("Xato: "+e.message,"error")}};
 function filterSO(){const s=(document.getElementById("sosrch")?.value||"").toLowerCase();const wf=document.getElementById("sowf")?.value||"";const rf=document.getElementById("sorf")?.value||"";filtSO=stockOuts.filter(x=>(!s||(x.productName||"").toLowerCase().includes(s)||(x.reasonLabel||"").toLowerCase().includes(s)||(x.warehouseName||"").toLowerCase().includes(s))&&(!wf||x.warehouse===wf)&&(!rf||x.reason===rf));renderSOT()}
 window.filterSO=filterSO;
 function renderSO(){filterSO()}
@@ -1209,9 +1253,9 @@ window.clrLogs=function(){showConfirm("Barcha loglarni o'chirish?",async()=>{try
 // USERS / WORKERS / PERMISSIONS / ANNOUNCEMENTS / FEATURES
 let editAnnId=null,editUserId=null;
 const OWNER={login:"admin",pass:"admin"};
-const SECMETA={dashboard:["fa-chart-pie","Dashboard"],analytics:["fa-chart-line","Tahlil"],products:["fa-boxes","Mahsulotlar"],categories:["fa-tags","Kategoriyalar"],warehouses:["fa-warehouse","Omborlar"],"stock-in":["fa-arrow-circle-down","Kirim"],"stock-out":["fa-arrow-circle-up","Chiqim"],transfers:["fa-exchange-alt","Ko'chirish"],"inventory-check":["fa-clipboard-check","Inventarizatsiya"],sales:["fa-shopping-cart","Sotuvlar"],purchases:["fa-file-invoice","Xaridlar"],orders:["fa-clipboard-list","Buyurtmalar"],returns:["fa-undo","Qaytarishlar"],pos:["fa-cash-register","Kassa"],customers:["fa-users","Mijozlar"],suppliers:["fa-truck","Yetkazuvchilar"],reports:["fa-file-alt","Hisobotlar"],logs:["fa-history","Harakatlar"],announcements:["fa-bullhorn","E'lonlar"],settings:["fa-cog","Sozlamalar"],users:["fa-user-shield","Ishchilar"]};
+const SECMETA={dashboard:["fa-chart-pie","Dashboard"],analytics:["fa-chart-line","Tahlil"],help:["fa-circle-question","Yo'riqnoma"],products:["fa-boxes","Mahsulotlar"],categories:["fa-tags","Kategoriyalar"],warehouses:["fa-warehouse","Omborlar"],"stock-in":["fa-arrow-circle-down","Kirim"],"stock-out":["fa-arrow-circle-up","Chiqim"],transfers:["fa-exchange-alt","Ko'chirish"],"inventory-check":["fa-clipboard-check","Inventarizatsiya"],sales:["fa-shopping-cart","Sotuvlar"],purchases:["fa-file-invoice","Xaridlar"],orders:["fa-clipboard-list","Buyurtmalar"],returns:["fa-undo","Qaytarishlar"],pos:["fa-cash-register","Kassa"],customers:["fa-users","Mijozlar"],suppliers:["fa-truck","Yetkazuvchilar"],reports:["fa-file-alt","Hisobotlar"],logs:["fa-history","Harakatlar"],announcements:["fa-bullhorn","E'lonlar"],settings:["fa-cog","Sozlamalar"],users:["fa-user-shield","Ishchilar"]};
 const SECKEYS=Object.keys(SECMETA);
-const ROLEPERMS={admin:[...SECKEYS],manager:SECKEYS.filter(k=>!["users","settings"].includes(k)),cashier:["dashboard","pos","products","sales","orders","customers"],viewer:["dashboard","products","analytics","reports"]};
+const ROLEPERMS={admin:[...SECKEYS],manager:SECKEYS.filter(k=>!["users","settings"].includes(k)),cashier:["dashboard","help","pos","products","sales","orders","customers"],viewer:["dashboard","help","products","analytics","reports"]};
 function hasPerm(s){if(!CURUSER)return true;if(CURUSER.role==="admin")return true;return(CURUSER.permissions||[]).includes(s)}
 function featEnabled(s){return features[s]!==false}
 function firstAllowed(){return SECKEYS.find(k=>featEnabled(k)&&hasPerm(k))||"dashboard"}
@@ -1228,18 +1272,40 @@ window.onRoleCh=function(){const r=document.getElementById("um-role").value;rend
 window.openUM=function(id=null){editUserId=id;document.getElementById("umtitle").textContent=id?"Ishchini tahrirlash":"Ishchi qo'shish";["um-name","um-login","um-pass","um-phone"].forEach(x=>{const el=document.getElementById(x);if(el)el.value=""});document.getElementById("um-role").value="cashier";document.getElementById("um-stat").value="active";document.getElementById("um-id").value="";let sel=ROLEPERMS.cashier;if(id){const u=users.find(x=>x.id===id);if(u){document.getElementById("um-id").value=id;document.getElementById("um-name").value=u.name||"";document.getElementById("um-login").value=u.login||"";document.getElementById("um-pass").value=u.password||"";document.getElementById("um-phone").value=u.phone||"";document.getElementById("um-role").value=u.role||"cashier";document.getElementById("um-stat").value=u.status||"active";sel=u.permissions||ROLEPERMS[u.role]||[]}}renderPermBoxes(sel);openM("um")};
 window.saveUser=async function(){const name=document.getElementById("um-name").value.trim();const login=document.getElementById("um-login").value.trim();const pass=document.getElementById("um-pass").value.trim();if(!name||!login||!pass)return showToast("Ism, login va parol kerak!","error");if(users.some(u=>u.login===login&&u.id!==editUserId))return showToast("Bu login band!","error");const perms=[...document.querySelectorAll(".um-pcb:checked")].map(x=>x.value);const data={name,login,password:pass,phone:document.getElementById("um-phone").value.trim(),role:document.getElementById("um-role").value,status:document.getElementById("um-stat").value,permissions:perms,updatedAt:serverTimestamp()};try{if(editUserId){await updateDoc(doc(db,"users",editUserId),data)}else{data.createdAt=serverTimestamp();data.orderCount=0;await addDoc(collection(db,"users"),data)}await addLog("user","Ishchi: "+name+" ("+data.role+")");await loadUsers();renderUsers();closeM("um");showToast("Ishchi saqlandi ✓","success")}catch(e){showToast("Xato: "+e.message,"error")}};
 window.deleteUser=async function(id){const u=users.find(x=>x.id===id);showConfirm(`"${u?.name||"Ishchi"}" o'chirilsinmi?`,async()=>{await deleteDoc(doc(db,"users",id));await loadUsers();renderUsers();showToast("O'chirildi","success")})};
-function renderUsers(){const tb=document.getElementById("usertbody");if(!users.length){tb.innerHTML=`<tr><td colspan="8"><div class="es"><i class="fas fa-user-shield"></i><h3>Ishchilar yo'q</h3><p>Yangi ishchi qo'shing</p></div></td></tr>`;return}const roles={admin:["bgp","Admin"],manager:["bgi","Menejer"],cashier:["bgs","Kassir"],viewer:["bge","Ko'ruvchi"]};tb.innerHTML=users.map((u,i)=>{const r=roles[u.role]||["bge",u.role||"—"];const pc=u.role==="admin"?SECKEYS.length:(u.permissions||[]).length;return`<tr><td>${i+1}</td><td class="fw6">${u.name||"—"}</td><td><span class="sku">${u.login||"—"}</span></td><td>${u.phone||"—"}</td><td><span class="badge ${r[0]}">${r[1]}</span></td><td><span class="badge bgi">${pc} ta bo'lim</span></td><td><span class="badge ${u.status==="inactive"?"bgd":"bgs"}">${u.status==="inactive"?"Bloklangan":"Faol"}</span></td><td><div class="df g8"><button class="btn bse bxs" onclick="openUM('${u.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`}).join("")}
+function renderUsers(){const tb=document.getElementById("usertbody");if(!users.length){tb.innerHTML=`<tr><td colspan="9"><div class="es"><i class="fas fa-user-shield"></i><h3>Ishchilar yo'q</h3><p>Yangi ishchi qo'shing</p></div></td></tr>`;return}const roles={admin:["bgp","Admin"],manager:["bgi","Menejer"],cashier:["bgs","Kassir"],viewer:["bge","Ko'ruvchi"]};tb.innerHTML=users.map((u,i)=>{const r=roles[u.role]||["bge",u.role||"—"];const pc=u.role==="admin"?SECKEYS.length:(u.permissions||[]).length;return`<tr><td>${i+1}</td><td class="fw6">${u.name||"—"}</td><td><span class="sku">${u.login||"—"}</span></td><td><span id="pw-${u.id}" class="f12" style="font-family:monospace">••••••</span> <button class="btn bxs bse" onclick="togUserPw('${u.id}','${(u.password||"").replace(/'/g,"\\'")}')"><i class="fas fa-eye"></i></button></td><td>${u.phone||"—"}</td><td><span class="badge ${r[0]}">${r[1]}</span></td><td><span class="badge bgi">${pc} ta bo'lim</span></td><td><span class="badge ${u.status==="inactive"?"bgd":"bgs"}">${u.status==="inactive"?"Bloklangan":"Faol"}</span></td><td><div class="df g8"><button class="btn bse bxs" onclick="openUM('${u.id}')" title="Tahrirlash/parol o'zgartirish"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`}).join("")}
+window.togUserPw=function(id,pw){const el=document.getElementById("pw-"+id);if(!el)return;if(el.dataset.show==="1"){el.textContent="••••••";el.dataset.show="0"}else{el.textContent=pw||"(yo'q)";el.dataset.show="1"}};
 // FEATURES
 async function loadFeatures(){try{const d=await getDoc(doc(db,"settings","features"));features=d.exists()?(d.data()||{}):{}}catch(e){features={}}}
 function renderFeatureToggles(){const c=document.getElementById("feattoggles");if(!c)return;c.innerHTML=SECKEYS.filter(k=>k!=="dashboard").map(k=>`<div class="sr"><div class="fw6 f13"><i class="fas ${SECMETA[k][0]} tm" style="width:18px"></i> ${SECMETA[k][1]}</div><div class="tgl ${featEnabled(k)?"on":""}" onclick="togFeature('${k}',this)"></div></div>`).join("")}
 window.togFeature=async function(k,el){const on=!el.classList.contains("on");el.classList.toggle("on");features[k]=on;try{await setDoc(doc(db,"settings","features"),features);applyAccess();showToast(SECMETA[k][1]+(on?" yoqildi ✓":" o'chirildi"),on?"success":"warning")}catch(e){showToast("Xato: "+e.message,"error")}};
 // ANNOUNCEMENTS
 async function loadAnns(){try{const snap=await getDocs(collection(db,"announcements"));announcements=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0))}catch(e){console.warn("Ann:",e.message)}}
+async function loadCustomReasons(){try{const snap=await getDocs(collection(db,"customReasons"));customReasons=snap.docs.map(d=>({id:d.id,...d.data()}))}catch(e){customReasons=[]}injectCustomReasons()}
+function injectCustomReasons(){const sel=document.getElementById("so-reason");if(!sel)return;sel.querySelectorAll("option.cr").forEach(o=>o.remove());const customOpt=sel.querySelector('option[value="custom"]');customReasons.forEach(cr=>{if(!cr.label)return;const o=document.createElement("option");o.value=cr.label;o.textContent="⭐ "+cr.label;o.className="cr";if(customOpt)sel.insertBefore(o,customOpt);else sel.appendChild(o)})}
+async function saveCustomReason(label){if(!label)return;const ex=customReasons.some(c=>(c.label||"").toLowerCase()===label.toLowerCase());const known=Object.values(REASONS).some(v=>v.toLowerCase()===label.toLowerCase());if(ex||known)return;try{const ref=await addDoc(collection(db,"customReasons"),{label,createdAt:serverTimestamp()});customReasons.push({id:ref.id,label});injectCustomReasons()}catch(e){}}
 function renderAnnBanner(){const c=document.getElementById("annbanner");if(!c)return;const act=announcements.filter(a=>a.active);if(!act.length){c.innerHTML="";return}const col={info:["#dbeafe","#1d4ed8","fa-info-circle"],discount:["#fef9c3","#b45309","fa-tags"],warning:["#fee2e2","#b91c1c","fa-exclamation-triangle"],success:["#dcfce7","#15803d","fa-check-circle"]};c.innerHTML=act.map(a=>{const cc=col[a.type]||col.info;return`<div style="background:${cc[0]};color:${cc[1]};border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)"><i class="fas ${cc[2]}" style="font-size:20px"></i><div style="flex:1"><div class="fw6">${a.title}${a.discount?` <span class="badge bgd">-${a.discount}%</span>`:""}</div>${a.text?`<div class="f12">${a.text}</div>`:""}</div></div>`}).join("")}
 function renderAnns(){const tb=document.getElementById("anntbody");if(!tb)return;document.getElementById("anncb").textContent=announcements.length;if(!announcements.length){tb.innerHTML=`<tr><td colspan="7"><div class="es"><i class="fas fa-bullhorn"></i><h3>E'lonlar yo'q</h3><p>Hamma sahifaga e'lon yoki chegirma yuboring</p></div></td></tr>`;return}const tn={info:"ℹ️ E'lon",discount:"🏷️ Chegirma",warning:"⚠️ Ogohlantirish",success:"✅ Yangilik"};tb.innerHTML=announcements.map(a=>`<tr><td>${tn[a.type]||a.type}</td><td class="fw6">${a.title}</td><td class="f12">${(a.text||"").substring(0,60)}</td><td>${a.discount?`<span class="badge bgd">-${a.discount}%</span>`:"—"}</td><td><span class="badge ${a.active?"bgs":"bge"}">${a.active?"Faol":"O'chiq"}</span></td><td class="f12 tm">${fD(a.createdAt)}</td><td><div class="df g8"><button class="btn bse bxs" onclick="openAnnM('${a.id}')"><i class="fas fa-edit"></i></button><button class="btn bd bxs" onclick="deleteAnn('${a.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join("")}
 window.openAnnM=function(id=null){editAnnId=id;document.getElementById("annmtitle").textContent=id?"E'lonni tahrirlash":"E'lon qo'shish";["annm-title","annm-text"].forEach(x=>document.getElementById(x).value="");document.getElementById("annm-discount").value="";document.getElementById("annm-type").value="info";document.getElementById("annm-active").value="1";document.getElementById("annm-id").value="";if(id){const a=announcements.find(x=>x.id===id);if(a){document.getElementById("annm-id").value=id;document.getElementById("annm-title").value=a.title||"";document.getElementById("annm-text").value=a.text||"";document.getElementById("annm-discount").value=a.discount||"";document.getElementById("annm-type").value=a.type||"info";document.getElementById("annm-active").value=a.active?"1":"0"}}openM("annm")};
 window.saveAnn=async function(){const title=document.getElementById("annm-title").value.trim();if(!title)return showToast("Sarlavha kerak!","error");const data={type:document.getElementById("annm-type").value,title,text:document.getElementById("annm-text").value.trim(),discount:parseInt(document.getElementById("annm-discount").value)||0,active:document.getElementById("annm-active").value==="1",updatedAt:serverTimestamp()};try{if(editAnnId){await updateDoc(doc(db,"announcements",editAnnId),data)}else{data.createdAt=serverTimestamp();await addDoc(collection(db,"announcements"),data)}await loadAnns();renderAnns();renderAnnBanner();closeM("annm");showToast("E'lon saqlandi ✓","success")}catch(e){showToast("Xato: "+e.message,"error")}};
 window.deleteAnn=async function(id){showConfirm("E'lonni o'chirish?",async()=>{await deleteDoc(doc(db,"announcements",id));await loadAnns();renderAnns();renderAnnBanner();showToast("O'chirildi","success")})};
+// QUICK ACTIONS (FAB)
+const QA_OPEN={products:"openPM",categories:"openCM",warehouses:"openWHM","stock-in":"openSIM","stock-out":"openSOM",transfers:"openTrM",customers:"openCustM",suppliers:"openSuppM",users:"openUM",announcements:"openAnnM"};
+window.toggleFab=function(){document.getElementById("fabwrap").classList.toggle("on")};
+window.qa=function(sec){const w=document.getElementById("fabwrap");if(w)w.classList.remove("on");if(CURUSER&&(!hasPerm(sec)||!featEnabled(sec)))return showToast("Sizda bu amalga ruxsat yo'q","error");nav(sec);const fn=QA_OPEN[sec];if(fn)setTimeout(()=>{try{window[fn]()}catch(e){}},300)};
+document.addEventListener("click",e=>{const w=document.getElementById("fabwrap");if(w&&w.classList.contains("on")&&!w.contains(e.target))w.classList.remove("on")});
+// HELP / YO'RIQNOMA
+function renderHelp(){const c=document.getElementById("helpbody");if(!c)return;const sec=(t,items)=>`<div class="sdv">${t}</div><div class="ib" style="line-height:1.9">${items.map(x=>"• "+x).join("<br>")}</div>`;c.innerHTML=`
+<div class="lsa" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#bfdbfe"><i class="fas fa-lightbulb ai" style="color:var(--p)"></i><div><div class="fw6">Boomstroy Inventar tizimiga xush kelibsiz!</div><div class="f12 tm">Quyida har bir bo'lim qanday ishlashi tushuntirilgan.</div></div></div>
+${sec("🔑 Tizimga kirish",["Admin (egasi): login <b>admin</b>, parol <b>admin</b> — hamma narsaga ruxsat.","Ishchilar o'z login va paroli bilan kiradi (adminni ozi yaratadi).","Chiqish uchun yuqori o'ngdagi dumaloq avatarni bosing."])}
+${sec("👷 Ishchi qanday kiradi",["Admin <b>Ishchilar / Ruxsatlar</b> bo'limidan ishchi yaratadi: ism, login, parol va ruxsatlar.","Ishchiga aytasiz: saytni oching → login va parolini kiriting → Kirish.","Ishchi faqat unga ruxsat berilgan bo'limlarni ko'radi.","Parolni ko'rish/o'zgartirish: Ishchilar jadvalida ko'z belgisini bosing yoki tahrirlash (qalam) tugmasini bosing."])}
+${sec("📂 Birinchi qadamlar (muhim tartib)",["1. <b>Kategoriyalar</b> bo'limidan kategoriya qo'shing (masalan: Sement, G'isht).","2. <b>Omborlar</b> bo'limidan ombor qo'shing.","3. Endi <b>Mahsulotlar</b> qo'shganda kategoriya va ombor ro'yxatda chiqadi."])}
+${sec("📦 Mahsulot qo'shish",["Mahsulotlar → Mahsulot qo'shish. Valyuta (so'm yoki dollar) tanlang — dollar bo'lsa sayt joriy kursda so'mga hisoblaydi.","Rasmni avtomatik topish: AI mahsulot rasmini yaratadi (Sozlamalarda Groq kaliti bo'lishi kerak).","Mahsulotni Kirim oynasi ichidan ham qo'shsa bo'ladi (Yangi mahsulot tugmasi)."])}
+${sec("🔄 Kirim / Chiqim / Ko'chirish",["<b>Kirim</b>: omborga mahsulot kirgani. Miqdor avtomatik qo'shiladi.","<b>Chiqim</b>: sababini tanlang yoki o'zingiz yozing — yozilgan sabab saqlanib qoladi va keyingi safar ro'yxatda chiqadi.","<b>Ko'chirish</b>: bir ombordan ikkinchisiga — biridan ayiriladi, ikkinchisiga qo'shiladi."])}
+${sec("💵 Dollar kursi",["Yuqorida joriy jonli dollar kursi ko'rsatiladi va avtomatik yangilanadi.","Dollarda kiritilgan narxlar shu kursda so'mga hisoblanadi."])}
+${sec("📢 E'lon / Chegirma",["E'lon yoki chegirma yarating — u barcha sahifalar tepasida banner bo'lib chiqadi.","Faol/o'chiq qilib qo'ysa bo'ladi."])}
+${sec("👥 Mijozlar",["Mijoz turini belgilang: oddiy, qarzdor, VIP yoki ulgurji.","Qarzdorga qarz miqdori va sababini yozing — Firebase'da saqlanadi."])}
+${sec("⚙️ Admin sozlamalari",["Sozlamalar → <b>Bo'limlarni yoqish/o'chirish</b>: istalgan bo'limni butun tizim uchun o'chirib qo'ying.","Groq va imgbb API kalitlarini shu yerda saqlang."])}
+${sec("⚡ Tezkor tugmalar",["O'ng pastdagi <i class='fas fa-bolt'></i> tugmasi — har qanday amalni bir bosishda ochadi.","Yuqori chapdagi <i class='fas fa-bars'></i> tugmasi — menyuni ochib/yopadi."])}`}
 
 // DASHBOARD
 function loadDash(){updDashStats();updDashLogs();renderLSDash();renderCCh();renderTP();updAllLSB()}
