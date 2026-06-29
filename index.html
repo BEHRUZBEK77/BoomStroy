@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v6.8</title>
+<title>Boomstroy v6.9</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -245,7 +245,7 @@ body.sbc .nav-arrow.left{left:14px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.8</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v6.9</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -549,6 +549,13 @@ body.sbc .nav-arrow.left{left:14px}
 <div class="fg"><label class="fl">Manzil</label><input class="fc" id="s-adr" placeholder="Toshkent"></div>
 <button class="btn bp" onclick="saveSett()"><i class="fas fa-save"></i> Saqlash</button>
 </div></div>
+<div class="card"><div class="ch"><i class="fas fa-key tm"></i><span class="ct">Parolni o'zgartirish</span></div>
+<div class="cb">
+<div class="fg"><label class="fl">Joriy parol</label><input class="fc" type="password" id="cp-cur" placeholder="Hozirgi parol"></div>
+<div class="fr"><div class="fg"><label class="fl">Yangi parol</label><input class="fc" type="password" id="cp-new"></div><div class="fg"><label class="fl">Yangi parol (takror)</label><input class="fc" type="password" id="cp-new2"></div></div>
+<button class="btn bp" onclick="changeMyPass()"><i class="fas fa-save"></i> Parolni saqlash</button>
+<div class="ib" style="margin-top:8px">Admin (egasi) standart: <b>admin / admin</b>. Bu yerdan o'zgartiring — Firebase'ga saqlanadi.</div>
+</div></div>
 <div class="card"><div class="ch"><i class="fas fa-image tm"></i><span class="ct">imgbb API Kaliti</span></div>
 <div class="cb">
 <div class="fg"><label class="fl">imgbb API Key</label>
@@ -584,7 +591,7 @@ body.sbc .nav-arrow.left{left:14px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.8.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 6.9.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
@@ -1061,7 +1068,7 @@ window.nav=function(sec){
 async function loadAll(){
   loadUSD();
   try{
-    await Promise.all([loadAPIKey(),loadGroqKey(),loadGoogleKeys(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers(),loadFeatures(),loadAnns(),loadCustomReasons()]);
+    await Promise.all([loadOwner(),loadAPIKey(),loadGroqKey(),loadGoogleKeys(),loadCats(),loadProds(),loadCusts(),loadSupps(),loadWHs(),loadSIs(),loadSOs(),loadSales(),loadPurch(),loadOrders(),loadTrs(),loadRets(),loadLogs(),loadUsers(),loadFeatures(),loadAnns(),loadCustomReasons()]);
     setConn(true);loadDash();updAllLSB();updAllSelects();updUSDBadge();renderFeatureToggles();renderAnnBanner();if(CURUSER)applyAccess();
   }catch(e){setConn(false);showToast("Firebase xatosi: "+e.message,"error")}
 }
@@ -1342,7 +1349,9 @@ window.clrLogs=function(){showConfirm("Barcha loglarni o'chirish?",async()=>{try
 
 // USERS / WORKERS / PERMISSIONS / ANNOUNCEMENTS / FEATURES
 let editAnnId=null,editUserId=null;
-const OWNER={login:"admin",pass:"admin"};
+let OWNER={login:"admin",pass:"admin"};
+async function loadOwner(){try{const d=await getDoc(doc(db,"settings","owner"));if(d.exists()){const o=d.data();OWNER={login:o.login||"admin",pass:o.pass||"admin"}}else{const c=localStorage.getItem("ownerpass");if(c)OWNER.pass=c}}catch(e){const c=localStorage.getItem("ownerpass");if(c)OWNER.pass=c}}
+window.changeMyPass=async function(){const cur=document.getElementById("cp-cur").value;const np=document.getElementById("cp-new").value.trim();const np2=document.getElementById("cp-new2").value.trim();if(!np)return showToast("Yangi parol kiriting!","error");if(np.length<3)return showToast("Parol kamida 3 ta belgi!","error");if(np!==np2)return showToast("Yangi parollar mos emas!","error");const clr=()=>{["cp-cur","cp-new","cp-new2"].forEach(x=>document.getElementById(x).value="")};if(CURUSER&&CURUSER.id){const u=users.find(x=>x.id===CURUSER.id);if(!u||(u.password||"")!==cur)return showToast("Joriy parol noto'g'ri!","error");try{await updateDoc(doc(db,"users",CURUSER.id),{password:np,updatedAt:serverTimestamp()});CURUSER.password=np;localStorage.setItem("bsuser",JSON.stringify(CURUSER));await loadUsers();if(curSec==="users")renderUsers();clr();showToast("Parolingiz o'zgartirildi ✓","success",4000)}catch(e){showToast("Xato: "+e.message,"error")}}else{if(cur!==OWNER.pass)return showToast("Joriy parol noto'g'ri!","error");try{await setDoc(doc(db,"settings","owner"),{login:OWNER.login,pass:np,updatedAt:serverTimestamp()});OWNER.pass=np;localStorage.setItem("ownerpass",np);clr();showToast("Admin paroli o'zgartirildi ✓","success",4000)}catch(e){showToast("Xato: "+e.message,"error")}}};
 const SECMETA={dashboard:["fa-chart-pie","Dashboard"],analytics:["fa-chart-line","Tahlil"],help:["fa-circle-question","Yo'riqnoma"],products:["fa-boxes","Mahsulotlar"],categories:["fa-tags","Kategoriyalar"],warehouses:["fa-warehouse","Omborlar"],"stock-in":["fa-arrow-circle-down","Kirim"],"stock-out":["fa-arrow-circle-up","Chiqim"],transfers:["fa-exchange-alt","Ko'chirish"],"inventory-check":["fa-clipboard-check","Inventarizatsiya"],sales:["fa-shopping-cart","Sotuvlar"],purchases:["fa-file-invoice","Xaridlar"],orders:["fa-clipboard-list","Buyurtmalar"],returns:["fa-undo","Qaytarishlar"],pos:["fa-cash-register","Kassa"],customers:["fa-users","Mijozlar"],suppliers:["fa-truck","Yetkazuvchilar"],reports:["fa-file-alt","Hisobotlar"],logs:["fa-history","Harakatlar"],announcements:["fa-bullhorn","E'lonlar"],settings:["fa-cog","Sozlamalar"],users:["fa-user-shield","Ishchilar"]};
 const SECKEYS=Object.keys(SECMETA);
 const ROLEPERMS={admin:[...SECKEYS],manager:SECKEYS.filter(k=>!["users","settings"].includes(k)),cashier:["dashboard","help","pos","products","sales","orders","customers"],viewer:["dashboard","help","products","analytics","reports"]};
@@ -1443,6 +1452,7 @@ window.gSearch=function(val){if(!val.trim()||val.length<2)return;const o=orders.
 window.showNotif=function(){const low=products.filter(p=>stSt(p).val!=="ok");const pend=orders.filter(o=>["pending","paid_pending"].includes(o.status));if(!low.length&&!pend.length){showToast("Hamma narsa yaxshi!","success");return}const out=low.filter(p=>stSt(p).val==="out"),lw=low.filter(p=>stSt(p).val==="low");if(out.length)showToast(`🔴 ${out.length} ta mahsulot TUGAGAN!`,"error",5000);if(lw.length)showToast(`🟡 ${lw.length} ta mahsulot kam qolgan!`,"warning",5000);if(pend.length)showToast(`📦 ${pend.length} ta yangi buyurtma!`,"warning",5000)};
 
 // INIT
+try{const _op=localStorage.getItem("ownerpass");if(_op)OWNER.pass=_op}catch(e){}
 injectWinControls();updUSDBadge();initAuth();loadAll();
 </script>
 </body>
