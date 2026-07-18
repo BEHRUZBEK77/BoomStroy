@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Boomstroy v7.1</title>
+<title>Boomstroy v7.2</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -246,7 +246,7 @@ body.sbc .nav-arrow.left{left:12px}
 <body>
 <div id="sov" onclick="clos()"></div>
 <nav id="sidebar">
-<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v7.1</small></div></div>
+<div class="sbl"><i class="fas fa-building"></i><div><span>Boomstroy</span><small>Inventar v7.2</small></div></div>
 <div class="sbs"><div class="sbst">Asosiy</div>
 <a class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</a>
 <a class="nav-item" onclick="nav('analytics')"><i class="fas fa-chart-line"></i> Tahlil</a>
@@ -318,6 +318,7 @@ body.sbc .nav-arrow.left{left:12px}
 <div class="ps" id="sec-products">
 <div id="plsb"></div>
 <div class="df jb ac mb3b"><div></div><div class="df g8">
+<button class="btn bs bsm" onclick="openImp()"><i class="fas fa-file-import"></i> Import (5000+)</button>
 <button class="btn bse bsm" onclick="genAllImgs()"><i class="fas fa-images"></i> Barchaga rasm</button>
 <button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-download"></i> CSV</button>
 <button class="btn bp" onclick="openPM()"><i class="fas fa-plus"></i> Mahsulot qo'shish</button>
@@ -593,7 +594,7 @@ body.sbc .nav-arrow.left{left:12px}
 <div class="card"><div class="ch"><i class="fas fa-database tm"></i><span class="ct">Ma'lumotlar</span></div>
 <div class="cb">
 <div class="df g8" style="flex-wrap:wrap"><button class="btn bse bsm" onclick="expAll()"><i class="fas fa-download"></i> Export JSON</button><button class="btn bse bsm" onclick="expCSV()"><i class="fas fa-file-csv"></i> Export CSV</button></div>
-<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 7.1.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
+<div class="ib" style="margin-top:12px"><div><strong>Versiya:</strong> 7.2.0</div><div><strong>Firebase:</strong> boomstroy-7bfdc</div></div>
 </div></div>
 </div></div>
 
@@ -663,6 +664,31 @@ body.sbc .nav-arrow.left{left:12px}
 <div id="pm-qrprev" style="display:none;margin-top:10px"><label class="fl">QR Kod</label><div id="pm-qrc" class="qrc"></div></div>
 </div>
 <div class="mf"><button class="btn bse" onclick="closeM('pm')">Bekor</button><button class="btn bp" id="pm-savebtn" onclick="saveProd()"><i class="fas fa-save"></i> Saqlash</button></div>
+</div></div>
+
+<!-- IMPORT MODAL -->
+<div class="mo" id="impm">
+<div class="modal mlg">
+<div class="mh"><i class="fas fa-file-import"></i><span class="mt">Mahsulotlarni import qilish (5000+)</span><button class="mc" onclick="closeM('impm')"><i class="fas fa-times"></i></button></div>
+<div class="mb2">
+<div class="ib">Fayl yuklang (<b>CSV, JSON, TXT</b>) yoki pastga joylashtiring. Har qatorda: <b>Nom, Narx, Miqdor</b> (vergul yoki tab bilan). AI (Groq) chalkash matnni ham tahlil qiladi.</div>
+<div class="fg"><label class="fl">Fayl (CSV / JSON / TXT)</label><input class="fc" type="file" accept=".csv,.json,.txt" onchange="impFile(event)"></div>
+<div class="fg"><label class="fl">Yoki ma'lumotni bu yerga joylashtiring</label><textarea class="fc" id="imp-text" rows="6" placeholder="Sement M400, 55000, 100&#10;G'isht qizil, 1200, 5000&#10;Armatura 12mm, 8500"></textarea></div>
+<div class="fr">
+<div class="fg"><label class="fl">Kategoriya</label><select class="fc" id="imp-cat"><option value="">Kategoriyasiz</option></select></div>
+<div class="fg"><label class="fl">Ombor *</label><select class="fc" id="imp-wh"><option value="">Tanlang...</option></select></div>
+</div>
+<div class="fr">
+<div class="fg"><label class="fl">Valyuta</label><select class="fc" id="imp-cur"><option value="UZS">So'm (UZS)</option><option value="USD">Dollar (USD)</option></select></div>
+<div class="fg"><label class="fl">Standart miqdor (bo'sh bo'lsa)</label><input class="fc" type="number" id="imp-qty" value="0"></div>
+</div>
+<div class="df g8" style="flex-wrap:wrap;margin-bottom:8px">
+<button class="btn bse bsm" onclick="impParse()"><i class="fas fa-list-check"></i> Tahlil qilish</button>
+<button class="btn bi bsm" onclick="impParseAI()"><i class="fas fa-robot"></i> AI (Groq) bilan tahlil</button>
+</div>
+<div id="imp-preview" class="ib" style="max-height:180px;overflow:auto">Ma'lumot joylashtiring va "Tahlil qilish" ni bosing.</div>
+</div>
+<div class="mf"><button class="btn bse" onclick="closeM('impm')">Bekor</button><button class="btn bp" id="imp-btn" onclick="doImport()" disabled><i class="fas fa-cloud-upload-alt"></i> Import qilish</button></div>
 </div></div>
 
 <!-- STOCK IN MODAL (TO'LIQ) -->
@@ -1007,7 +1033,7 @@ async function loadUSD(){const srcs=[async()=>{const r=await fetch("https://open
 function updUSDBadge(){const el=document.getElementById("usdbadge");if(el)el.innerHTML=`<i class="fas fa-dollar-sign"></i> 1$ = ${fN(Math.round(USDRATE))} so'm`}
 function toUZS(price,cur){return (cur==="USD")?(price||0)*USDRATE:(price||0)}
 function priceUZS(p){return toUZS(p?.price,p?.currency)}
-async function groqAsk(prompt){if(!GROQKEY)return"";try{const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+GROQKEY},body:JSON.stringify({model:"llama-3.3-70b-versatile",messages:[{role:"user",content:prompt}],temperature:0.3,max_tokens:60})});const j=await r.json();return j?.choices?.[0]?.message?.content?.trim()||""}catch(e){return""}}
+async function groqAsk(prompt,maxTok){if(!GROQKEY)return"";try{const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+GROQKEY},body:JSON.stringify({model:"llama-3.3-70b-versatile",messages:[{role:"user",content:prompt}],temperature:0.2,max_tokens:maxTok||60})});const j=await r.json();return j?.choices?.[0]?.message?.content?.trim()||""}catch(e){return""}}
 let curSec="dashboard";
 let pPage=1,pPS=15,filtP=[];
 let oFilt=[],oPage=1,oPS=20;
@@ -1113,6 +1139,14 @@ async function openverseImg(q){try{const r=await fetch(`https://api.openverse.or
 function aiImg(kw,name,cat){const seed=Math.abs([...((name||"x")+(cat||""))].reduce((a,c)=>(a*31+c.charCodeAt(0))|0,7));return`https://image.pollinations.ai/prompt/${encodeURIComponent(kw+", professional commercial product photography, isolated on pure white background, soft studio lighting, e-commerce catalog, ultra realistic, ultra detailed, sharp focus, centered composition, high resolution 8k, no text, no watermark, no people")}?width=768&height=768&nologo=true&model=flux&seed=${seed}`}
 async function findImg(name,cat){const kw=await imgKeywords(name,cat);const u=await googleImg(kw);if(u)return u;return aiImg(kw,name,cat)}
 window.genAllImgs=async function(){const miss=products.filter(p=>!p.imageUrl);if(!miss.length)return showToast("Barcha mahsulotda rasm bor ✓","success");showConfirm(`${miss.length} ta rasmsiz mahsulotga AI rasm yaratilsinmi? (biroz vaqt oladi)`,async()=>{let ok=0;showToast("Rasm yaratilmoqda...","",4000);for(const p of miss){try{const c=categories.find(x=>x.id===p.category);const url=await findImg(p.name,c?.name||"");if(url){await updateDoc(doc(db,"products",p.id),{imageUrl:url,updatedAt:serverTimestamp()});ok++}}catch(e){}}await loadProds();renderP();updAllLSB();showToast(`${ok} ta mahsulotga rasm yaratildi ✓`,"success",5000)})};
+let impRows=[];
+function parseRows(text){text=(text||"").trim();let rows=[];if(!text)return rows;if(text[0]==="["||text[0]==="{"){try{let j=JSON.parse(text);if(!Array.isArray(j))j=[j];rows=j.map(o=>({name:(o.name||o.nomi||o.title||o.product||o.mahsulot||"").toString().trim(),price:parseFloat((o.price??o.narx??o.narxi??o.cost??0).toString().replace(/[^\d.]/g,""))||0,quantity:parseInt((o.quantity??o.qty??o.miqdor??o.soni??0).toString().replace(/[^\d]/g,""))||0}))}catch(e){}}else{const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length)return rows;const first=lines[0].toLowerCase();const hasHeader=/(nom|name|narx|price|product|mahsulot)/.test(first)&&!/\d{3,}/.test(first);const start=hasHeader?1:0;const dl=lines[0].includes("\t")?"\t":lines[0].includes(";")?";":lines[0].includes(",")?",":null;for(let i=start;i<lines.length;i++){const l=lines[i];if(!l.trim())continue;let name="",price=0,qty=0;if(dl){const pr=l.split(dl).map(x=>x.trim());name=pr[0]||"";price=parseFloat((pr[1]||"").replace(/[^\d.]/g,""))||0;qty=parseInt((pr[2]||"").replace(/[^\d]/g,""))||0}else{const m=l.match(/^(.*?)[\s\-:=]+([\d][\d\s.,]*)$/);if(m){name=m[1].trim();price=parseFloat(m[2].replace(/[^\d.]/g,""))||0}else{name=l.trim()}}if(name)rows.push({name,price,quantity:qty})}}return rows.filter(r=>r.name)}
+function impPreview(){const el=document.getElementById("imp-preview");if(!impRows.length){el.textContent="Ma'lumot topilmadi. Formatni tekshiring yoki AI bilan tahlil qiling.";document.getElementById("imp-btn").disabled=true;return}el.innerHTML=`<b style="color:var(--s)">${impRows.length} ta mahsulot topildi.</b> Namuna:<br>`+impRows.slice(0,10).map(r=>`• ${r.name} — <b>${fN(r.price)}</b>${r.quantity?" ("+r.quantity+" dona)":""}`).join("<br>")+(impRows.length>10?`<br>...va yana ${impRows.length-10} ta`:"");document.getElementById("imp-btn").disabled=false}
+window.openImp=function(){impRows=[];document.getElementById("imp-text").value="";document.getElementById("imp-cur").value="UZS";document.getElementById("imp-qty").value="0";document.getElementById("imp-btn").disabled=true;document.getElementById("imp-cat").innerHTML='<option value="">Kategoriyasiz</option>'+categories.map(c=>`<option value="${c.id}">${c.icon||"📦"} ${c.name}</option>`).join("");document.getElementById("imp-wh").innerHTML='<option value="">Tanlang...</option>'+warehouses.map(w=>`<option value="${w.id}">${w.name}</option>`).join("");document.getElementById("imp-preview").textContent="Ma'lumot joylashtiring va \"Tahlil qilish\" ni bosing.";openM("impm")};
+window.impFile=function(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById("imp-text").value=(r.result||"").slice(0,2000000);impParse()};r.readAsText(f)};
+window.impParse=function(){impRows=parseRows(document.getElementById("imp-text").value);impPreview()};
+window.impParseAI=async function(){if(!GROQKEY)return showToast("Groq kaliti yo'q! Sozlamalarga qo'ying.","error");const text=document.getElementById("imp-text").value.trim();if(!text)return showToast("Avval ma'lumot joylashtiring!","warning");showToast("AI tahlil qilmoqda...","",3000);const chunk=text.slice(0,5000);try{const out=await groqAsk(`Extract products from this text into a JSON array. Each item exactly: {"name":string,"price":number,"quantity":number}. Prices and quantities must be plain numbers (no spaces, no currency). If quantity unknown use 0. Return ONLY the raw JSON array, no markdown fences, no explanation. Text:\n${chunk}`,4000);let j=JSON.parse(out.replace(/```json|```/g,"").trim());if(!Array.isArray(j))j=[j];impRows=j.map(o=>({name:(o.name||"").toString().trim(),price:parseFloat(o.price)||0,quantity:parseInt(o.quantity)||0})).filter(r=>r.name);impPreview();showToast(text.length>5000?"AI faqat boshini tahlil qildi. Katta ro'yxat uchun CSV+Oddiy tahlil ishlating.":"AI tahlili tayyor ✓","success",5000)}catch(e){showToast("AI tahlil qila olmadi — oddiy tahlilni sinang","warning");impParse()}};
+window.doImport=async function(){if(!impRows.length)return showToast("Avval tahlil qiling!","warning");const wh=document.getElementById("imp-wh").value;if(!wh)return showToast("Ombor tanlang!","error");const cat=document.getElementById("imp-cat").value;const cur=document.getElementById("imp-cur").value;const dq=parseInt(document.getElementById("imp-qty").value)||0;const c=categories.find(x=>x.id===cat);const btn=document.getElementById("imp-btn");btn.disabled=true;let done=0;try{for(let i=0;i<impRows.length;i+=400){const chunk=impRows.slice(i,i+400);const batch=writeBatch(db);for(const r of chunk){const ref=doc(collection(db,"products"));const sku=genSKU(r.name,c?.name||"");batch.set(ref,{name:r.name,category:cat,sku,warehouse:wh,price:r.price||0,currency:cur,cost:0,quantity:r.quantity||dq,minQuantity:5,brand:"",unit:"dona",description:"",status:"active",qrData:JSON.stringify({id:ref.id,sku,name:r.name,price:r.price||0,unit:"dona",company:"Boomstroy"}),createdAt:serverTimestamp(),updatedAt:serverTimestamp()});done++}await batch.commit();btn.innerHTML=`<div class="spinner" style="width:14px;height:14px"></div> ${done}/${impRows.length}...`}await addLog("product",`Import: ${done} ta mahsulot qo'shildi`);await loadProds();renderP();updProdSelects();updDashStats();updAllLSB();closeM("impm");showToast(`${done} ta mahsulot import qilindi ✓`,"success",6000)}catch(e){showToast("Import xatosi: "+e.message,"error")}btn.disabled=false;btn.innerHTML='<i class="fas fa-cloud-upload-alt"></i> Import qilish'};
 window.genAllCatImgs=async function(){const miss=categories.filter(c=>!c.imageUrl);if(!miss.length)return showToast("Barcha kategoriyada rasm bor ✓","success");showConfirm(`${miss.length} ta rasmsiz kategoriyaga AI rasm yaratilsinmi?`,async()=>{let ok=0;showToast("Rasm yaratilmoqda...","",4000);for(const c of miss){try{const url=await findImg(c.name,"construction category");if(url){await updateDoc(doc(db,"categories",c.id),{imageUrl:url,updatedAt:serverTimestamp()});ok++}}catch(e){}}await loadCats();renderCats();updCatSelects();showToast(`${ok} ta kategoriyaga rasm yaratildi ✓`,"success",5000)})};
 window.autoFindImg=async function(){const name=document.getElementById("pm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");const catId=document.getElementById("pm-cat").value;const cat=categories.find(c=>c.id===catId);const st=document.getElementById("pm-istat");st.innerHTML='<i class="fas fa-spinner fa-spin"></i> Rasm tayyorlanmoqda...';try{const kw=await imgKeywords(name,cat?.name||"");pendAiFallback=aiImg(kw,name,cat?.name||"");let url=await googleImg(kw);if(!url)url=pendAiFallback;pendAutoImg=url;document.getElementById("pm-iprev").innerHTML=`<img src="${url}" class="ipv" alt="" onload="document.getElementById('pm-istat').innerHTML='<i class=\\'fas fa-check-circle\\' style=\\'color:var(--s)\\'></i> Rasm topildi ✓'" onerror="imgFallback(this)">`}catch(e){st.innerHTML='<i class="fas fa-times-circle" style="color:var(--d)"></i> Topilmadi'}};
 window.autoFindCatImg=async function(){const name=document.getElementById("cm-name").value.trim();if(!name)return showToast("Avval nomi kiriting!","warning");showToast("AI rasm yaratmoqda...","",2000);try{const u=await findImg(name,"construction");document.getElementById("cm-img").value=u;showToast("Rasm topildi ✓","success")}catch(e){showToast("Rasm topilmadi","error")}};
